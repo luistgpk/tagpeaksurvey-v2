@@ -17,9 +17,21 @@ export default async function handler(req, res) {
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
         const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+        console.log('Environment check:', {
+            hasUrl: !!supabaseUrl,
+            hasServiceKey: !!supabaseServiceKey,
+            url: supabaseUrl ? 'Set' : 'Missing',
+            serviceKey: supabaseServiceKey ? 'Set' : 'Missing'
+        });
+
         if (!supabaseUrl || !supabaseServiceKey) {
-            console.error('Missing Supabase configuration');
-            return res.status(500).json({ error: 'Server configuration error' });
+            console.error('Missing Supabase configuration:', {
+                url: supabaseUrl,
+                serviceKey: supabaseServiceKey ? 'Present' : 'Missing'
+            });
+            return res.status(500).json({ 
+                error: 'Server configuration error - Missing Supabase credentials' 
+            });
         }
 
         const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -46,14 +58,28 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: 'Failed to save results' });
         }
 
-        // Save demographics data
+        // Save demographics data - map camelCase to snake_case for database
+        const mappedDemographicsData = {
+            user_id: userId,
+            timestamp: new Date().toISOString(),
+            age: demographicsData.age,
+            gender: demographicsData.gender,
+            education: demographicsData.education,
+            invests: demographicsData.invests,
+            habit: demographicsData.habit,
+            smokes: demographicsData.smokes,
+            gambles: demographicsData.gambles,
+            monthly_income: demographicsData.monthly_income,
+            price_research: demographicsData.priceResearch,
+            purchase_preference: demographicsData.purchasePreference,
+            used_traditional_cashback: demographicsData.usedTraditionalCashback,
+            experience_rating: demographicsData.experienceRating,
+            rating_justification: demographicsData.ratingJustification
+        };
+
         const { error: demographicsError } = await supabase
             .from('demographics')
-            .insert([{
-                user_id: userId,
-                timestamp: new Date().toISOString(),
-                ...demographicsData
-            }]);
+            .insert([mappedDemographicsData]);
 
         if (demographicsError) {
             console.error('Error saving demographics:', demographicsError);

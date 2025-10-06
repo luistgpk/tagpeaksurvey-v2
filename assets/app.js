@@ -838,14 +838,14 @@ function submitQuiz() {
 
     if (allCorrect) {
         quizMessage.className = 'text-center text-green-600 font-medium mb-4';
-        quizMessage.innerHTML = "<strong>Parabéns!</strong> Compreensão verificada. A preparar o estudo...";
+        quizMessage.innerHTML = `<strong>${t('congratulations')}</strong> ${t('quizSuccess')}`;
         document.getElementById('submit-quiz-btn').disabled = true;
         
         // Vai para a nova página de instruções antes de iniciar o estudo
         setTimeout(() => renderScreen('instruction_reminder'), 500); 
     } else {
         quizMessage.className = 'text-center text-red-600 font-medium mb-4';
-        quizMessage.innerHTML = `Tem <strong>${incorrectCount}</strong> resposta(s) incorreta(s). Por favor, reveja as suas escolhas e tente novamente.`;
+        quizMessage.innerHTML = t('incorrectAnswers', {count: incorrectCount});
         document.getElementById('submit-quiz-btn').disabled = false;
     }
 }
@@ -1356,7 +1356,7 @@ function renderTestimonialsScreen() {
 function renderQuizScreen() {
     return `
         <div id="quiz-screen">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Questões acerca do texto anterior</h2>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">${t('quizTitle')}</h2>
             
             <div id="quiz-content" class="space-y-4">
                 </div>
@@ -1364,7 +1364,7 @@ function renderQuizScreen() {
             <div id="quiz-message" class="text-center font-medium mb-4"></div>
             
             <div class="text-center mt-6">
-                <button id="submit-quiz-btn" onclick="submitQuiz()" class="btn-primary" disabled>Verificar Respostas</button>
+                <button id="submit-quiz-btn" onclick="submitQuiz()" class="btn-primary" disabled>${t('verifyAnswers')}</button>
             </div>
         </div>
     `;
@@ -1395,21 +1395,20 @@ function renderQuizQuestions() {
 
 // Ecrã de Lembrete de Instruções (Após o Quiz, Antes da Tarefa)
 function renderInstructionReminderScreen() {
-    // Frase alterada conforme solicitação
     return `
         <div id="instruction-reminder-screen" class="text-center p-8">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-red-600">INSTRUÇÕES FINAIS PARA A TAREFA</h2>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-red-600">${t('instructionsTitle')}</h2>
             <div class="bg-yellow-100 p-6 rounded-lg border-4 border-yellow-400 max-w-lg mx-auto">
                 <p class="text-xl text-gray-800 font-semibold leading-relaxed">
-                    Pedimos que leia <strong>atentamente</strong> os enunciados e as opções.
+                    ${t('instructionsText1')}
                 </p>
                 <p class="text-gray-800 mt-4 text-lg">
-                    Em cada situação <strong class="text-red-700">selecione a opção que representa a sua preferência real</strong>.
+                    ${t('instructionsText2')}
                 </p>
             </div>
             
             <div class="text-center mt-8">
-                <button onclick="window.initializeStudy()" class="btn-primary">Iniciar Tarefa Principal</button>
+                <button onclick="window.initializeStudy()" class="btn-primary">${t('startTask')}</button>
             </div>
         </div>
     `;
@@ -1480,8 +1479,8 @@ function renderQuestionScreen(staircase) {
     return `
         <div id="question-screen">
             <div class="text-center mb-6">
-                <p class="progress-indicator inline-block" id="progress-indicator">Produto ${state.currentStaircaseIndex + 1} de ${config.priceLevels.length}</p>
-                <h2 class="text-2xl font-bold text-gray-800 mt-2">Imagine que você está comprando <span id="product-full-name" class="${accentClass} font-extrabold">${productNameAndPrice}</span>. Qual das seguintes opções prefere?</h2>
+                <p class="progress-indicator inline-block" id="progress-indicator">${t('productProgress', {current: state.currentStaircaseIndex + 1, total: config.priceLevels.length})}</p>
+                <h2 class="text-2xl font-bold text-gray-800 mt-2">${t('imagineBuying', {product: `<span id="product-full-name" class="${accentClass} font-extrabold">${productNameAndPrice}</span>`})}</h2>
             </div>
 
             <div class="product-image-container">
@@ -1489,13 +1488,13 @@ function renderQuestionScreen(staircase) {
             </div>
             <div class="grid md:grid-cols-2 gap-6">
                 <div id="cashback-option" class="option-card flex flex-col items-center text-center" onclick="handleStaircaseChoice('cashback')">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Opção A: <strong class="${uniformValueClass}">Cashback Investido</strong></h3>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">${t('optionA')}</h3>
                     <p class="text-gray-600">
                         ${optionADescription}
                     </p>
                 </div>
                 <div id="discount-option" class="option-card flex flex-col items-center text-center" onclick="handleStaircaseChoice('discount')">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Opção B: <strong class="${uniformValueClass}">Desconto Imediato</strong></h3>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">${t('optionB')}</h3>
                     <p class="text-gray-600">
                         ${optionBDescription}
                     </p>
@@ -1512,8 +1511,8 @@ function renderDemographicsScreen() {
     // Formulário Demográfico (reestruturado com os requisitos)
     return `
         <div id="demographics-screen">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Informação Sociodemográfica</h2>
-            <p class="text-gray-600 mb-6 text-center">Por favor, preencha as seguintes questões. Os seus dados serão mantidos confidenciais e utilizados apenas para fins de análise estatística.</p>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">${t('demographicsTitle')}</h2>
+            <p class="text-gray-600 mb-6 text-center">${t('demographicsSubtitle')}</p>
             
             <form id="demographics-form" onsubmit="handleDemographicsSubmit(event)" class="space-y-6">
                 
@@ -1549,12 +1548,12 @@ function renderDemographicsScreen() {
                 <hr class="my-6 border-t border-gray-200">
 
                 <div>
-                    <label for="age" class="block text-sm font-medium text-gray-700 mb-1">4. Idade</label>
+                    <label for="age" class="block text-sm font-medium text-gray-700 mb-1">4. ${t('age')}</label>
                     <input type="number" id="age" name="age" min="18" max="100" required class="w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">5. Género</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">5. ${t('gender')}</label>
                     <div class="flex flex-wrap gap-4">
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="gender" value="Feminino" required class="text-indigo-600 focus:ring-indigo-500">
@@ -1576,9 +1575,9 @@ function renderDemographicsScreen() {
                 </div>
 
                 <div>
-                    <label for="education" class="block text-sm font-medium text-gray-700 mb-1">6. Nível de Escolaridade (Consoante Portugal)</label>
+                    <label for="education" class="block text-sm font-medium text-gray-700 mb-1">6. ${t('education')}</label>
                     <select id="education" name="education" required class="w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="">Selecione...</option>
+                        <option value="">${t('selectOption')}</option>
                         <option value="Ensino Básico">Ensino Básico (até 9.º ano)</option>
                         <option value="Ensino Secundário">Ensino Secundário (12.º ano / Profissional)</option>
                         <option value="Licenciatura">Licenciatura</option>
@@ -1678,7 +1677,7 @@ function renderDemographicsScreen() {
                 </div>
                 
                 <div class="text-center pt-4">
-                    <button type="submit" id="demog-submit-btn" class="btn-primary" disabled>Concluir e Submeter Dados</button>
+                    <button type="submit" id="demog-submit-btn" class="btn-primary" disabled>${t('submit')}</button>
                 </div>
             </form>
         </div>
@@ -1688,12 +1687,12 @@ function renderDemographicsScreen() {
 function renderThankYouScreen() {
     return `
         <div id="thank-you-screen" class="text-center p-8">
-            <h1 class="text-4xl font-bold text-indigo-600 mb-6">Obrigado(a) pela sua Participação!</h1>
-            <p class="text-gray-700 text-lg mb-4">O seu estudo está completo e as suas respostas foram guardadas com sucesso.</p>
-            <p class="text-gray-500 text-md">Agradecemos o seu tempo e contribuição.</p>
+            <h1 class="text-4xl font-bold text-indigo-600 mb-6">${t('thankYouTitle')}</h1>
+            <p class="text-gray-700 text-lg mb-4">${t('thankYouText1')}</p>
+            <p class="text-gray-500 text-md">${t('thankYouText2')}</p>
             
             <div class="mt-8 p-4 bg-yellow-100 rounded-lg max-w-xl mx-auto border border-yellow-300">
-                <p class="text-sm font-medium text-gray-700">O seu ID de Utilizador para verificação é:</p>
+                <p class="text-sm font-medium text-gray-700">${t('userIdLabel')}</p>
                 <p id="user-id-display" class="font-mono text-xs text-red-700 break-all mt-2">${userId}</p>
             </div>
         </div>

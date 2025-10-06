@@ -183,7 +183,31 @@ const translations = {
         upTo: "Até",
         
         // With
-        with: "com a"
+        with: "com a",
+        
+        // Language selection
+        studyInPortuguese: "Estudo em português",
+        studyInEnglish: "Study in English",
+        studyInSpanish: "Estudio en español",
+        
+        // Welcome screen
+        toStartResearch: "para iniciar a pesquisa",
+        
+        // Error messages
+        errorScreenNotFound: "Erro: Ecrã não encontrado.",
+        
+        // Testimonial names and locations
+        testimonial1Name: "João, 32 anos",
+        testimonial1Location: "Lisboa",
+        testimonial2Name: "Raquel, 28 anos", 
+        testimonial2Location: "Porto",
+        testimonial3Name: "Miguel, 34 anos",
+        testimonial3Location: "Braga",
+        
+        // Language names
+        portuguese: "Português",
+        english: "English",
+        spanish: "Español"
     },
     
     en: {
@@ -359,7 +383,31 @@ const translations = {
         upTo: "Up to",
         
         // With
-        with: "with a"
+        with: "with a",
+        
+        // Language selection
+        studyInPortuguese: "Study in Portuguese",
+        studyInEnglish: "Study in English",
+        studyInSpanish: "Study in Spanish",
+        
+        // Welcome screen
+        toStartResearch: "to start the research",
+        
+        // Error messages
+        errorScreenNotFound: "Error: Screen not found.",
+        
+        // Testimonial names and locations
+        testimonial1Name: "John, 32 years old",
+        testimonial1Location: "Lisbon",
+        testimonial2Name: "Rachel, 28 years old",
+        testimonial2Location: "Porto", 
+        testimonial3Name: "Michael, 34 years old",
+        testimonial3Location: "Braga",
+        
+        // Language names
+        portuguese: "Portuguese",
+        english: "English",
+        spanish: "Spanish"
     },
     
     es: {
@@ -535,7 +583,31 @@ const translations = {
         upTo: "Hasta",
         
         // With
-        with: "con una"
+        with: "con una",
+        
+        // Language selection
+        studyInPortuguese: "Estudio en portugués",
+        studyInEnglish: "Estudio en inglés",
+        studyInSpanish: "Estudio en español",
+        
+        // Welcome screen
+        toStartResearch: "para iniciar la investigación",
+        
+        // Error messages
+        errorScreenNotFound: "Error: Pantalla no encontrada.",
+        
+        // Testimonial names and locations
+        testimonial1Name: "Juan, 32 años",
+        testimonial1Location: "Lisboa",
+        testimonial2Name: "Raquel, 28 años",
+        testimonial2Location: "Oporto",
+        testimonial3Name: "Miguel, 34 años", 
+        testimonial3Location: "Braga",
+        
+        // Language names
+        portuguese: "Portugués",
+        english: "Inglés",
+        spanish: "Español"
     }
 };
 
@@ -796,7 +868,7 @@ function renderScreen(screenName, data = {}) {
                 contentArea.innerHTML = renderThankYouScreen();
                 break;
             default:
-                contentArea.innerHTML = '<p class="text-center text-red-500">Erro: Ecrã não encontrado.</p>';
+                contentArea.innerHTML = `<p class="text-center text-red-500">${t('errorScreenNotFound')}</p>`;
         }
         
         // 3. Inicia o Fade In
@@ -1350,8 +1422,8 @@ function renderLanguageSelectionScreen() {
                             <span class="text-white font-bold text-2xl">🇵🇹</span>
                         </div>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Português</h3>
-                    <p class="text-gray-600">Estudo em português</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">${t('portuguese')}</h3>
+                    <p class="text-gray-600">${t('studyInPortuguese')}</p>
                 </div>
                 
                 <!-- English -->
@@ -1361,8 +1433,8 @@ function renderLanguageSelectionScreen() {
                             <span class="text-white font-bold text-2xl">🇬🇧</span>
                         </div>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">English</h3>
-                    <p class="text-gray-600">Study in English</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">${t('english')}</h3>
+                    <p class="text-gray-600">${t('studyInEnglish')}</p>
                 </div>
                 
                 <!-- Spanish -->
@@ -1372,8 +1444,8 @@ function renderLanguageSelectionScreen() {
                             <span class="text-white font-bold text-2xl">🇪🇸</span>
                         </div>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Español</h3>
-                    <p class="text-gray-600">Estudio en español</p>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">${t('spanish')}</h3>
+                    <p class="text-gray-600">${t('studyInSpanish')}</p>
                 </div>
             </div>
             
@@ -1430,7 +1502,7 @@ function renderWelcomeScreen() {
                 </p>
             </div>
             
-            <p class="text-gray-600 mt-8 mb-8 text-center text-xl">👉 ${t('next')} para iniciar a pesquisa.</p>
+            <p class="text-gray-600 mt-8 mb-8 text-center text-xl">👉 ${t('next')} ${t('toStartResearch')}.</p>
             <div class="text-center">
                 <button onclick="renderScreen('demographics')" class="btn-primary">${t('next')}</button>
             </div>
@@ -1579,7 +1651,7 @@ function renderTestimonialsScreen() {
                                 "${t('testimonial1')}"
                             </blockquote>
                             <footer class="text-sm text-gray-600 font-semibold">
-                                <strong class="text-green-600">João, 32 anos</strong> - Lisboa
+                                <strong class="text-green-600">${t('testimonial1Name')}</strong> - ${t('testimonial1Location')}
                             </footer>
                         </div>
                     </div>
@@ -1598,7 +1670,7 @@ function renderTestimonialsScreen() {
                                 "${t('testimonial2')}"
                             </blockquote>
                             <footer class="text-sm text-gray-600 font-semibold">
-                                <strong class="text-blue-600">Raquel, 28 anos</strong> - Porto
+                                <strong class="text-blue-600">${t('testimonial2Name')}</strong> - ${t('testimonial2Location')}
                             </footer>
                         </div>
                     </div>
@@ -1617,7 +1689,7 @@ function renderTestimonialsScreen() {
                                 "${t('testimonial3')}"
                             </blockquote>
                             <footer class="text-sm text-gray-600 font-semibold">
-                                <strong class="text-purple-600">Miguel, 34 anos</strong> - Braga
+                                <strong class="text-purple-600">${t('testimonial3Name')}</strong> - ${t('testimonial3Location')}
                             </footer>
                         </div>
                     </div>

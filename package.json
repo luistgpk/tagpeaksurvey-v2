@@ -1,0 +1,20 @@
+{
+  "name": "tagpeak-survey-v2",
+  "version": "1.0.0",
+  "description": "Survey application for cashback vs discount preference study",
+  "main": "21.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required for static site'",
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

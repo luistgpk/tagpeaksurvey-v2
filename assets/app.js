@@ -6,6 +6,256 @@ const supabaseAnonKey = 'VERCEL_SUPABASE_ANON_KEY_PLACEHOLDER';
 // --- ESTADO DA APLICAÇÃO ---
 let userId = 'initializing...'; // Inicialização
 let isApiReady = false;
+let selectedLanguage = 'pt'; // Default to Portuguese
+
+// --- TRANSLATIONS ---
+const translations = {
+    pt: {
+        // Language Selection
+        selectLanguage: "Selecione o seu idioma",
+        languageSubtitle: "Escolha o idioma para continuar com o estudo",
+        continue: "Continuar",
+        
+        // Welcome Screen
+        welcome: "Bem-vindo(a)!",
+        welcomeSubtitle: "Agradecemos por dedicar alguns minutos para participar deste estudo.",
+        objective: "Objetivo da Pesquisa:",
+        objectiveText: "Queremos compreender melhor a perceção sobre programas de benefícios oferecidos por empresas. As respostas vão ajudar-nos a desenvolver soluções mais alinhadas com as demandas dos consumidores.",
+        timeEstimated: "Tempo Estimado:",
+        timeText: "A pesquisa leva cerca de 5 a 7 minutos para ser concluída.",
+        confidentiality: "Confidencialidade:",
+        confidentialityText: "As suas respostas são anónimas e serão utilizadas exclusivamente para fins internos, com o objetivo de gerar insights e melhorar os nossos serviços.",
+        voluntary: "Participação Voluntária:",
+        voluntaryText: "A participação é totalmente voluntária e pode ser interrompida a qualquer momento. Ao continuar, está a concordar com os termos acima.",
+        next: "Avançar",
+        
+        // Attention Screen
+        attentionTitle: "Aviso Importante",
+        attentionText1: "A seguir, será apresentado uma notícia sobre um novo modelo de benefício.",
+        attentionText2: "É fundamental que compreenda a sua descrição para a realização do estudo.",
+        understood: "Compreendi, Avançar para a Explicação",
+        
+        // Explanation Screen
+        explanationTitle: "NOVO MODELO DE CASHBACK CHEGA AO MERCADO",
+        explanationText1: "O novo benefício tem como missão oferecer aos consumidores um cashback elevado, que pode chegar a 100% do valor da compra inicial, sem custos ou riscos adicionais.",
+        explanationText2: "A cada compra realizada, a marca financia um investimento feito por especialistas nos mercados financeiros. Os resultados desses investimentos determinam o crescimento do cashback, que nunca será inferior a 0,5%.",
+        explanationText3: "Os usuários podem acompanhar todo o processo em tempo real durante os 6 meses em que o investimento está ativo e realizar o resgate a qualquer momento.",
+        proceed: "Para prosseguir, clique em 'Avançar'.",
+        
+        // Testimonials
+        testimonialsTitle: "Experiências Reais dos Utilizadores",
+        testimonialsSubtitle: "Veja como outros utilizadores já beneficiaram deste novo modelo de cashback:",
+        testimonial1: "Comprei um telemóvel por €800 e recebi 30% (€240) de volta! O investimento funcionou perfeitamente e consegui resgatar o valor quando precisei.",
+        testimonial2: "Consegui 25% de volta nas minhas férias! Foi uma surpresa agradável ver o cashback crescer ao longo dos meses.",
+        testimonial3: "O meu cashback começou em 5% e subiu para 12% passado 1 mês. Muito bom! A flexibilidade de resgate é excelente.",
+        tip: "Dica:",
+        tipText: "Estes são exemplos reais de como o novo modelo de cashback pode beneficiar os utilizadores.",
+        continueQuiz: "Agora vamos verificar se compreendeu o conceito.",
+        continueQuizButton: "Continuar para o Quiz",
+        
+        // Quiz
+        quizTitle: "Questões acerca do texto anterior",
+        verifyAnswers: "Verificar Respostas",
+        congratulations: "Parabéns!",
+        quizSuccess: "Compreensão verificada. A preparar o estudo...",
+        incorrectAnswers: "Tem {count} resposta(s) incorreta(s). Por favor, reveja as suas escolhas e tente novamente.",
+        
+        // Instructions
+        instructionsTitle: "INSTRUÇÕES FINAIS PARA A TAREFA",
+        instructionsText1: "Pedimos que leia atentamente os enunciados e as opções.",
+        instructionsText2: "Em cada situação selecione a opção que representa a sua preferência real.",
+        startTask: "Iniciar Tarefa Principal",
+        
+        // Staircase
+        productProgress: "Produto {current} de {total}",
+        imagineBuying: "Imagine que você está comprando {product}. Qual das seguintes opções prefere?",
+        optionA: "Opção A: Cashback Investido",
+        optionB: "Opção B: Desconto Imediato",
+        
+        // Demographics
+        demographicsTitle: "Informação Sociodemográfica",
+        demographicsSubtitle: "Por favor, preencha as seguintes questões. Os seus dados serão mantidos confidenciais e utilizados apenas para fins de análise estatística.",
+        
+        // Thank You
+        thankYouTitle: "Obrigado(a) pela sua Participação!",
+        thankYouText1: "O seu estudo está completo e as suas respostas foram guardadas com sucesso.",
+        thankYouText2: "Agradecemos o seu tempo e contribuição.",
+        userIdLabel: "O seu ID de Utilizador para verificação é:",
+        
+        // Common
+        age: "Idade",
+        gender: "Género",
+        education: "Nível de Escolaridade (Consoante Portugal)",
+        selectOption: "Selecione...",
+        submit: "Concluir e Submeter Dados"
+    },
+    
+    en: {
+        // Language Selection
+        selectLanguage: "Select your language",
+        languageSubtitle: "Choose the language to continue with the study",
+        continue: "Continue",
+        
+        // Welcome Screen
+        welcome: "Welcome!",
+        welcomeSubtitle: "Thank you for taking a few minutes to participate in this study.",
+        objective: "Research Objective:",
+        objectiveText: "We want to better understand perceptions about benefit programs offered by companies. Your responses will help us develop solutions more aligned with consumer demands.",
+        timeEstimated: "Estimated Time:",
+        timeText: "The survey takes about 5 to 7 minutes to complete.",
+        confidentiality: "Confidentiality:",
+        confidentialityText: "Your responses are anonymous and will be used exclusively for internal purposes, with the goal of generating insights and improving our services.",
+        voluntary: "Voluntary Participation:",
+        voluntaryText: "Participation is completely voluntary and can be interrupted at any time. By continuing, you agree to the terms above.",
+        next: "Next",
+        
+        // Attention Screen
+        attentionTitle: "Important Notice",
+        attentionText1: "Next, you will be presented with news about a new benefit model.",
+        attentionText2: "It is essential that you understand its description for the study.",
+        understood: "I understand, proceed to explanation",
+        
+        // Explanation Screen
+        explanationTitle: "NEW CASHBACK MODEL ARRIVES IN THE MARKET",
+        explanationText1: "The new benefit aims to offer consumers high cashback, which can reach 100% of the initial purchase value, without additional costs or risks.",
+        explanationText2: "With each purchase made, the brand finances an investment made by financial market specialists. The results of these investments determine cashback growth, which will never be less than 0.5%.",
+        explanationText3: "Users can follow the entire process in real time during the 6 months that the investment is active and withdraw at any time.",
+        proceed: "To proceed, click 'Next'.",
+        
+        // Testimonials
+        testimonialsTitle: "Real User Experiences",
+        testimonialsSubtitle: "See how other users have already benefited from this new cashback model:",
+        testimonial1: "I bought a phone for €800 and received 30% (€240) back! The investment worked perfectly and I was able to withdraw the amount when I needed it.",
+        testimonial2: "I got 25% back on my vacation! It was a pleasant surprise to see the cashback grow over the months.",
+        testimonial3: "My cashback started at 5% and rose to 12% after 1 month. Very good! The withdrawal flexibility is excellent.",
+        tip: "Tip:",
+        tipText: "These are real examples of how the new cashback model can benefit users.",
+        continueQuiz: "Now let's verify if you understood the concept.",
+        continueQuizButton: "Continue to Quiz",
+        
+        // Quiz
+        quizTitle: "Questions about the previous text",
+        verifyAnswers: "Verify Answers",
+        congratulations: "Congratulations!",
+        quizSuccess: "Understanding verified. Preparing the study...",
+        incorrectAnswers: "You have {count} incorrect answer(s). Please review your choices and try again.",
+        
+        // Instructions
+        instructionsTitle: "FINAL INSTRUCTIONS FOR THE TASK",
+        instructionsText1: "We ask that you read the statements and options carefully.",
+        instructionsText2: "In each situation, select the option that represents your real preference.",
+        startTask: "Start Main Task",
+        
+        // Staircase
+        productProgress: "Product {current} of {total}",
+        imagineBuying: "Imagine you are buying {product}. Which of the following options do you prefer?",
+        optionA: "Option A: Invested Cashback",
+        optionB: "Option B: Immediate Discount",
+        
+        // Demographics
+        demographicsTitle: "Sociodemographic Information",
+        demographicsSubtitle: "Please fill out the following questions. Your data will be kept confidential and used only for statistical analysis purposes.",
+        
+        // Thank You
+        thankYouTitle: "Thank you for your participation!",
+        thankYouText1: "Your study is complete and your responses have been saved successfully.",
+        thankYouText2: "We appreciate your time and contribution.",
+        userIdLabel: "Your User ID for verification is:",
+        
+        // Common
+        age: "Age",
+        gender: "Gender",
+        education: "Education Level",
+        selectOption: "Select...",
+        submit: "Complete and Submit Data"
+    },
+    
+    es: {
+        // Language Selection
+        selectLanguage: "Selecciona tu idioma",
+        languageSubtitle: "Elige el idioma para continuar con el estudio",
+        continue: "Continuar",
+        
+        // Welcome Screen
+        welcome: "¡Bienvenido/a!",
+        welcomeSubtitle: "Gracias por dedicar unos minutos a participar en este estudio.",
+        objective: "Objetivo de la Investigación:",
+        objectiveText: "Queremos comprender mejor la percepción sobre los programas de beneficios ofrecidos por las empresas. Tus respuestas nos ayudarán a desarrollar soluciones más alineadas con las demandas de los consumidores.",
+        timeEstimated: "Tiempo Estimado:",
+        timeText: "La encuesta toma aproximadamente 5 a 7 minutos para completarse.",
+        confidentiality: "Confidencialidad:",
+        confidentialityText: "Tus respuestas son anónimas y serán utilizadas exclusivamente para fines internos, con el objetivo de generar insights y mejorar nuestros servicios.",
+        voluntary: "Participación Voluntaria:",
+        voluntaryText: "La participación es completamente voluntaria y puede ser interrumpida en cualquier momento. Al continuar, estás de acuerdo con los términos anteriores.",
+        next: "Siguiente",
+        
+        // Attention Screen
+        attentionTitle: "Aviso Importante",
+        attentionText1: "A continuación, se te presentará una noticia sobre un nuevo modelo de beneficio.",
+        attentionText2: "Es fundamental que comprendas su descripción para la realización del estudio.",
+        understood: "Entendido, proceder a la explicación",
+        
+        // Explanation Screen
+        explanationTitle: "NUEVO MODELO DE CASHBACK LLEGA AL MERCADO",
+        explanationText1: "El nuevo beneficio tiene como misión ofrecer a los consumidores un cashback elevado, que puede llegar al 100% del valor de la compra inicial, sin costos o riesgos adicionales.",
+        explanationText2: "Con cada compra realizada, la marca financia una inversión realizada por especialistas en los mercados financieros. Los resultados de estas inversiones determinan el crecimiento del cashback, que nunca será inferior al 0,5%.",
+        explanationText3: "Los usuarios pueden seguir todo el proceso en tiempo real durante los 6 meses en que la inversión está activa y realizar el rescate en cualquier momento.",
+        proceed: "Para proceder, haz clic en 'Siguiente'.",
+        
+        // Testimonials
+        testimonialsTitle: "Experiencias Reales de los Usuarios",
+        testimonialsSubtitle: "Ve cómo otros usuarios ya se han beneficiado de este nuevo modelo de cashback:",
+        testimonial1: "Compré un teléfono por €800 y recibí 30% (€240) de vuelta! La inversión funcionó perfectamente y pude retirar el valor cuando lo necesité.",
+        testimonial2: "Conseguí 25% de vuelta en mis vacaciones! Fue una sorpresa agradable ver el cashback crecer a lo largo de los meses.",
+        testimonial3: "Mi cashback comenzó en 5% y subió a 12% después de 1 mes. ¡Muy bueno! La flexibilidad de rescate es excelente.",
+        tip: "Consejo:",
+        tipText: "Estos son ejemplos reales de cómo el nuevo modelo de cashback puede beneficiar a los usuarios.",
+        continueQuiz: "Ahora vamos a verificar si comprendiste el concepto.",
+        continueQuizButton: "Continuar al Quiz",
+        
+        // Quiz
+        quizTitle: "Preguntas sobre el texto anterior",
+        verifyAnswers: "Verificar Respuestas",
+        congratulations: "¡Felicitaciones!",
+        quizSuccess: "Comprensión verificada. Preparando el estudio...",
+        incorrectAnswers: "Tienes {count} respuesta(s) incorrecta(s). Por favor, revisa tus elecciones e intenta de nuevo.",
+        
+        // Instructions
+        instructionsTitle: "INSTRUCCIONES FINALES PARA LA TAREA",
+        instructionsText1: "Te pedimos que leas atentamente los enunciados y las opciones.",
+        instructionsText2: "En cada situación selecciona la opción que representa tu preferencia real.",
+        startTask: "Iniciar Tarea Principal",
+        
+        // Staircase
+        productProgress: "Producto {current} de {total}",
+        imagineBuying: "Imagina que estás comprando {product}. ¿Cuál de las siguientes opciones prefieres?",
+        optionA: "Opción A: Cashback Invertido",
+        optionB: "Opción B: Descuento Inmediato",
+        
+        // Demographics
+        demographicsTitle: "Información Sociodemográfica",
+        demographicsSubtitle: "Por favor, completa las siguientes preguntas. Tus datos serán mantenidos confidenciales y utilizados únicamente para fines de análisis estadístico.",
+        
+        // Thank You
+        thankYouTitle: "¡Gracias por tu participación!",
+        thankYouText1: "Tu estudio está completo y tus respuestas han sido guardadas exitosamente.",
+        thankYouText2: "Agradecemos tu tiempo y contribución.",
+        userIdLabel: "Tu ID de Usuario para verificación es:",
+        
+        // Common
+        age: "Edad",
+        gender: "Género",
+        education: "Nivel de Escolaridad",
+        selectOption: "Seleccionar...",
+        submit: "Completar y Enviar Datos"
+    }
+};
+
+// --- TRANSLATION HELPER ---
+function t(key, params = {}) {
+    const translation = translations[selectedLanguage][key] || translations['pt'][key] || key;
+    return translation.replace(/\{(\w+)\}/g, (match, param) => params[param] || match);
+}
 
 // --- NOVO: Mapeamento de Imagens para Cada Produto ---
 const productImages = {
@@ -218,6 +468,9 @@ function renderScreen(screenName, data = {}) {
         
         // 2. Gera o novo conteúdo
         switch (screenName) {
+            case 'language_selection':
+                contentArea.innerHTML = renderLanguageSelectionScreen();
+                break;
             case 'welcome':
                 contentArea.innerHTML = renderWelcomeScreen();
                 break;
@@ -793,35 +1046,106 @@ window.handleDemographicsSubmit = async (event) => {
     renderScreen('attention_screen');
 }
 
+// --- LANGUAGE SELECTION SCREEN ---
+function renderLanguageSelectionScreen() {
+    return `
+        <div id="language-selection-screen" class="text-center">
+            <div class="mb-8">
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">${t('selectLanguage')}</h1>
+                <p class="text-gray-600 text-lg">${t('languageSubtitle')}</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <!-- Portuguese -->
+                <div class="language-option option-card text-center" onclick="selectLanguage('pt')">
+                    <div class="mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                            <span class="text-white font-bold text-2xl">🇵🇹</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Português</h3>
+                    <p class="text-gray-600">Estudo em português</p>
+                </div>
+                
+                <!-- English -->
+                <div class="language-option option-card text-center" onclick="selectLanguage('en')">
+                    <div class="mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                            <span class="text-white font-bold text-2xl">🇬🇧</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">English</h3>
+                    <p class="text-gray-600">Study in English</p>
+                </div>
+                
+                <!-- Spanish -->
+                <div class="language-option option-card text-center" onclick="selectLanguage('es')">
+                    <div class="mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                            <span class="text-white font-bold text-2xl">🇪🇸</span>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Español</h3>
+                    <p class="text-gray-600">Estudio en español</p>
+                </div>
+            </div>
+            
+            <div class="mt-8">
+                <button id="continue-language-btn" class="btn-primary" disabled onclick="continueWithLanguage()">
+                    ${t('continue')}
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// --- LANGUAGE SELECTION HANDLERS ---
+window.selectLanguage = (language) => {
+    selectedLanguage = language;
+    
+    // Update visual selection
+    document.querySelectorAll('.language-option').forEach(option => {
+        option.classList.remove('selected', 'accent-blue-border');
+    });
+    
+    event.target.closest('.language-option').classList.add('selected', 'accent-blue-border');
+    
+    // Enable continue button
+    document.getElementById('continue-language-btn').disabled = false;
+};
+
+window.continueWithLanguage = () => {
+    renderScreen('welcome');
+};
+
 function renderWelcomeScreen() {
-    // TEXTO DE BOAS VINDAS
     return `
         <div id="welcome-screen">
-            <h1 class="text-3xl font-bold text-gray-800 mb-4 text-center text-indigo-600">Bem-vindo(a)!</h1>
-            <p class="text-gray-600 mb-6 text-center text-lg">Agradecemos por dedicar alguns minutos para participar deste estudo.</p>
+            <h1 class="text-3xl font-bold text-gray-800 mb-4 text-center text-indigo-600">${t('welcome')}</h1>
+            <p class="text-gray-600 mb-6 text-center text-lg">${t('welcomeSubtitle')}</p>
             <hr class="my-6">
             <div class="bg-indigo-50 p-6 rounded-lg space-y-4 text-left">
                 
                 <p class="text-gray-700">
-                    <strong class="font-semibold text-indigo-700">Objetivo da Pesquisa:</strong> Queremos compreender melhor a perceção sobre programas de benefícios oferecidos por empresas. As respostas vão ajudar-nos a desenvolver soluções mais alinhadas com as demandas dos consumidores.
+                    <strong class="font-semibold text-indigo-700">${t('objective')}</strong> ${t('objectiveText')}
                 </p>
                 
                 <p class="text-gray-700">
-                    <strong class="font-semibold text-indigo-700">Tempo Estimado:</strong> A pesquisa leva cerca de <strong class="text-indigo-700">5 a 7 minutos</strong> para ser concluída.
+                    <strong class="font-semibold text-indigo-700">${t('timeEstimated')}</strong> ${t('timeText')}
                 </p>
                 
                 <p class="text-gray-700">
-                    <strong class="font-semibold text-indigo-700">Confidencialidade:</strong> As suas <strong class="text-indigo-700">respostas são anónimas</strong> e serão utilizadas exclusivamente para fins internos, com o objetivo de gerar insights e melhorar os nossos serviços.
+                    <strong class="font-semibold text-indigo-700">${t('confidentiality')}</strong> ${t('confidentialityText')}
                 </p>
 
                 <p class="text-gray-700">
-                    <strong class="font-semibold text-indigo-700">Participação Voluntária:</strong> A participação é totalmente voluntária e pode ser interrompida a qualquer momento. Ao continuar, está a concordar com os termos acima.
+                    <strong class="font-semibold text-indigo-700">${t('voluntary')}</strong> ${t('voluntaryText')}
                 </p>
             </div>
             
-            <p class="text-gray-600 mt-8 mb-8 text-center text-xl">👉 Clique em "Avançar" para iniciar a pesquisa.</p>
+            <p class="text-gray-600 mt-8 mb-8 text-center text-xl">👉 ${t('next')} para iniciar a pesquisa.</p>
             <div class="text-center">
-                <button onclick="renderScreen('demographics')" class="btn-primary">Avançar</button>
+                <button onclick="renderScreen('demographics')" class="btn-primary">${t('next')}</button>
             </div>
         </div>
     `;
@@ -883,27 +1207,26 @@ function renderTraditionalQuizContent() {
 
 // ECRÃ 3: Tela de Aviso (Attention Screen)
 function renderAttentionScreen() {
-    // Frase e cor alteradas conforme solicitação
     const content = `
         <div id="attention-screen" class="p-8 border-4 border-yellow-400 rounded-xl">
             <div class="text-center space-y-4">
                 <h2 class="text-3xl font-extrabold text-gray-800 mb-4">
                     <span class="inline-block transform -translate-y-1 text-yellow-600">⚠️</span> 
-                    Aviso Importante
+                    ${t('attentionTitle')}
                     <span class="inline-block transform -translate-y-1 text-yellow-600">⚠️</span>
                 </h2>
                 
                 <p class="text-xl text-gray-800">
-                    A seguir, será apresentado <strong>uma notícia sobre um novo modelo de benefício</strong>.
+                    ${t('attentionText1')}
                 </p>
                 
                 <p class="text-xl text-red-600 font-semibold mt-4">
-                    É fundamental que compreenda a sua descrição para a realização do estudo.
+                    ${t('attentionText2')}
                 </p>
                 
                 <div class="pt-6">
                     <button onclick="renderScreen('explanation')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 text-lg shadow-lg">
-                        Compreendi, Avançar para a Explicação
+                        ${t('understood')}
                     </button>
                 </div>
             </div>
@@ -915,29 +1238,28 @@ function renderAttentionScreen() {
 
 // ECRÃ 4: Explicação do Novo Modelo (o antigo ECRÃ 3)
 function renderExplanationScreen() {
-    // REMOÇÃO DO TEXTO VERMELHO E SUBSTITUIÇÃO DO CORPO DO TEXTO
     const content = `
         <div id="model-explanation-screen">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">NOVO MODELO DE CASHBACK CHEGA AO MERCADO</h1>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">${t('explanationTitle')}</h1>
             
             <hr class="my-6">
 
             <div class="bg-indigo-50 p-6 rounded-lg border-l-4 border-indigo-400">
                 <p class="text-gray-700 leading-relaxed space-y-4">
                     <span class="block">
-                        O novo benefício tem como missão oferecer aos consumidores um <strong class="text-indigo-700">cashback elevado</strong>, que pode chegar a <strong class="text-indigo-700">100% do valor da compra inicial</strong>, sem custos ou riscos adicionais.
+                        ${t('explanationText1')}
                     </span>
                     <span class="block">
-                        A cada compra realizada, a marca financia um investimento feito por <strong class="text-indigo-700">especialistas nos mercados financeiros</strong>. Os resultados desses investimentos determinam o crescimento do cashback, que nunca será inferior a <strong class="text-indigo-700">0,5%</strong>.
+                        ${t('explanationText2')}
                     </span>
                     <span class="block">
-                        Os usuários podem acompanhar todo o processo em tempo real durante os <strong class="text-indigo-700">6 meses</strong> em que o investimento está ativo e <strong class="text-indigo-700">realizar o resgate a qualquer momento</strong>.
+                        ${t('explanationText3')}
                     </span>
                     </p>
             </div>
-            <p class="text-gray-600 mt-8 mb-8 text-center">Para prosseguir, clique em 'Avançar'.</p>
+            <p class="text-gray-600 mt-8 mb-8 text-center">${t('proceed')}</p>
             <div class="text-center">
-                <button onclick="renderScreen('testimonials')" class="btn-primary">Avançar</button>
+                <button onclick="renderScreen('testimonials')" class="btn-primary">${t('next')}</button>
             </div>
         </div>
     `;
@@ -948,11 +1270,11 @@ function renderExplanationScreen() {
 function renderTestimonialsScreen() {
     const content = `
         <div id="testimonials-screen">
-            <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Experiências Reais dos Utilizadores</h1>
+            <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">${t('testimonialsTitle')}</h1>
             
             <div class="bg-indigo-50 p-6 rounded-lg mb-6">
                 <p class="text-gray-700 text-center text-lg mb-6">
-                    Veja como outros utilizadores já beneficiaram deste novo modelo de cashback:
+                    ${t('testimonialsSubtitle')}
                 </p>
             </div>
 
@@ -967,7 +1289,7 @@ function renderTestimonialsScreen() {
                         </div>
                         <div class="flex-1">
                             <blockquote class="text-gray-700 text-lg leading-relaxed mb-4 font-medium">
-                                "Comprei um telemóvel por €800 e recebi 30% (€240) de volta! O investimento funcionou perfeitamente e consegui resgatar o valor quando precisei."
+                                "${t('testimonial1')}"
                             </blockquote>
                             <footer class="text-sm text-gray-600 font-semibold">
                                 <strong class="text-green-600">João, 32 anos</strong> - Lisboa
@@ -986,7 +1308,7 @@ function renderTestimonialsScreen() {
                         </div>
                         <div class="flex-1">
                             <blockquote class="text-gray-700 text-lg leading-relaxed mb-4 font-medium">
-                                "Consegui 25% de volta nas minhas férias! Foi uma surpresa agradável ver o cashback crescer ao longo dos meses."
+                                "${t('testimonial2')}"
                             </blockquote>
                             <footer class="text-sm text-gray-600 font-semibold">
                                 <strong class="text-blue-600">Raquel, 28 anos</strong> - Porto
@@ -1005,7 +1327,7 @@ function renderTestimonialsScreen() {
                         </div>
                         <div class="flex-1">
                             <blockquote class="text-gray-700 text-lg leading-relaxed mb-4 font-medium">
-                                "O meu cashback começou em 5% e subiu para 12% passado 1 mês. Muito bom! A flexibilidade de resgate é excelente."
+                                "${t('testimonial3')}"
                             </blockquote>
                             <footer class="text-sm text-gray-600 font-semibold">
                                 <strong class="text-purple-600">Miguel, 34 anos</strong> - Braga
@@ -1017,13 +1339,13 @@ function renderTestimonialsScreen() {
 
             <div class="mt-8 alert-warning">
                 <p class="text-center font-medium">
-                    💡 <strong>Dica:</strong> Estes são exemplos reais de como o novo modelo de cashback pode beneficiar os utilizadores.
+                    💡 <strong>${t('tip')}</strong> ${t('tipText')}
                 </p>
             </div>
             
-            <p class="text-gray-600 mt-8 mb-8 text-center">Agora vamos verificar se compreendeu o conceito.</p>
+            <p class="text-gray-600 mt-8 mb-8 text-center">${t('continueQuiz')}</p>
             <div class="text-center">
-                <button onclick="renderScreen('quiz')" class="btn-primary">Continuar para o Quiz</button>
+                <button onclick="renderScreen('quiz')" class="btn-primary">${t('continueQuizButton')}</button>
             </div>
         </div>
     `;
@@ -1382,8 +1704,8 @@ function renderThankYouScreen() {
 
 // 1. Inicia o Supabase de forma assíncrona
 function startApplication() {
-    // REQUISITO 1: O ecrã de informações sociodemográficas deve aparecer logo após boa vindas
-    renderScreen('welcome'); 
+    // Start with language selection
+    renderScreen('language_selection'); 
     
     // Inicia o Supabase em segundo plano
     initializeSupabase(); 

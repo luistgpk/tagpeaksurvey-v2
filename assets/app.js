@@ -227,6 +227,9 @@ function renderScreen(screenName, data = {}) {
             case 'explanation':
                 contentArea.innerHTML = renderExplanationScreen();
                 break;
+            case 'testimonials':
+                contentArea.innerHTML = renderTestimonialsScreen();
+                break;
             case 'quiz':
                 contentArea.innerHTML = renderQuizScreen();
                 renderQuizQuestions(); 
@@ -934,14 +937,100 @@ function renderExplanationScreen() {
             </div>
             <p class="text-gray-600 mt-8 mb-8 text-center">Para prosseguir, clique em 'Avançar'.</p>
             <div class="text-center">
-                <button onclick="renderScreen('quiz')" class="btn-primary">Avançar</button>
+                <button onclick="renderScreen('testimonials')" class="btn-primary">Avançar</button>
             </div>
         </div>
     `;
     return content;
 }
 
-// ECRÃ 5: Quiz do Novo Modelo (o antigo ECRÃ 4)
+// ECRÃ 5: Testimonials (Novo)
+function renderTestimonialsScreen() {
+    const content = `
+        <div id="testimonials-screen">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Experiências Reais dos Utilizadores</h1>
+            
+            <div class="bg-indigo-50 p-6 rounded-lg mb-6">
+                <p class="text-gray-700 text-center text-lg mb-6">
+                    Veja como outros utilizadores já beneficiaram deste novo modelo de cashback:
+                </p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                <span class="text-green-600 font-bold text-lg">J</span>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <blockquote class="text-gray-700 text-lg leading-relaxed mb-3">
+                                "Comprei um telemóvel por €800 e recebi 30% (€240) de volta! O investimento funcionou perfeitamente e consegui resgatar o valor quando precisei."
+                            </blockquote>
+                            <footer class="text-sm text-gray-500">
+                                <strong>João, 32 anos</strong> - Lisboa
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                <span class="text-blue-600 font-bold text-lg">R</span>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <blockquote class="text-gray-700 text-lg leading-relaxed mb-3">
+                                "Consegui 25% de volta nas minhas férias! Foi uma surpresa agradável ver o cashback crescer ao longo dos meses."
+                            </blockquote>
+                            <footer class="text-sm text-gray-500">
+                                <strong>Raquel, 28 anos</strong> - Porto
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                <span class="text-purple-600 font-bold text-lg">M</span>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <blockquote class="text-gray-700 text-lg leading-relaxed mb-3">
+                                "O meu cashback começou em 5% e subiu para 12% passado 1 mês. Muito bom! A flexibilidade de resgate é excelente."
+                            </blockquote>
+                            <footer class="text-sm text-gray-500">
+                                <strong>Miguel, 34 anos</strong> - Braga
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                <p class="text-center text-gray-700 font-medium">
+                    💡 <strong>Dica:</strong> Estes são exemplos reais de como o novo modelo de cashback pode beneficiar os utilizadores.
+                </p>
+            </div>
+            
+            <p class="text-gray-600 mt-8 mb-8 text-center">Agora vamos verificar se compreendeu o conceito.</p>
+            <div class="text-center">
+                <button onclick="renderScreen('quiz')" class="btn-primary">Continuar para o Quiz</button>
+            </div>
+        </div>
+    `;
+    return content;
+}
+
+// ECRÃ 6: Quiz do Novo Modelo (o antigo ECRÃ 5)
 function renderQuizScreen() {
     return `
         <div id="quiz-screen">

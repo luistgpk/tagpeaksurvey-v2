@@ -145,7 +145,45 @@ const translations = {
         
         // Likert Scale
         muitoNegativa: "1 - Muito Negativa",
-        muitoPositiva: "5 - Muito Positiva"
+        muitoPositiva: "5 - Muito Positiva",
+        
+        // Product names
+        tshirt: "uma T-shirt",
+        mesa: "uma Mesa", 
+        computador: "um Computador",
+        
+        // Justification placeholder
+        justificationPlaceholder: "Descreva brevemente o motivo da sua avaliação.",
+        
+        // Justification label
+        justificationOptional: "Justificação (opcional):",
+        
+        // Error messages
+        fillRequiredQuestions: "Por favor, preencha as questões obrigatórias sobre a sua experiência antes de submeter.",
+        justificationMinLength: "A justificação deve ter pelo menos 5 caracteres.",
+        
+        // Product description
+        withCost: "com o custo de",
+        
+        // Cashback guarantee
+        cashbackGuarantee: "garantia de 0,5%",
+        cashbackGuaranteeAmount: "do valor da compra e com",
+        cashbackFlexibility: "resgate a qualquer momento",
+        
+        // Discount option
+        immediateDiscount: "Desconto imediato de",
+        
+        // Time period
+        during6Months: "durante os 6 meses",
+        
+        // Cashback text
+        ofCashback: "de cashback",
+        
+        // Up to
+        upTo: "Até",
+        
+        // With
+        with: "com a"
     },
     
     en: {
@@ -283,7 +321,45 @@ const translations = {
         
         // Likert Scale
         muitoNegativa: "1 - Very Negative",
-        muitoPositiva: "5 - Very Positive"
+        muitoPositiva: "5 - Very Positive",
+        
+        // Product names
+        tshirt: "a T-shirt",
+        mesa: "a Table", 
+        computador: "a Computer",
+        
+        // Justification placeholder
+        justificationPlaceholder: "Briefly describe the reason for your evaluation.",
+        
+        // Justification label
+        justificationOptional: "Justification (optional):",
+        
+        // Error messages
+        fillRequiredQuestions: "Please fill out the required questions about your experience before submitting.",
+        justificationMinLength: "The justification must be at least 5 characters long.",
+        
+        // Product description
+        withCost: "with a cost of",
+        
+        // Cashback guarantee
+        cashbackGuarantee: "guarantee of 0.5%",
+        cashbackGuaranteeAmount: "of the purchase value and with",
+        cashbackFlexibility: "withdrawal at any time",
+        
+        // Discount option
+        immediateDiscount: "Immediate discount of",
+        
+        // Time period
+        during6Months: "during the 6 months",
+        
+        // Cashback text
+        ofCashback: "cashback",
+        
+        // Up to
+        upTo: "Up to",
+        
+        // With
+        with: "with a"
     },
     
     es: {
@@ -421,7 +497,45 @@ const translations = {
         
         // Likert Scale
         muitoNegativa: "1 - Muy Negativa",
-        muitoPositiva: "5 - Muy Positiva"
+        muitoPositiva: "5 - Muy Positiva",
+        
+        // Product names
+        tshirt: "una Camiseta",
+        mesa: "una Mesa", 
+        computador: "una Computadora",
+        
+        // Justification placeholder
+        justificationPlaceholder: "Describe brevemente el motivo de tu evaluación.",
+        
+        // Justification label
+        justificationOptional: "Justificación (opcional):",
+        
+        // Error messages
+        fillRequiredQuestions: "Por favor, completa las preguntas obligatorias sobre tu experiencia antes de enviar.",
+        justificationMinLength: "La justificación debe tener al menos 5 caracteres.",
+        
+        // Product description
+        withCost: "con un costo de",
+        
+        // Cashback guarantee
+        cashbackGuarantee: "garantía del 0,5%",
+        cashbackGuaranteeAmount: "del valor de la compra y con",
+        cashbackFlexibility: "retiro en cualquier momento",
+        
+        // Discount option
+        immediateDiscount: "Descuento inmediato de",
+        
+        // Time period
+        during6Months: "durante los 6 meses",
+        
+        // Cashback text
+        ofCashback: "de cashback",
+        
+        // Up to
+        upTo: "Hasta",
+        
+        // With
+        with: "con una"
     }
 };
 
@@ -471,9 +585,9 @@ async function initializeSupabase() {
 // --- CONFIGURAÇÃO DO ESTUDO ---
 const config = {
     priceLevels: [
-        { id: 'low', name: 'uma T-shirt', price: 40, currency: '€' },
-        { id: 'medium', name: 'uma Mesa', price: 250, currency: '€' },
-        { id: 'high', name: 'um Computador', price: 1000, currency: '€' }
+        { id: 'low', name: 'tshirt', price: 40, currency: '€' },
+        { id: 'medium', name: 'mesa', price: 250, currency: '€' },
+        { id: 'high', name: 'computador', price: 1000, currency: '€' }
     ],
     staircase: {
         // Pontos de partida possíveis: 5% (baixo), 15% (médio), 25% (alto)
@@ -555,7 +669,7 @@ async function saveResultsToSupabase(indifferencePoints, demographicsData) {
 
             return {
                 id: s.id,
-                name: s.name.replace('uma ', '').replace('um ', '').replace('uns ', ''),
+                name: t(s.name).replace('uma ', '').replace('um ', '').replace('uns ', '').replace('a ', '').replace('an ', ''),
                 presentationOrder: presentationIndex, // Ordem em que o produto foi apresentado
                 startDiscount: s.initialDiscount, // Ponto de partida inicial (Âncora)
                 price: s.price,
@@ -1049,7 +1163,7 @@ function calculateIndifferencePoints() {
         }
         
         state.indifferencePoints[staircase.id] = {
-            name: staircase.name.replace('uma ', '').replace('um ', '').replace('uns ', ''),
+            name: t(staircase.name).replace('uma ', '').replace('um ', '').replace('uns ', '').replace('a ', '').replace('an ', ''),
             price: formatCurrency(staircase.price, staircase.currency),
             point: indifferencePoint.toFixed(2)
         };
@@ -1075,7 +1189,7 @@ window.handleDemographicsSubmit = async (event) => {
     // 1. Validação do Bloco Customizado (inclui Q1, Q2, Q3.1-3.2 e Justificação)
     // Se a validação falhar, a UI já deve ter bloqueado o botão, mas esta é a checagem final.
     if (!updateDemographicsUI()) {
-        alert("Por favor, preencha as questões obrigatórias sobre a sua experiência antes de submeter.");
+        alert(t('fillRequiredQuestions'));
         return; 
     }
     
@@ -1150,13 +1264,13 @@ function updateDemographicsUI() {
         }
         
         if (isJustificationRequired) {
-            justificationLabel.innerHTML = '3.2. Justifique brevemente o por que de classificar sua experiencia desta forma?';
+            justificationLabel.innerHTML = `3.2. ${t('demoQ3_2_justification')}`;
             
             if (!isJustificationValid) {
                 justificationTextarea.classList.add('border-red-500');
                 justificationTextarea.classList.remove('border-gray-300');
                 if (errorMessageElement) {
-                    errorMessageElement.textContent = 'A justificação deve ter pelo menos 5 caracteres.';
+                    errorMessageElement.textContent = t('justificationMinLength');
                 }
             } else {
                 justificationTextarea.classList.remove('border-red-500');
@@ -1166,7 +1280,7 @@ function updateDemographicsUI() {
                 }
             }
         } else {
-            justificationLabel.innerHTML = '3.2. Justificação (opcional):';
+            justificationLabel.innerHTML = `3.2. ${t('justificationOptional')}`;
             justificationTextarea.classList.remove('border-red-500');
             justificationTextarea.classList.add('border-gray-300');
              if (errorMessageElement) {
@@ -1193,7 +1307,7 @@ window.handleDemographicsSubmit = async (event) => {
     // 1. Validação do Bloco Customizado (inclui Q1, Q2, Q3.1-3.2 e Justificação)
     // Se a validação falhar, a UI já deve ter bloqueado o botão, mas esta é a checagem final.
     if (!updateDemographicsUI()) {
-        alert("Por favor, preencha as questões obrigatórias sobre a sua experiência antes de submeter.");
+        alert(t('fillRequiredQuestions'));
         return; 
     }
     
@@ -1370,7 +1484,7 @@ function renderTraditionalQuizContent() {
                 </label>
                 <textarea id="rating-justification" rows="3" 
                     class="w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-                    placeholder="Descreva brevemente o motivo da sua avaliação.">${state.ratingJustification}</textarea>
+                    placeholder="${t('justificationPlaceholder')}">${state.ratingJustification}</textarea>
                 <p id="justification-error" class="text-sm text-red-600 mt-1"></p> </div>
         </div>
         
@@ -1599,7 +1713,7 @@ function renderQuestionScreen(staircase) {
     const displayDiscount = isCatchTrial ? 100 : staircase.currentDiscount;
 
     const basePriceFormatted = formatCurrency(staircase.price, staircase.currency);
-    const productNameAndPrice = `${staircase.name} com o custo de ${basePriceFormatted}`;
+    const productNameAndPrice = `${t(staircase.name)} ${t('withCost')} ${basePriceFormatted}`;
     
     const monetaryDiscount = staircase.price * (displayDiscount / 100);
     const monetaryCashbackGuaranteed = staircase.price * (0.5 / 100); 
@@ -1634,16 +1748,16 @@ function renderQuestionScreen(staircase) {
     
     // Opção A: Cashback Investido
     const optionADescription = `
-        Até <strong class="${uniformValueClass}">${formatPercent(100)}%</strong> 
+        ${t('upTo')} <strong class="${uniformValueClass}">${formatPercent(100)}%</strong> 
         (<strong class="${uniformValueClass}">${formattedCashbackMax}</strong>) 
-        de cashback, com a <strong class="${uniformValueClass}">garantia de 0,5%</strong> 
+        ${t('ofCashback')}, ${t('with')} <strong class="${uniformValueClass}">${t('cashbackGuarantee')}</strong> 
         (<strong class="${uniformValueClass}">${formattedCashbackGuaranteed}</strong>) 
-        do valor da compra e com <strong class="${uniformValueClass}">resgate a qualquer momento</strong> durante os 6 meses.
+        ${t('cashbackGuaranteeAmount')} <strong class="${uniformValueClass}">${t('cashbackFlexibility')}</strong> ${t('during6Months')}.
     `;
 
     // Opção B: Desconto Imediato
     const optionBDescription = `
-        Desconto imediato de 
+        ${t('immediateDiscount')} 
         <strong class="${uniformValueClass}">${displayDiscountFormatted}%</strong> 
         (<strong class="${uniformValueClass}">${formattedDiscount}</strong>).
     `;

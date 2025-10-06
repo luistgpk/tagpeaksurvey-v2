@@ -1,7 +1,7 @@
 // --- VARIÁVEIS DE CONFIGURAÇÃO (Supabase) ---
-// Environment variables are loaded automatically in Vercel
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || window.location.origin;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+// Environment variables are injected by Vercel at build time
+const supabaseUrl = 'VERCEL_SUPABASE_URL_PLACEHOLDER';
+const supabaseAnonKey = 'VERCEL_SUPABASE_ANON_KEY_PLACEHOLDER';
 
 // --- ESTADO DA APLICAÇÃO ---
 let userId = 'initializing...'; // Inicialização

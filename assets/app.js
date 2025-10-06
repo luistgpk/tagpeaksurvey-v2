@@ -87,7 +87,65 @@ const translations = {
         gender: "Género",
         education: "Nível de Escolaridade (Consoante Portugal)",
         selectOption: "Selecione...",
-        submit: "Concluir e Submeter Dados"
+        submit: "Concluir e Submeter Dados",
+        
+        // Quiz Questions
+        quizQ1: "Qual é o valor mínimo de cashback que tem garantido em qualquer compra neste novo modelo?",
+        quizQ1A1: "100%",
+        quizQ1A2: "0,5%",
+        quizQ1A3: "5%",
+        quizQ2: "Qual é o retorno máximo que pode atingir com o valor investido do seu cashback?",
+        quizQ2A1: "O dobro do valor da compra.",
+        quizQ2A2: "100% do valor da compra.",
+        quizQ2A3: "50% do valor da compra.",
+        quizQ3: "Por quanto tempo o valor do cashback fica investido e qual a flexibilidade de levantamento?",
+        quizQ3A1: "Fica investido por 6 meses e não pode ser levantado antes.",
+        quizQ3A2: "Fica investido por 12 meses, mas pode levantar a qualquer momento.",
+        quizQ3A3: "Fica investido por 6 meses e pode ser levantado a qualquer momento (mesmo após os 6 meses)",
+        
+        // Demographics Questions
+        demoQ1: "Costuma fazer pesquisa de preço antes de realizar sua compra?",
+        demoQ2: "Prefere realizar compras presencialmente ou online?",
+        demoQ3: "Sobre a sua experiência com benefícios:",
+        demoQ3_1: "Alguma vez já utilizaste cashback tradicional?",
+        demoQ3_2: "Como classifica a sua experiência?",
+        demoQ3_2_justification: "Justifique brevemente o por que de classificar sua experiencia desta forma?",
+        demoQ4: "Idade",
+        demoQ5: "Género",
+        demoQ6: "Nível de Escolaridade (Consoante Portugal)",
+        demoQ7: "Tem o hábito de investir em mercados financeiros ou considera-se familiarizado(a) com este tópico?",
+        demoQ8: "Qual o beneficio que mais o atrai na hora de realizar sua compra?",
+        demoQ9: "Fuma habitualmente?",
+        demoQ10: "Costuma fazer apostas (ex: lotaria, jogos de casino, apostas desportivas)?",
+        demoQ11: "Qual é o seu rendimento mensal líquido (após impostos)? Por favor, selecione a faixa que melhor representa o seu rendimento médio mensal.",
+        
+        // Options
+        yes: "Sim",
+        no: "Não",
+        online: "Online",
+        presencial: "Presencial",
+        feminino: "Feminino",
+        masculino: "Masculino",
+        outro: "Outro",
+        preferNotSay: "Prefiro não dizer",
+        ensinoBasico: "Ensino Básico (até 9.º ano)",
+        ensinoSecundario: "Ensino Secundário (12.º ano / Profissional)",
+        licenciatura: "Licenciatura",
+        mestrado: "Mestrado / Pós-graduação",
+        doutoramento: "Doutoramento",
+        desconto: "Desconto",
+        cashback: "Cashback",
+        nenhumDosDois: "Nenhum dos dois",
+        menos1000: "Menos de €1.000",
+        entre1000_1499: "Entre €1.000 e €1.499",
+        entre1500_2499: "Entre €1.500 e €2.499",
+        entre2500_3499: "Entre €2.500 e €3.499",
+        mais3500: "€3.500 ou mais",
+        preferNotRespond: "Prefiro não responder",
+        
+        // Likert Scale
+        muitoNegativa: "1 - Muito Negativa",
+        muitoPositiva: "5 - Muito Positiva"
     },
     
     en: {
@@ -167,7 +225,65 @@ const translations = {
         gender: "Gender",
         education: "Education Level",
         selectOption: "Select...",
-        submit: "Complete and Submit Data"
+        submit: "Complete and Submit Data",
+        
+        // Quiz Questions
+        quizQ1: "What is the minimum cashback value guaranteed in any purchase in this new model?",
+        quizQ1A1: "100%",
+        quizQ1A2: "0.5%",
+        quizQ1A3: "5%",
+        quizQ2: "What is the maximum return you can achieve with your invested cashback value?",
+        quizQ2A1: "Double the purchase value.",
+        quizQ2A2: "100% of the purchase value.",
+        quizQ2A3: "50% of the purchase value.",
+        quizQ3: "For how long is the cashback value invested and what is the withdrawal flexibility?",
+        quizQ3A1: "It stays invested for 6 months and cannot be withdrawn before.",
+        quizQ3A2: "It stays invested for 12 months, but can be withdrawn at any time.",
+        quizQ3A3: "It stays invested for 6 months and can be withdrawn at any time (even after 6 months)",
+        
+        // Demographics Questions
+        demoQ1: "Do you usually research prices before making your purchase?",
+        demoQ2: "Do you prefer to shop in person or online?",
+        demoQ3: "About your experience with benefits:",
+        demoQ3_1: "Have you ever used traditional cashback?",
+        demoQ3_2: "How do you rate your experience?",
+        demoQ3_2_justification: "Briefly justify why you rate your experience this way?",
+        demoQ4: "Age",
+        demoQ5: "Gender",
+        demoQ6: "Education Level",
+        demoQ7: "Do you have the habit of investing in financial markets or consider yourself familiar with this topic?",
+        demoQ8: "What benefit attracts you most when making your purchase?",
+        demoQ9: "Do you smoke regularly?",
+        demoQ10: "Do you usually place bets (e.g., lottery, casino games, sports betting)?",
+        demoQ11: "What is your net monthly income (after taxes)? Please select the range that best represents your average monthly income.",
+        
+        // Options
+        yes: "Yes",
+        no: "No",
+        online: "Online",
+        presencial: "In Person",
+        feminino: "Female",
+        masculino: "Male",
+        outro: "Other",
+        preferNotSay: "Prefer not to say",
+        ensinoBasico: "Basic Education (up to 9th grade)",
+        ensinoSecundario: "Secondary Education (12th grade / Professional)",
+        licenciatura: "Bachelor's Degree",
+        mestrado: "Master's / Postgraduate",
+        doutoramento: "Doctorate",
+        desconto: "Discount",
+        cashback: "Cashback",
+        nenhumDosDois: "Neither",
+        menos1000: "Less than €1,000",
+        entre1000_1499: "Between €1,000 and €1,499",
+        entre1500_2499: "Between €1,500 and €2,499",
+        entre2500_3499: "Between €2,500 and €3,499",
+        mais3500: "€3,500 or more",
+        preferNotRespond: "Prefer not to respond",
+        
+        // Likert Scale
+        muitoNegativa: "1 - Very Negative",
+        muitoPositiva: "5 - Very Positive"
     },
     
     es: {
@@ -247,7 +363,65 @@ const translations = {
         gender: "Género",
         education: "Nivel de Escolaridad",
         selectOption: "Seleccionar...",
-        submit: "Completar y Enviar Datos"
+        submit: "Completar y Enviar Datos",
+        
+        // Quiz Questions
+        quizQ1: "¿Cuál es el valor mínimo de cashback garantizado en cualquier compra en este nuevo modelo?",
+        quizQ1A1: "100%",
+        quizQ1A2: "0,5%",
+        quizQ1A3: "5%",
+        quizQ2: "¿Cuál es el retorno máximo que puedes alcanzar con el valor invertido de tu cashback?",
+        quizQ2A1: "El doble del valor de la compra.",
+        quizQ2A2: "100% del valor de la compra.",
+        quizQ2A3: "50% del valor de la compra.",
+        quizQ3: "¿Por cuánto tiempo se mantiene invertido el valor del cashback y cuál es la flexibilidad de retiro?",
+        quizQ3A1: "Se mantiene invertido por 6 meses y no se puede retirar antes.",
+        quizQ3A2: "Se mantiene invertido por 12 meses, pero se puede retirar en cualquier momento.",
+        quizQ3A3: "Se mantiene invertido por 6 meses y se puede retirar en cualquier momento (incluso después de los 6 meses)",
+        
+        // Demographics Questions
+        demoQ1: "¿Sueles investigar precios antes de realizar tu compra?",
+        demoQ2: "¿Prefieres realizar compras presencialmente u online?",
+        demoQ3: "Sobre tu experiencia con beneficios:",
+        demoQ3_1: "¿Alguna vez has utilizado cashback tradicional?",
+        demoQ3_2: "¿Cómo calificas tu experiencia?",
+        demoQ3_2_justification: "Justifica brevemente por qué calificas tu experiencia de esta manera?",
+        demoQ4: "Edad",
+        demoQ5: "Género",
+        demoQ6: "Nivel de Escolaridad",
+        demoQ7: "¿Tienes el hábito de invertir en mercados financieros o te consideras familiarizado(a) con este tema?",
+        demoQ8: "¿Qué beneficio te atrae más a la hora de realizar tu compra?",
+        demoQ9: "¿Fumas habitualmente?",
+        demoQ10: "¿Sueles hacer apuestas (ej: lotería, juegos de casino, apuestas deportivas)?",
+        demoQ11: "¿Cuál es tu ingreso mensual neto (después de impuestos)? Por favor, selecciona el rango que mejor represente tu ingreso mensual promedio.",
+        
+        // Options
+        yes: "Sí",
+        no: "No",
+        online: "Online",
+        presencial: "Presencial",
+        feminino: "Femenino",
+        masculino: "Masculino",
+        outro: "Otro",
+        preferNotSay: "Prefiero no decir",
+        ensinoBasico: "Educación Básica (hasta 9º grado)",
+        ensinoSecundario: "Educación Secundaria (12º grado / Profesional)",
+        licenciatura: "Licenciatura",
+        mestrado: "Maestría / Posgrado",
+        doutoramento: "Doctorado",
+        desconto: "Descuento",
+        cashback: "Cashback",
+        nenhumDosDois: "Ninguno de los dos",
+        menos1000: "Menos de €1.000",
+        entre1000_1499: "Entre €1.000 y €1.499",
+        entre1500_2499: "Entre €1.500 y €2.499",
+        entre2500_3499: "Entre €2.500 y €3.499",
+        mais3500: "€3.500 o más",
+        preferNotRespond: "Prefiero no responder",
+        
+        // Likert Scale
+        muitoNegativa: "1 - Muy Negativa",
+        muitoPositiva: "5 - Muy Positiva"
     }
 };
 
@@ -315,28 +489,27 @@ const config = {
     },
     verificationQuestions: [
         {
-            question: "Qual é o valor mínimo de cashback que tem garantido em qualquer compra neste novo modelo?",
+            question: "quizQ1",
             options: [
-                { text: "100%", isCorrect: false },
-                { text: "0,5%", isCorrect: true },
-                { text: "5%", isCorrect: false }
+                { text: "quizQ1A1", isCorrect: false },
+                { text: "quizQ1A2", isCorrect: true },
+                { text: "quizQ1A3", isCorrect: false }
             ]
         },
         {
-            question: "Qual é o retorno máximo que pode atingir com o valor investido do seu cashback?",
+            question: "quizQ2",
             options: [
-                { text: "O dobro do valor da compra.", isCorrect: false },
-                { text: "100% do valor da compra.", isCorrect: true },
-                { text: "50% do valor da compra.", isCorrect: false }
+                { text: "quizQ2A1", isCorrect: false },
+                { text: "quizQ2A2", isCorrect: true },
+                { text: "quizQ2A3", isCorrect: false }
             ]
         },
         {
-            question: "Por quanto tempo o valor do cashback fica investido e qual a flexibilidade de levantamento?",
+            question: "quizQ3",
             options: [
-                { text: "Fica investido por 6 meses e não pode ser levantado antes.", isCorrect: false },
-                { text: "Fica investido por 12 meses, mas pode levantar a qualquer momento.", isCorrect: false },
-                // ALTERAÇÃO SOLICITADA: Nova Opção Correta
-                { text: "Fica investido por 6 meses e pode ser levantado a qualquer momento (mesmo após os 6 meses)", isCorrect: true }
+                { text: "quizQ3A1", isCorrect: false },
+                { text: "quizQ3A2", isCorrect: false },
+                { text: "quizQ3A3", isCorrect: true }
             ]
         }
     ]
@@ -1168,32 +1341,32 @@ function renderTraditionalQuizContent() {
 
     return `
         <div id="question-group-3-1" class="p-4 border border-gray-200 rounded-lg">
-            <p class="font-semibold mb-3 text-gray-800">3.1. Alguma vez já utilizaste <strong>cashback tradicional</strong>?</p>
+            <p class="font-semibold mb-3 text-gray-800">3.1. ${t('demoQ3_1')}</p>
             <div class="grid grid-cols-2 gap-4">
                 <div data-question-id="usedTraditionalCashback" data-answer="Sim" class="option-card traditional-quiz-option text-center ${state.usedTraditionalCashback === 'Sim' ? 'selected accent-blue-border' : ''}" onclick="selectTraditionalQuizAnswer('usedTraditionalCashback', 'Sim')">
-                    <span class="text-lg font-medium">Sim</span>
+                    <span class="text-lg font-medium">${t('yes')}</span>
                 </div>
                 <div data-question-id="usedTraditionalCashback" data-answer="Não" class="option-card traditional-quiz-option text-center ${state.usedTraditionalCashback === 'Não' ? 'selected accent-blue-border' : ''}" onclick="selectTraditionalQuizAnswer('usedTraditionalCashback', 'Não')">
-                    <span class="text-lg font-medium">Não</span>
+                    <span class="text-lg font-medium">${t('no')}</span>
                 </div>
             </div>
         </div>
         
         <div id="question-group-2" class="p-4 border border-gray-200 rounded-lg mt-4" style="display: ${q2InitialStyle};">
-            <p class="font-semibold mb-3 text-gray-800">3.2. Como classifica a sua experiência?</p>
+            <p class="font-semibold mb-3 text-gray-800">3.2. ${t('demoQ3_2')}</p>
             
             <div class="grid grid-cols-5 gap-2 mb-2">
                 ${likertGrid}
             </div>
             
             <div class="flex justify-between text-sm text-gray-600 mt-1">
-                <span class="text-red-600 font-semibold">1 - Muito Negativa</span>
-                <span class="text-green-600 font-semibold">5 - Muito Positiva</span>
+                <span class="text-red-600 font-semibold">${t('muitoNegativa')}</span>
+                <span class="text-green-600 font-semibold">${t('muitoPositiva')}</span>
             </div>
 
              <div id="justification-group" class="mt-4" style="display: none;">
                 <label id="justification-label" for="rating-justification" class="block text-sm font-medium text-gray-700 mb-1">
-                    Justificação (opcional):
+                    ${t('demoQ3_2_justification')}
                 </label>
                 <textarea id="rating-justification" rows="3" 
                     class="w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
@@ -1377,7 +1550,7 @@ function renderQuizQuestions() {
         const qElement = document.createElement('div');
         qElement.id = `question-${qIndex}`;
         qElement.className = "mb-4 p-4 border border-gray-200 rounded-lg";
-        qElement.innerHTML = `<p class="font-semibold mb-3 text-gray-800">Q${qIndex + 1}: ${q.question}</p>`;
+        qElement.innerHTML = `<p class="font-semibold mb-3 text-gray-800">Q${qIndex + 1}: ${t(q.question)}</p>`;
 
         q.options.forEach((opt, optIndex) => {
             const optElement = document.createElement('div');
@@ -1385,7 +1558,7 @@ function renderQuizQuestions() {
             // Usa a função global `selectQuizAnswer`
             optElement.onclick = () => selectQuizAnswer(qIndex, optIndex); 
             
-            optElement.innerHTML = `<label class="cursor-pointer block text-gray-700">${opt.text}</label>`;
+            optElement.innerHTML = `<label class="cursor-pointer block text-gray-700">${t(opt.text)}</label>`;
             qElement.appendChild(optElement);
         });
         quizContent.appendChild(qElement);
@@ -1517,161 +1690,161 @@ function renderDemographicsScreen() {
             <form id="demographics-form" onsubmit="handleDemographicsSubmit(event)" class="space-y-6">
                 
                 <div id="question-group-new-1" class="p-4 border border-gray-200 rounded-lg">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">1. Costuma fazer pesquisa de preço antes de realizar sua compra?</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">1. ${t('demoQ1')}</label>
                     <div class="grid grid-cols-2 gap-4">
                         <div data-question-id="priceResearch" data-answer="Sim" class="option-card text-center ${state.priceResearch === 'Sim' ? 'selected accent-blue-border' : ''}" onclick="selectTraditionalQuizAnswer('priceResearch', 'Sim')">
-                            <span class="text-lg font-medium">Sim</span>
+                            <span class="text-lg font-medium">${t('yes')}</span>
                         </div>
                         <div data-question-id="priceResearch" data-answer="Não" class="option-card text-center ${state.priceResearch === 'Não' ? 'selected accent-blue-border' : ''}" onclick="selectTraditionalQuizAnswer('priceResearch', 'Não')">
-                            <span class="text-lg font-medium">Não</span>
+                            <span class="text-lg font-medium">${t('no')}</span>
                         </div>
                     </div>
                 </div>
 
                 <div id="question-group-new-2" class="p-4 border border-gray-200 rounded-lg">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">2. Prefere realizar compras presencialmente ou online?</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">2. ${t('demoQ2')}</label>
                     <div class="grid grid-cols-2 gap-4">
                         <div data-question-id="purchasePreference" data-answer="Online" class="option-card text-center ${state.purchasePreference === 'Online' ? 'selected accent-blue-border' : ''}" onclick="selectTraditionalQuizAnswer('purchasePreference', 'Online')">
-                            <span class="text-lg font-medium">Online</span>
+                            <span class="text-lg font-medium">${t('online')}</span>
                         </div>
                         <div data-question-id="purchasePreference" data-answer="Presencial" class="option-card text-center ${state.purchasePreference === 'Presencial' ? 'selected accent-blue-border' : ''}" onclick="selectTraditionalQuizAnswer('purchasePreference', 'Presencial')">
-                            <span class="text-lg font-medium">Presencial</span>
+                            <span class="text-lg font-medium">${t('presencial')}</span>
                         </div>
                     </div>
                 </div>
 
                 <div id="question-group-moved-3" class="mt-6">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">3. Sobre a sua experiência com benefícios:</h3>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">3. ${t('demoQ3')}</h3>
                     ${traditionalQuizContentHTML}
                 </div>
                 
                 <hr class="my-6 border-t border-gray-200">
 
                 <div>
-                    <label for="age" class="block text-sm font-medium text-gray-700 mb-1">4. ${t('age')}</label>
+                    <label for="age" class="block text-sm font-medium text-gray-700 mb-1">4. ${t('demoQ4')}</label>
                     <input type="number" id="age" name="age" min="18" max="100" required class="w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">5. ${t('gender')}</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">5. ${t('demoQ5')}</label>
                     <div class="flex flex-wrap gap-4">
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="gender" value="Feminino" required class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Feminino</span>
+                            <span>${t('feminino')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="gender" value="Masculino" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Masculino</span>
+                            <span>${t('masculino')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="gender" value="Outro" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Outro</span>
+                            <span>${t('outro')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="gender" value="Prefiro nao dizer" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Prefiro não dizer</span>
+                            <span>${t('preferNotSay')}</span>
                         </label>
                     </div>
                 </div>
 
                 <div>
-                    <label for="education" class="block text-sm font-medium text-gray-700 mb-1">6. ${t('education')}</label>
+                    <label for="education" class="block text-sm font-medium text-gray-700 mb-1">6. ${t('demoQ6')}</label>
                     <select id="education" name="education" required class="w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="">${t('selectOption')}</option>
-                        <option value="Ensino Básico">Ensino Básico (até 9.º ano)</option>
-                        <option value="Ensino Secundário">Ensino Secundário (12.º ano / Profissional)</option>
-                        <option value="Licenciatura">Licenciatura</option>
-                        <option value="Mestrado/Pos-graduacao">Mestrado / Pós-graduação</option>
-                        <option value="Doutoramento">Doutoramento</option>
+                        <option value="Ensino Básico">${t('ensinoBasico')}</option>
+                        <option value="Ensino Secundário">${t('ensinoSecundario')}</option>
+                        <option value="Licenciatura">${t('licenciatura')}</option>
+                        <option value="Mestrado/Pos-graduacao">${t('mestrado')}</option>
+                        <option value="Doutoramento">${t('doutoramento')}</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">7. Tem o hábito de investir em mercados financeiros ou considera-se familiarizado(a) com este tópico?</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">7. ${t('demoQ7')}</label>
                     <div class="flex flex-wrap gap-4">
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="invests" value="Sim" required class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Sim</span>
+                            <span>${t('yes')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="invests" value="Nao" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Não</span>
+                            <span>${t('no')}</span>
                         </label>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">8. Qual o beneficio que mais o atrai na hora de realizar sua compra?</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">8. ${t('demoQ8')}</label>
                     <div class="flex flex-wrap gap-4">
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="habit" value="Desconto" required class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Desconto</span>
+                            <span>${t('desconto')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="habit" value="Cashback" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Cashback</span>
+                            <span>${t('cashback')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="habit" value="Nenhum dos dois" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Nenhum dos dois</span>
+                            <span>${t('nenhumDosDois')}</span>
                         </label>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">9. Fuma habitualmente?</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">9. ${t('demoQ9')}</label>
                     <div class="flex flex-wrap gap-4">
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="smokes" value="Sim" required class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Sim</span>
+                            <span>${t('yes')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="smokes" value="Nao" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Não</span>
+                            <span>${t('no')}</span>
                         </label>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">10. Costuma fazer apostas (ex: lotaria, jogos de casino, apostas desportivas)?</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">10. ${t('demoQ10')}</label>
                     <div class="flex flex-wrap gap-4">
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="gambles" value="Sim" required class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Sim</span>
+                            <span>${t('yes')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="gambles" value="Nao" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Não</span>
+                            <span>${t('no')}</span>
                         </label>
                     </div>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">11. Qual é o seu rendimento mensal líquido (após impostos)? Por favor, selecione a faixa que melhor representa o seu rendimento médio mensal.</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">11. ${t('demoQ11')}</label>
                     <div class="flex flex-col space-y-2">
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="monthly_income" value="Menos de €1.000" required class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Menos de €1.000</span>
+                            <span>${t('menos1000')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="monthly_income" value="Entre €1.000 e €1.499" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Entre €1.000 e €1.499</span>
+                            <span>${t('entre1000_1499')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="monthly_income" value="Entre €1.500 e €2.499" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Entre €1.500 e €2.499</span>
+                            <span>${t('entre1500_2499')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="monthly_income" value="Entre €2.500 e €3.499" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Entre €2.500 e €3.499</span>
+                            <span>${t('entre2500_3499')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="monthly_income" value="€3.500 ou mais" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>€3.500 ou mais</span>
+                            <span>${t('mais3500')}</span>
                         </label>
                         <label class="flex items-center space-x-2">
                             <input type="radio" name="monthly_income" value="Prefiro não responder" class="text-indigo-600 focus:ring-indigo-500">
-                            <span>Prefiro não responder</span>
+                            <span>${t('preferNotRespond')}</span>
                         </label>
                     </div>
                 </div>

@@ -49,14 +49,14 @@ const config = {
     priceLevels: [
         { id: 'low', name: 'uma T-shirt', price: 40, currency: '€' },
         { id: 'medium', name: 'uma Mesa', price: 250, currency: '€' },
-        { id: 'high', name: 'um Notebook', price: 1000, currency: '€' }
+        { id: 'high', name: 'um Computador', price: 1000, currency: '€' }
     ],
     staircase: {
         // Pontos de partida possíveis: 5% (baixo), 15% (médio), 25% (alto)
-        startDiscounts: [5, 15, 25], 
+        startDiscounts: [10, 25, 40], 
         // *** ALTERAÇÃO SOLICITADA: stepSizes mudado para [16, 8, 4, 2, 1, 0.5] ***
         // O array tem 6 elementos. A 5ª reversão (reversals=5) vai pegar o índice 5 (0.5).
-        stepSizes: [16, 8, 4, 2, 1, 0.5], 
+        stepSizes: [32, 16, 8, 4, 2, 1], 
         reversalsToEnd: 6,
         // **ATUALIZADO:** 1 Catch Trial por produto.
         ctPerStaircase: 1, 

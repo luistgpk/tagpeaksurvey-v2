@@ -1,0 +1,17 @@
+name: Daily Survey Report
+on:
+  schedule:
+    - cron: '0 9 * * *' # 9 AM UTC daily
+  workflow_dispatch:
+
+jobs:
+  send-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Daily Report
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json" \
+            ${{ secrets.SUPABASE_URL }}/functions/v1/cron-daily-report
+

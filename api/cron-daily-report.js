@@ -14,13 +14,16 @@ export default async function handler(req, res) {
     const analystEmail = process.env.ANALYST_EMAIL;
     const fromEmail = process.env.FROM_EMAIL || 'noreply@yourdomain.com';
     
+    // Support multiple recipients (comma-separated)
+    const recipientEmails = analystEmail.split(',').map(email => email.trim()).filter(email => email);
+    
     if (!supabaseUrl || !serviceKey) {
       return res.status(500).json({ 
         error: 'Missing Supabase configuration' 
       });
     }
 
-    if (!resendApiKey || !analystEmail) {
+    if (!resendApiKey || recipientEmails.length === 0) {
       return res.status(500).json({ 
         error: 'Missing email configuration (RESEND_API_KEY, ANALYST_EMAIL)' 
       });
@@ -54,7 +57,7 @@ export default async function handler(req, res) {
 
     // If no data for today, send a notification
     if (staircaseData.length === 0 && demographicsData.length === 0) {
-      await sendEmail(resendApiKey, fromEmail, analystEmail, today, 0, 0, null);
+      await sendEmail(resendApiKey, fromEmail, recipientEmails, today, 0, 0, null);
       
       return res.status(200).json({
         success: true,
@@ -65,8 +68,8 @@ export default async function handler(req, res) {
     // Create Excel data
     const excelData = createExcelData(staircaseData, demographicsData);
     
-    // Send email with Excel attachment
-    await sendEmail(resendApiKey, fromEmail, analystEmail, today, staircaseData.length, demographicsData.length, excelData);
+    // Send email with CSV attachment
+    await sendEmail(resendApiKey, fromEmail, recipientEmails, today, staircaseData.length, demographicsData.length, excelData);
 
     return res.status(200).json({
       success: true,
@@ -116,10 +119,10 @@ function createExcelData(staircaseData, demographicsData) {
 }
 
 // Helper function to send email
-async function sendEmail(resendApiKey, fromEmail, analystEmail, today, staircaseCount, demographicsCount, excelData) {
+async function sendEmail(resendApiKey, fromEmail, recipientEmails, today, staircaseCount, demographicsCount, excelData) {
   const emailData = {
     from: `Survey System <${fromEmail}>`,
-    to: [analystEmail],
+    to: recipientEmails,
     subject: `Daily Survey Report - ${today} (${staircaseCount + demographicsCount} responses)`,
     html: `
       <h2>Daily Survey Report - ${today}</h2>
@@ -133,16 +136,16 @@ async function sendEmail(resendApiKey, fromEmail, analystEmail, today, staircase
     `
   };
 
-  // Add Excel attachment if data exists
+  // Add CSV attachment if data exists
   if (excelData) {
-    const excelBuffer = createExcelBuffer(excelData);
-    const excelBase64 = Buffer.from(excelBuffer).toString('base64');
+    const csvBuffer = createExcelBuffer(excelData);
+    const csvBase64 = Buffer.from(csvBuffer).toString('base64');
     
     emailData.attachments = [
       {
-        filename: `survey-data-${today}.xlsx`,
-        content: excelBase64,
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        filename: `survey-data-${today}.csv`,
+        content: csvBase64,
+        type: 'text/csv'
       }
     ];
   }
@@ -164,9 +167,9 @@ async function sendEmail(resendApiKey, fromEmail, analystEmail, today, staircase
   return await response.json();
 }
 
-// Helper function to create Excel buffer (simplified version)
+// Helper function to create Excel buffer (proper CSV format)
 function createExcelBuffer(data) {
-  // This is a simplified CSV export - for full Excel support, you'd need a library like 'xlsx'
+  // Create a proper CSV file instead of fake Excel
   const csvContent = Object.keys(data).map(sheetName => {
     const sheetData = data[sheetName];
     if (sheetData.length === 0) return '';
@@ -174,7 +177,12 @@ function createExcelBuffer(data) {
     const headers = Object.keys(sheetData[0]);
     const csvRows = [
       headers.join(','),
-      ...sheetData.map(row => headers.map(header => `"${row[header] || ''}"`).join(','))
+      ...sheetData.map(row => headers.map(header => {
+        const value = row[header] || '';
+        // Escape quotes and wrap in quotes if contains comma, quote, or newline
+        const escaped = String(value).replace(/"/g, '""');
+        return /[",\n\r]/.test(escaped) ? `"${escaped}"` : escaped;
+      }).join(','))
     ];
     
     return `\n=== ${sheetName} ===\n${csvRows.join('\n')}\n`;

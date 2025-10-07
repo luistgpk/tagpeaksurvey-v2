@@ -47,11 +47,10 @@ This guide will help you set up automatic daily email reports with Excel attachm
 
 1. Go to your Supabase dashboard
 2. Navigate to **Settings** → **Edge Functions**
-3. Add these environment variables:
+3. Add these environment variables (note: Supabase blocks variables starting with "SUPABASE_"):
 
 ```
-SUPABASE_URL=your_supabase_url
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+SERVICE_ROLE_KEY=your_service_role_key
 RESEND_API_KEY=re_your_resend_key_here
 ANALYST_EMAIL=analyst@yourcompany.com
 FROM_EMAIL=noreply@yourdomain.com
@@ -87,8 +86,26 @@ jobs:
 ```
 
 #### **Option B: Vercel Cron Jobs**
-Add to your `vercel.json`:
+1. Create `api/cron-daily-report.js`:
+```javascript
+export default async function handler(req, res) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  const response = await fetch(`${supabaseUrl}/functions/v1/cron-daily-report`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${serviceKey}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  
+  const result = await response.json();
+  return res.status(200).json(result);
+}
+```
 
+2. Add to your `vercel.json`:
 ```json
 {
   "crons": [

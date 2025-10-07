@@ -1,10 +1,16 @@
+# Vercel Environment Variables
+# Add these to your Vercel project settings
+
 # Supabase Configuration
-SUPABASE_URL=your_supabase_url_here
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+SERVICE_ROLE_KEY=your_service_role_key_here
 
-# Email Configuration
-RESEND_API_KEY=your_resend_api_key_here
+# Email Configuration (Resend)
+RESEND_API_KEY=re_your_resend_api_key_here
 ANALYST_EMAIL=analyst@example.com
-
-# Optional: Custom email settings
 FROM_EMAIL=noreply@yourdomain.com
+
+# For GitHub Actions secrets (use these in GitHub repo settings):
+# SUPABASE_URL=https://your-project-ref.supabase.co
+# SERVICE_ROLE_KEY=your_service_role_key_here

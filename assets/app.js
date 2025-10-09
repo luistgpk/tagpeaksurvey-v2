@@ -103,6 +103,16 @@ const translations = {
         quizQ3A2: "Fica investido por 12 meses, mas pode levantar a qualquer momento.",
         quizQ3A3: "Fica investido por 6 meses e pode ser levantado a qualquer momento (mesmo após os 6 meses)",
         
+        // Quiz Feedback
+        quizCorrect: "✅ Correto!",
+        quizIncorrect: "❌ Incorreto. Tente novamente.",
+        quizQ1Correct: "Exato! O cashback tem uma garantia mínima de 0,5% do valor da compra.",
+        quizQ1Incorrect: "Não é correto. O texto menciona que o cashback nunca será inferior a 0,5%.",
+        quizQ2Correct: "Perfeito! O cashback pode chegar até 100% do valor da compra inicial.",
+        quizQ2Incorrect: "Incorreto. O texto indica que o cashback pode chegar a 100% do valor da compra.",
+        quizQ3Correct: "Correto! O cashback fica investido por 6 meses e pode ser resgatado a qualquer momento.",
+        quizQ3Incorrect: "Não é a resposta correta. O texto menciona que pode ser resgatado a qualquer momento durante os 6 meses.",
+        
         // Demographics Questions
         demoQ1: "Costuma fazer pesquisa de preço antes de realizar sua compra?",
         demoQ2: "Prefere realizar compras presencialmente ou online?",
@@ -207,7 +217,10 @@ const translations = {
         // Language names
         portuguese: "Português",
         english: "English",
-        spanish: "Español"
+        spanish: "Español",
+        
+        // Discount indicator
+        discountUpdated: "Desconto atualizado"
     },
     
     en: {
@@ -302,6 +315,16 @@ const translations = {
         quizQ3A1: "It stays invested for 6 months and cannot be withdrawn before.",
         quizQ3A2: "It stays invested for 12 months, but can be withdrawn at any time.",
         quizQ3A3: "It stays invested for 6 months and can be withdrawn at any time (even after 6 months)",
+        
+        // Quiz Feedback
+        quizCorrect: "✅ Correct!",
+        quizIncorrect: "❌ Incorrect. Please try again.",
+        quizQ1Correct: "Exactly! The cashback has a minimum guarantee of 0.5% of the purchase value.",
+        quizQ1Incorrect: "Not correct. The text mentions that cashback will never be less than 0.5%.",
+        quizQ2Correct: "Perfect! The cashback can reach up to 100% of the initial purchase value.",
+        quizQ2Incorrect: "Incorrect. The text indicates that cashback can reach 100% of the purchase value.",
+        quizQ3Correct: "Correct! The cashback stays invested for 6 months and can be withdrawn at any time.",
+        quizQ3Incorrect: "Not the correct answer. The text mentions it can be withdrawn at any time during the 6 months.",
         
         // Demographics Questions
         demoQ1: "Do you usually research prices before making your purchase?",
@@ -407,7 +430,10 @@ const translations = {
         // Language names
         portuguese: "Portuguese",
         english: "English",
-        spanish: "Spanish"
+        spanish: "Spanish",
+        
+        // Discount indicator
+        discountUpdated: "Discount updated"
     },
     
     es: {
@@ -502,6 +528,16 @@ const translations = {
         quizQ3A1: "Se mantiene invertido por 6 meses y no se puede retirar antes.",
         quizQ3A2: "Se mantiene invertido por 12 meses, pero se puede retirar en cualquier momento.",
         quizQ3A3: "Se mantiene invertido por 6 meses y se puede retirar en cualquier momento (incluso después de los 6 meses)",
+        
+        // Quiz Feedback
+        quizCorrect: "✅ ¡Correcto!",
+        quizIncorrect: "❌ Incorrecto. Inténtalo de nuevo.",
+        quizQ1Correct: "¡Exacto! El cashback tiene una garantía mínima del 0,5% del valor de la compra.",
+        quizQ1Incorrect: "No es correcto. El texto menciona que el cashback nunca será inferior al 0,5%.",
+        quizQ2Correct: "¡Perfecto! El cashback puede llegar hasta el 100% del valor de la compra inicial.",
+        quizQ2Incorrect: "Incorrecto. El texto indica que el cashback puede llegar al 100% del valor de la compra.",
+        quizQ3Correct: "¡Correcto! El cashback se mantiene invertido por 6 meses y se puede retirar en cualquier momento.",
+        quizQ3Incorrect: "No es la respuesta correcta. El texto menciona que se puede retirar en cualquier momento durante los 6 meses.",
         
         // Demographics Questions
         demoQ1: "¿Sueles investigar precios antes de realizar tu compra?",
@@ -607,7 +643,10 @@ const translations = {
         // Language names
         portuguese: "Portugués",
         english: "Inglés",
-        spanish: "Español"
+        spanish: "Español",
+        
+        // Discount indicator
+        discountUpdated: "Descuento actualizado"
     }
 };
 
@@ -760,7 +799,9 @@ async function saveResultsToSupabase(indifferencePoints, demographicsData) {
                 usedTraditionalCashback: state.usedTraditionalCashback,
                 experienceRating: state.experienceRating,
                 ratingJustification: state.ratingJustification, 
-            }
+            },
+            // QUIZ RESULTS FOR CONCEPT UNDERSTANDING
+            conceptQuiz: state.quizResults || null
         };
 
         // Envia dados para a API Vercel
@@ -1063,6 +1104,8 @@ window.handleStaircaseChoice = (choice) => {
     const stepIndex = Math.min(staircase.reversals, config.staircase.stepSizes.length - 1);
     const stepSize = config.staircase.stepSizes[stepIndex];
     
+    const previousDiscount = staircase.currentDiscount;
+    
     if (choice === 'discount') { // Escolheu desconto, precisa de um desconto menor para voltar ao cashback.
         staircase.currentDiscount -= stepSize;
     } else { // Escolheu cashback, precisa de um desconto maior para trocar para o desconto.
@@ -1076,6 +1119,11 @@ window.handleStaircaseChoice = (choice) => {
         staircase.currentDiscount = 100;
     }
     
+    // Show discount change indicator if discount actually changed
+    if (previousDiscount !== staircase.currentDiscount) {
+        showDiscountChangeIndicator();
+    }
+    
     // Transição de 500ms (ver a seleção) + (fade out/in)
     setTimeout(() => runNextStaircase(), 500);
 }
@@ -1087,21 +1135,86 @@ function selectQuizAnswer(qIndex, optIndex) {
     const optionsContainer = document.getElementById(`question-${qIndex}`);
     const optionCards = optionsContainer.querySelectorAll('.quiz-option');
     
+    // Remove existing feedback if any
+    const existingFeedback = optionsContainer.querySelector('.quiz-feedback');
+    if (existingFeedback) {
+        existingFeedback.remove();
+    }
+    
     optionCards.forEach((card, index) => {
+        // Remove all previous styling
+        card.classList.remove('selected', 'accent-blue-border', 'correct-answer', 'incorrect-answer');
+        
         // Adiciona ou remove a classe 'selected'
         if (index === optIndex) {
             card.classList.add('selected');
             // Garante que a borda de seleção seja azul (indigo) no quiz
             card.classList.add('accent-blue-border'); 
-        } else {
-            card.classList.remove('selected');
-            card.classList.remove('accent-blue-border');
         }
     });
+    
+    // Check if answer is correct and provide immediate feedback
+    const question = config.verificationQuestions[qIndex];
+    const isCorrect = question.options[optIndex]?.isCorrect;
+    
+    // Add visual feedback to the selected option
+    const selectedCard = optionCards[optIndex];
+    if (isCorrect) {
+        selectedCard.classList.add('correct-answer');
+    } else {
+        selectedCard.classList.add('incorrect-answer');
+    }
+    
+    // Create feedback element
+    const feedbackElement = document.createElement('div');
+    feedbackElement.className = 'quiz-feedback mt-3 p-3 rounded-lg';
+    
+    if (isCorrect) {
+        feedbackElement.className += ' bg-green-100 border border-green-300 text-green-800';
+        feedbackElement.innerHTML = `
+            <div class="font-semibold">${t('quizCorrect')}</div>
+            <div class="text-sm mt-1">${t(`quizQ${qIndex + 1}Correct`)}</div>
+        `;
+    } else {
+        feedbackElement.className += ' bg-red-100 border border-red-300 text-red-800';
+        feedbackElement.innerHTML = `
+            <div class="font-semibold">${t('quizIncorrect')}</div>
+            <div class="text-sm mt-1">${t(`quizQ${qIndex + 1}Incorrect`)}</div>
+        `;
+    }
+    
+    optionsContainer.appendChild(feedbackElement);
     
     updateQuizSubmitButton();
 }
 window.selectQuizAnswer = selectQuizAnswer; // Torna a função global
+
+// Function to show discount change indicator
+function showDiscountChangeIndicator() {
+    const indicator = document.getElementById('discount-indicator');
+    if (indicator) {
+        indicator.style.display = 'block';
+        indicator.style.opacity = '0';
+        indicator.style.transform = 'translateY(-10px)';
+        
+        // Animate in
+        setTimeout(() => {
+            indicator.style.transition = 'all 0.3s ease';
+            indicator.style.opacity = '1';
+            indicator.style.transform = 'translateY(0)';
+        }, 10);
+        
+        // Hide after 2 seconds
+        setTimeout(() => {
+            indicator.style.transition = 'all 0.3s ease';
+            indicator.style.opacity = '0';
+            indicator.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                indicator.style.display = 'none';
+            }, 300);
+        }, 2000);
+    }
+}
 
 // FUNÇÃO UNIFICADA PARA SELECIONAR RESPOSTAS DO QUIZ TRADICIONAL / NOVAS PERGUNTAS DE DEMOGRAFIA
 window.selectTraditionalQuizAnswer = (questionId, answer) => {
@@ -1196,6 +1309,17 @@ function submitQuiz() {
     });
 
     if (allCorrect) {
+        // Save quiz answers to state for database storage
+        state.quizResults = {
+            answers: state.quizAnswers.map((selectedOptIndex, qIndex) => ({
+                questionIndex: qIndex,
+                selectedOption: selectedOptIndex,
+                isCorrect: config.verificationQuestions[qIndex].options[selectedOptIndex]?.isCorrect
+            })),
+            allCorrect: true,
+            completedAt: new Date().toISOString()
+        };
+        
         quizMessage.className = 'text-center text-green-600 font-medium mb-4';
         quizMessage.innerHTML = `<strong>${t('congratulations')}</strong> ${t('quizSuccess')}`;
         document.getElementById('submit-quiz-btn').disabled = true;
@@ -1222,8 +1346,8 @@ function calculateIndifferencePoints() {
         // ***** GARANTIA DE EXCLUSÃO 3/3: Usa APENAS a array 'reversalPoints', que só contém
         // dados de trials normais (não Catch) que resultaram em reversão. *****
         
-        // Utiliza a média dos últimos 4 pontos de reversão
-        const relevantReversals = staircase.reversalPoints.slice(-4); 
+        // Utiliza a média dos últimos 3 pontos de reversão
+        const relevantReversals = staircase.reversalPoints.slice(-3); 
         let indifferencePoint = 0;
 
         if (relevantReversals.length > 0) {
@@ -1830,8 +1954,8 @@ function renderQuestionScreen(staircase) {
     // Opção B: Desconto Imediato
     const optionBDescription = `
         ${t('immediateDiscount')} 
-        <strong class="${uniformValueClass}">${displayDiscountFormatted}%</strong> 
-        (<strong class="${uniformValueClass}">${formattedDiscount}</strong>).
+        <strong class="${uniformValueClass} discount-value">${displayDiscountFormatted}%</strong> 
+        (<strong class="${uniformValueClass} discount-amount">${formattedDiscount}</strong>).
     `;
 
 
@@ -1840,6 +1964,14 @@ function renderQuestionScreen(staircase) {
             <div class="text-center mb-6">
                 <p class="progress-indicator inline-block" id="progress-indicator">${t('productProgress', {current: state.currentStaircaseIndex + 1, total: config.priceLevels.length})}</p>
                 <h2 class="text-2xl font-bold text-gray-800 mt-2">${t('imagineBuying', {product: `<span id="product-full-name" class="${accentClass} font-extrabold">${productNameAndPrice}</span>`})}</h2>
+                <div class="discount-change-indicator mt-2 text-sm text-gray-500" id="discount-indicator" style="display: none;">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        ${t('discountUpdated')}
+                    </span>
+                </div>
             </div>
 
             <div class="product-image-container">

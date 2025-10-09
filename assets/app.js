@@ -882,7 +882,13 @@ function renderScreen(screenName, data = {}) {
                 contentArea.innerHTML = renderInstructionReminderScreen();
                 break;
             case 'staircase':
-                contentArea.innerHTML = renderQuestionScreen(data.staircase); 
+                contentArea.innerHTML = renderQuestionScreen(data.staircase);
+                // Trigger discount animation if needed
+                setTimeout(() => {
+                    if (state.previousDiscount !== undefined && state.newDiscount !== undefined) {
+                        animateDiscountTransition();
+                    }
+                }, 100);
                 break;
             case 'demographics': // Ecrã alterado para ser o segundo no fluxo. (REQUISITO 1)
                 contentArea.innerHTML = renderDemographicsScreen();
@@ -1110,9 +1116,10 @@ window.handleStaircaseChoice = (choice) => {
         staircase.currentDiscount = 100;
     }
     
-    // Show discount change indicator if discount actually changed
+    // Store the previous discount for animation on next screen
     if (previousDiscount !== staircase.currentDiscount) {
-        showDiscountChangeIndicator();
+        state.previousDiscount = previousDiscount;
+        state.newDiscount = staircase.currentDiscount;
     }
     
     // Transição de 500ms (ver a seleção) + (fade out/in)
@@ -1180,33 +1187,43 @@ function selectQuizAnswer(qIndex, optIndex) {
 }
 window.selectQuizAnswer = selectQuizAnswer; // Torna a função global
 
-// Function to show discount change with rotating number animation
-function showDiscountChangeIndicator() {
+// Function to animate discount transition from old to new value
+function animateDiscountTransition() {
     const percentageElement = document.getElementById('discount-percentage');
     const amountElement = document.getElementById('discount-amount');
     
-    // Add a delay before starting the animation to make it more evident
-    setTimeout(() => {
-        if (percentageElement) {
-            // Add rotating class to trigger animation
-            percentageElement.classList.add('rotating');
-            
-            // Remove the class after animation completes
-            setTimeout(() => {
-                percentageElement.classList.remove('rotating');
-            }, 1200);
-        }
+    if (percentageElement && amountElement) {
+        // Add rotating class to trigger animation
+        percentageElement.classList.add('rotating');
+        amountElement.classList.add('rotating');
         
-        if (amountElement) {
-            // Add rotating class to trigger animation
-            amountElement.classList.add('rotating');
+        // Update the values during the animation
+        setTimeout(() => {
+            const newPercentage = percentageElement.dataset.newValue;
+            const newAmount = amountElement.dataset.newAmount;
             
-            // Remove the class after animation completes
-            setTimeout(() => {
-                amountElement.classList.remove('rotating');
-            }, 1200);
-        }
-    }, 300); // 300ms delay before animation starts
+            if (newPercentage && newAmount) {
+                percentageElement.textContent = newPercentage;
+                amountElement.textContent = newAmount;
+            }
+        }, 600); // Update values at the midpoint of rotation
+        
+        // Remove the class after animation completes
+        setTimeout(() => {
+            percentageElement.classList.remove('rotating');
+            amountElement.classList.remove('rotating');
+            
+            // Clear the stored values
+            state.previousDiscount = undefined;
+            state.newDiscount = undefined;
+        }, 1200);
+    }
+}
+
+// Function to show discount change with rotating number animation (legacy)
+function showDiscountChangeIndicator() {
+    // This function is now handled by animateDiscountTransition
+    // but kept for compatibility
 }
 
 // FUNÇÃO UNIFICADA PARA SELECIONAR RESPOSTAS DO QUIZ TRADICIONAL / NOVAS PERGUNTAS DE DEMOGRAFIA
@@ -1900,10 +1917,18 @@ function renderQuestionScreen(staircase) {
     // Usa a flag de Catch Trial do estado global para determinar o desconto a exibir
     const isCatchTrial = state.isCurrentTrialCatch;
     const displayDiscount = isCatchTrial ? 100 : staircase.currentDiscount;
+    
+    // Check if we need to show transition from old to new discount
+    const shouldAnimateDiscount = state.previousDiscount !== undefined && 
+                                 state.newDiscount !== undefined && 
+                                 state.previousDiscount !== state.newDiscount &&
+                                 !isCatchTrial;
 
     const basePriceFormatted = formatCurrency(staircase.price, staircase.currency);
     const productNameAndPrice = `${t(staircase.name)} ${t('withCost')} ${basePriceFormatted}`;
     
+    // Calculate discount values - use previous discount initially if animating
+    const initialDiscount = shouldAnimateDiscount ? state.previousDiscount : displayDiscount;
     const monetaryDiscount = staircase.price * (displayDiscount / 100);
     const monetaryCashbackGuaranteed = staircase.price * (0.5 / 100); 
     const monetaryCashbackMax = staircase.price * (100 / 100); 
@@ -1934,6 +1959,7 @@ function renderQuestionScreen(staircase) {
         return fixedValue;
     };
     const displayDiscountFormatted = formatPercent(displayDiscount);
+    const initialDiscountFormatted = formatPercent(initialDiscount);
     
     // Opção A: Cashback Investido
     const optionADescription = `
@@ -1947,8 +1973,8 @@ function renderQuestionScreen(staircase) {
     // Opção B: Desconto Imediato
     const optionBDescription = `
         ${t('immediateDiscount')} 
-        <strong class="${uniformValueClass} discount-value" id="discount-percentage">${displayDiscountFormatted}%</strong> 
-        (<strong class="${uniformValueClass} discount-amount" id="discount-amount">${formattedDiscount}</strong>).
+        <strong class="${uniformValueClass} discount-value" id="discount-percentage" data-old-value="${initialDiscountFormatted}%" data-new-value="${displayDiscountFormatted}%">${initialDiscountFormatted}%</strong> 
+        (<strong class="${uniformValueClass} discount-amount" id="discount-amount" data-old-amount="${formatCurrency(staircase.price * (initialDiscount / 100), staircase.currency)}" data-new-amount="${formattedDiscount}">${formatCurrency(staircase.price * (initialDiscount / 100), staircase.currency)}</strong>).
     `;
 
 

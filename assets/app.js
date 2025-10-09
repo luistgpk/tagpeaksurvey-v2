@@ -107,7 +107,7 @@ const translations = {
         quizCorrect: "✅ Correto!",
         quizIncorrect: "❌ Incorreto. Tente novamente.",
         quizQ1Correct: "Exato! O cashback tem uma garantia mínima de 0,5% do valor da compra, independentemente do desempenho dos investimentos.",
-        quizQ1Incorrect: "Não é correto. O texto menciona que o cashback nunca será inferior a 0,5%, garantindo um retorno mínimo mesmo se os investimentos não performarem bem.",
+        quizQ1Incorrect: "Não é correto. O texto menciona que o cashback nunca será inferior a 0,5%, garantindo um retorno mínimo mesmo se os investimentos não correrem bem.",
         quizQ2Correct: "Perfeito! O cashback pode chegar até 100% do valor da compra inicial, dependendo do sucesso dos investimentos em empresas de alto potencial.",
         quizQ2Incorrect: "Incorreto. O texto indica que o cashback pode chegar a 100% do valor da compra através dos investimentos em empresas listadas nos mercados de ações.",
         quizQ3Correct: "Correto! O cashback fica investido por 6 meses em empresas de alto potencial e pode ser resgatado a qualquer momento desde o primeiro dia.",
@@ -212,7 +212,7 @@ const translations = {
         testimonial2Name: "Raquel, 28 anos", 
         testimonial2Location: "Porto",
         testimonial3Name: "Miguel, 34 anos",
-        testimonial3Location: "Braga",
+        testimonial3Location: "Madrid",
         
         // Language names
         portuguese: "Português",
@@ -417,12 +417,12 @@ const translations = {
         errorScreenNotFound: "Error: Screen not found.",
         
         // Testimonial names and locations
-        testimonial1Name: "John, 32 years old",
+        testimonial1Name: "João, 32 years old",
         testimonial1Location: "Lisbon",
-        testimonial2Name: "Rachel, 28 years old",
+        testimonial2Name: "Raquel, 28 years old",
         testimonial2Location: "Porto", 
-        testimonial3Name: "Michael, 34 years old",
-        testimonial3Location: "Braga",
+        testimonial3Name: "Miguel, 34 years old",
+        testimonial3Location: "Madrid",
         
         // Language names
         portuguese: "Portuguese",
@@ -627,12 +627,12 @@ const translations = {
         errorScreenNotFound: "Error: Pantalla no encontrada.",
         
         // Testimonial names and locations
-        testimonial1Name: "Juan, 32 años",
+        testimonial1Name: "João, 32 años",
         testimonial1Location: "Lisboa",
         testimonial2Name: "Raquel, 28 años",
         testimonial2Location: "Oporto",
         testimonial3Name: "Miguel, 34 años", 
-        testimonial3Location: "Braga",
+        testimonial3Location: "Madrid",
         
         // Language names
         portuguese: "Portugués",
@@ -1185,25 +1185,28 @@ function showDiscountChangeIndicator() {
     const percentageElement = document.getElementById('discount-percentage');
     const amountElement = document.getElementById('discount-amount');
     
-    if (percentageElement) {
-        // Add rotating class to trigger animation
-        percentageElement.classList.add('rotating');
+    // Add a delay before starting the animation to make it more evident
+    setTimeout(() => {
+        if (percentageElement) {
+            // Add rotating class to trigger animation
+            percentageElement.classList.add('rotating');
+            
+            // Remove the class after animation completes
+            setTimeout(() => {
+                percentageElement.classList.remove('rotating');
+            }, 1200);
+        }
         
-        // Remove the class after animation completes
-        setTimeout(() => {
-            percentageElement.classList.remove('rotating');
-        }, 800);
-    }
-    
-    if (amountElement) {
-        // Add rotating class to trigger animation
-        amountElement.classList.add('rotating');
-        
-        // Remove the class after animation completes
-        setTimeout(() => {
-            amountElement.classList.remove('rotating');
-        }, 800);
-    }
+        if (amountElement) {
+            // Add rotating class to trigger animation
+            amountElement.classList.add('rotating');
+            
+            // Remove the class after animation completes
+            setTimeout(() => {
+                amountElement.classList.remove('rotating');
+            }, 1200);
+        }
+    }, 300); // 300ms delay before animation starts
 }
 
 // FUNÇÃO UNIFICADA PARA SELECIONAR RESPOSTAS DO QUIZ TRADICIONAL / NOVAS PERGUNTAS DE DEMOGRAFIA

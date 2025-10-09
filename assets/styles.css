@@ -151,25 +151,42 @@ body {
     position: relative;
     display: inline-block;
     transition: all 0.3s ease;
+    perspective: 1000px;
 }
 
 .discount-value.rotating, .discount-amount.rotating {
-    animation: numberRotation 0.8s ease-in-out;
+    animation: clockRotation 1.2s ease-in-out;
 }
 
-@keyframes numberRotation {
+@keyframes clockRotation {
     0% { 
-        transform: rotateX(0deg);
+        transform: rotateY(0deg);
         opacity: 1;
+    }
+    25% { 
+        transform: rotateY(90deg);
+        opacity: 0.2;
     }
     50% { 
-        transform: rotateX(90deg);
-        opacity: 0.3;
+        transform: rotateY(180deg);
+        opacity: 0.1;
+    }
+    75% { 
+        transform: rotateY(270deg);
+        opacity: 0.2;
     }
     100% { 
-        transform: rotateX(0deg);
+        transform: rotateY(360deg);
         opacity: 1;
     }
+}
+
+/* Enhanced visual feedback during rotation */
+.discount-value.rotating, .discount-amount.rotating {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+    border-radius: 6px;
+    padding: 2px 8px;
+    box-shadow: 0 0 10px rgba(79, 70, 229, 0.3);
 }
 
 .product-low-border-selected { 

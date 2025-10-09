@@ -38,8 +38,8 @@ const translations = {
         // Explanation Screen
         explanationTitle: "NOVO MODELO DE CASHBACK CHEGA AO MERCADO",
         explanationText1: "O novo benefício tem como missão oferecer aos consumidores um cashback elevado, que pode chegar a 100% do valor da compra inicial, sem custos ou riscos adicionais.",
-        explanationText2: "A cada compra realizada, a marca financia um investimento feito por especialistas nos mercados financeiros. Os resultados desses investimentos determinam o crescimento do cashback, que nunca será inferior a 0,5%.",
-        explanationText3: "Os usuários podem acompanhar todo o processo em tempo real durante os 6 meses em que o investimento está ativo e realizar o resgate a qualquer momento.",
+        explanationText2: "A cada compra realizada, a marca financia um investimento em empresas de alto potencial listadas nos mercados de ações, escolhidas por especialistas em investimentos. Os resultados desses investimentos determinam o crescimento do cashback, que nunca será inferior a 0,5%.",
+        explanationText3: "Os usuários podem acompanhar todo o processo em tempo real durante os 6 meses em que o investimento está ativo e realizar o resgate a qualquer momento desde o primeiro dia.",
         proceed: "Para prosseguir, clique em 'Avançar'.",
         
         // Testimonials
@@ -106,12 +106,12 @@ const translations = {
         // Quiz Feedback
         quizCorrect: "✅ Correto!",
         quizIncorrect: "❌ Incorreto. Tente novamente.",
-        quizQ1Correct: "Exato! O cashback tem uma garantia mínima de 0,5% do valor da compra.",
-        quizQ1Incorrect: "Não é correto. O texto menciona que o cashback nunca será inferior a 0,5%.",
-        quizQ2Correct: "Perfeito! O cashback pode chegar até 100% do valor da compra inicial.",
-        quizQ2Incorrect: "Incorreto. O texto indica que o cashback pode chegar a 100% do valor da compra.",
-        quizQ3Correct: "Correto! O cashback fica investido por 6 meses e pode ser resgatado a qualquer momento.",
-        quizQ3Incorrect: "Não é a resposta correta. O texto menciona que pode ser resgatado a qualquer momento durante os 6 meses.",
+        quizQ1Correct: "Exato! O cashback tem uma garantia mínima de 0,5% do valor da compra, independentemente do desempenho dos investimentos.",
+        quizQ1Incorrect: "Não é correto. O texto menciona que o cashback nunca será inferior a 0,5%, garantindo um retorno mínimo mesmo se os investimentos não performarem bem.",
+        quizQ2Correct: "Perfeito! O cashback pode chegar até 100% do valor da compra inicial, dependendo do sucesso dos investimentos em empresas de alto potencial.",
+        quizQ2Incorrect: "Incorreto. O texto indica que o cashback pode chegar a 100% do valor da compra através dos investimentos em empresas listadas nos mercados de ações.",
+        quizQ3Correct: "Correto! O cashback fica investido por 6 meses em empresas de alto potencial e pode ser resgatado a qualquer momento desde o primeiro dia.",
+        quizQ3Incorrect: "Não é a resposta correta. O texto menciona que pode ser resgatado a qualquer momento desde o primeiro dia, durante os 6 meses de investimento.",
         
         // Demographics Questions
         demoQ1: "Costuma fazer pesquisa de preço antes de realizar sua compra?",
@@ -217,10 +217,7 @@ const translations = {
         // Language names
         portuguese: "Português",
         english: "English",
-        spanish: "Español",
-        
-        // Discount indicator
-        discountUpdated: "Desconto atualizado"
+        spanish: "Español"
     },
     
     en: {
@@ -251,8 +248,8 @@ const translations = {
         // Explanation Screen
         explanationTitle: "NEW CASHBACK MODEL ARRIVES IN THE MARKET",
         explanationText1: "The new benefit aims to offer consumers high cashback, which can reach 100% of the initial purchase value, without additional costs or risks.",
-        explanationText2: "With each purchase made, the brand finances an investment made by financial market specialists. The results of these investments determine cashback growth, which will never be less than 0.5%.",
-        explanationText3: "Users can follow the entire process in real time during the 6 months that the investment is active and withdraw at any time.",
+        explanationText2: "With each purchase made, the brand finances an investment in high-potential companies listed on stock markets, chosen by investment specialists. The results of these investments determine cashback growth, which will never be less than 0.5%.",
+        explanationText3: "Users can follow the entire process in real time during the 6 months that the investment is active and withdraw at any time from day 1.",
         proceed: "To proceed, click 'Next'.",
         
         // Testimonials
@@ -319,12 +316,12 @@ const translations = {
         // Quiz Feedback
         quizCorrect: "✅ Correct!",
         quizIncorrect: "❌ Incorrect. Please try again.",
-        quizQ1Correct: "Exactly! The cashback has a minimum guarantee of 0.5% of the purchase value.",
-        quizQ1Incorrect: "Not correct. The text mentions that cashback will never be less than 0.5%.",
-        quizQ2Correct: "Perfect! The cashback can reach up to 100% of the initial purchase value.",
-        quizQ2Incorrect: "Incorrect. The text indicates that cashback can reach 100% of the purchase value.",
-        quizQ3Correct: "Correct! The cashback stays invested for 6 months and can be withdrawn at any time.",
-        quizQ3Incorrect: "Not the correct answer. The text mentions it can be withdrawn at any time during the 6 months.",
+        quizQ1Correct: "Exactly! The cashback has a minimum guarantee of 0.5% of the purchase value, regardless of investment performance.",
+        quizQ1Incorrect: "Not correct. The text mentions that cashback will never be less than 0.5%, ensuring a minimum return even if the investments don't perform well.",
+        quizQ2Correct: "Perfect! The cashback can reach up to 100% of the initial purchase value, depending on the success of investments in high-potential companies.",
+        quizQ2Incorrect: "Incorrect. The text indicates that cashback can reach 100% of the purchase value through investments in companies listed on stock markets.",
+        quizQ3Correct: "Correct! The cashback stays invested for 6 months in high-potential companies and can be withdrawn at any time from day 1.",
+        quizQ3Incorrect: "Not the correct answer. The text mentions it can be withdrawn at any time from day 1, during the 6 months of investment.",
         
         // Demographics Questions
         demoQ1: "Do you usually research prices before making your purchase?",
@@ -430,10 +427,7 @@ const translations = {
         // Language names
         portuguese: "Portuguese",
         english: "English",
-        spanish: "Spanish",
-        
-        // Discount indicator
-        discountUpdated: "Discount updated"
+        spanish: "Spanish"
     },
     
     es: {
@@ -464,8 +458,8 @@ const translations = {
         // Explanation Screen
         explanationTitle: "NUEVO MODELO DE CASHBACK LLEGA AL MERCADO",
         explanationText1: "El nuevo beneficio tiene como misión ofrecer a los consumidores un cashback elevado, que puede llegar al 100% del valor de la compra inicial, sin costos o riesgos adicionales.",
-        explanationText2: "Con cada compra realizada, la marca financia una inversión realizada por especialistas en los mercados financieros. Los resultados de estas inversiones determinan el crecimiento del cashback, que nunca será inferior al 0,5%.",
-        explanationText3: "Los usuarios pueden seguir todo el proceso en tiempo real durante los 6 meses en que la inversión está activa y realizar el rescate en cualquier momento.",
+        explanationText2: "Con cada compra realizada, la marca financia una inversión en empresas de alto potencial listadas en los mercados de valores, elegidas por especialistas en inversiones. Los resultados de estas inversiones determinan el crecimiento del cashback, que nunca será inferior al 0,5%.",
+        explanationText3: "Los usuarios pueden seguir todo el proceso en tiempo real durante los 6 meses en que la inversión está activa y realizar el rescate en cualquier momento desde el primer día.",
         proceed: "Para proceder, haz clic en 'Siguiente'.",
         
         // Testimonials
@@ -532,12 +526,12 @@ const translations = {
         // Quiz Feedback
         quizCorrect: "✅ ¡Correcto!",
         quizIncorrect: "❌ Incorrecto. Inténtalo de nuevo.",
-        quizQ1Correct: "¡Exacto! El cashback tiene una garantía mínima del 0,5% del valor de la compra.",
-        quizQ1Incorrect: "No es correcto. El texto menciona que el cashback nunca será inferior al 0,5%.",
-        quizQ2Correct: "¡Perfecto! El cashback puede llegar hasta el 100% del valor de la compra inicial.",
-        quizQ2Incorrect: "Incorrecto. El texto indica que el cashback puede llegar al 100% del valor de la compra.",
-        quizQ3Correct: "¡Correcto! El cashback se mantiene invertido por 6 meses y se puede retirar en cualquier momento.",
-        quizQ3Incorrect: "No es la respuesta correcta. El texto menciona que se puede retirar en cualquier momento durante los 6 meses.",
+        quizQ1Correct: "¡Exacto! El cashback tiene una garantía mínima del 0,5% del valor de la compra, independientemente del rendimiento de las inversiones.",
+        quizQ1Incorrect: "No es correcto. El texto menciona que el cashback nunca será inferior al 0,5%, garantizando un retorno mínimo incluso si las inversiones no rinden bien.",
+        quizQ2Correct: "¡Perfecto! El cashback puede llegar hasta el 100% del valor de la compra inicial, dependiendo del éxito de las inversiones en empresas de alto potencial.",
+        quizQ2Incorrect: "Incorrecto. El texto indica que el cashback puede llegar al 100% del valor de la compra a través de inversiones en empresas listadas en los mercados de valores.",
+        quizQ3Correct: "¡Correcto! El cashback se mantiene invertido por 6 meses en empresas de alto potencial y se puede retirar en cualquier momento desde el primer día.",
+        quizQ3Incorrect: "No es la respuesta correcta. El texto menciona que se puede retirar en cualquier momento desde el primer día, durante los 6 meses de inversión.",
         
         // Demographics Questions
         demoQ1: "¿Sueles investigar precios antes de realizar tu compra?",
@@ -643,10 +637,7 @@ const translations = {
         // Language names
         portuguese: "Portugués",
         english: "Inglés",
-        spanish: "Español",
-        
-        // Discount indicator
-        discountUpdated: "Descuento actualizado"
+        spanish: "Español"
     }
 };
 
@@ -1189,30 +1180,29 @@ function selectQuizAnswer(qIndex, optIndex) {
 }
 window.selectQuizAnswer = selectQuizAnswer; // Torna a função global
 
-// Function to show discount change indicator
+// Function to show discount change with rotating number animation
 function showDiscountChangeIndicator() {
-    const indicator = document.getElementById('discount-indicator');
-    if (indicator) {
-        indicator.style.display = 'block';
-        indicator.style.opacity = '0';
-        indicator.style.transform = 'translateY(-10px)';
+    const percentageElement = document.getElementById('discount-percentage');
+    const amountElement = document.getElementById('discount-amount');
+    
+    if (percentageElement) {
+        // Add rotating class to trigger animation
+        percentageElement.classList.add('rotating');
         
-        // Animate in
+        // Remove the class after animation completes
         setTimeout(() => {
-            indicator.style.transition = 'all 0.3s ease';
-            indicator.style.opacity = '1';
-            indicator.style.transform = 'translateY(0)';
-        }, 10);
+            percentageElement.classList.remove('rotating');
+        }, 800);
+    }
+    
+    if (amountElement) {
+        // Add rotating class to trigger animation
+        amountElement.classList.add('rotating');
         
-        // Hide after 2 seconds
+        // Remove the class after animation completes
         setTimeout(() => {
-            indicator.style.transition = 'all 0.3s ease';
-            indicator.style.opacity = '0';
-            indicator.style.transform = 'translateY(-10px)';
-            setTimeout(() => {
-                indicator.style.display = 'none';
-            }, 300);
-        }, 2000);
+            amountElement.classList.remove('rotating');
+        }, 800);
     }
 }
 
@@ -1954,8 +1944,8 @@ function renderQuestionScreen(staircase) {
     // Opção B: Desconto Imediato
     const optionBDescription = `
         ${t('immediateDiscount')} 
-        <strong class="${uniformValueClass} discount-value">${displayDiscountFormatted}%</strong> 
-        (<strong class="${uniformValueClass} discount-amount">${formattedDiscount}</strong>).
+        <strong class="${uniformValueClass} discount-value" id="discount-percentage">${displayDiscountFormatted}%</strong> 
+        (<strong class="${uniformValueClass} discount-amount" id="discount-amount">${formattedDiscount}</strong>).
     `;
 
 
@@ -1964,14 +1954,6 @@ function renderQuestionScreen(staircase) {
             <div class="text-center mb-6">
                 <p class="progress-indicator inline-block" id="progress-indicator">${t('productProgress', {current: state.currentStaircaseIndex + 1, total: config.priceLevels.length})}</p>
                 <h2 class="text-2xl font-bold text-gray-800 mt-2">${t('imagineBuying', {product: `<span id="product-full-name" class="${accentClass} font-extrabold">${productNameAndPrice}</span>`})}</h2>
-                <div class="discount-change-indicator mt-2 text-sm text-gray-500" id="discount-indicator" style="display: none;">
-                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                        </svg>
-                        ${t('discountUpdated')}
-                    </span>
-                </div>
             </div>
 
             <div class="product-image-container">

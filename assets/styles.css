@@ -146,37 +146,29 @@ body {
     font-weight: 600;
 }
 
-/* === DISCOUNT VALUE INDICATORS === */
+/* === DISCOUNT VALUE ANIMATION === */
 .discount-value, .discount-amount {
     position: relative;
-    transition: all 0.3s ease;
     display: inline-block;
+    transition: all 0.3s ease;
 }
 
-.discount-value {
-    background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
-    padding: 2px 6px;
-    border-radius: 4px;
-    border: 1px solid rgba(79, 70, 229, 0.2);
-    animation: subtlePulse 2s ease-in-out infinite;
+.discount-value.rotating, .discount-amount.rotating {
+    animation: numberRotation 0.8s ease-in-out;
 }
 
-.discount-amount {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%);
-    padding: 2px 6px;
-    border-radius: 4px;
-    border: 1px solid rgba(245, 158, 11, 0.2);
-    animation: subtlePulse 2s ease-in-out infinite;
-}
-
-@keyframes subtlePulse {
-    0%, 100% { 
-        transform: scale(1);
+@keyframes numberRotation {
+    0% { 
+        transform: rotateX(0deg);
         opacity: 1;
     }
     50% { 
-        transform: scale(1.02);
-        opacity: 0.9;
+        transform: rotateX(90deg);
+        opacity: 0.3;
+    }
+    100% { 
+        transform: rotateX(0deg);
+        opacity: 1;
     }
 }
 

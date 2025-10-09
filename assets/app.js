@@ -114,20 +114,20 @@ const translations = {
         quizQ3Incorrect: "Não é a resposta correta. O texto menciona que pode ser resgatado a qualquer momento desde o primeiro dia, durante os 6 meses de investimento.",
         
         // Demographics Questions
-        demoQ1: "Costuma fazer pesquisa de preço antes de realizar sua compra?",
-        demoQ2: "Prefere realizar compras presencialmente ou online?",
+        demoQ1: "Costuma fazer pesquisa de preços extensiva antes de realizar uma compra?",
+        demoQ2: "Prefere fazer compras presencialmente ou online?",
         demoQ3: "Sobre a sua experiência com benefícios:",
-        demoQ3_1: "Alguma vez já utilizaste cashback tradicional?",
+        demoQ3_1: "Alguma vez já utilizou cashback tradicional?",
         demoQ3_2: "Como classifica a sua experiência?",
-        demoQ3_2_justification: "Justifique brevemente o por que de classificar sua experiencia desta forma?",
+        demoQ3_2_justification: "Justifique brevemente o porquê de classificar sua experiencia desta forma?",
         demoQ4: "Idade",
         demoQ5: "Género",
-        demoQ6: "Nível de Escolaridade (Consoante Portugal)",
+        demoQ6: "Nível de Escolaridade",
         demoQ7: "Tem o hábito de investir em mercados financeiros ou considera-se familiarizado(a) com este tópico?",
-        demoQ8: "Qual o beneficio que mais o atrai na hora de realizar sua compra?",
-        demoQ9: "Fuma habitualmente?",
+        demoQ8: "Qual o benefício que mais atrai na hora de fazer uma compra?",
+        demoQ9: "Costuma fumar habitualmente?",
         demoQ10: "Costuma fazer apostas (ex: lotaria, jogos de casino, apostas desportivas)?",
-        demoQ11: "Qual é o seu rendimento mensal líquido (após impostos)? Por favor, selecione a faixa que melhor representa o seu rendimento médio mensal.",
+        demoQ11: "Qual é o seu rendimento mensal líquido? Por favor, selecione a faixa que melhor representa o seu rendimento médio mensal.",
         
         // Options
         yes: "Sim",
@@ -324,7 +324,7 @@ const translations = {
         quizQ3Incorrect: "Not the correct answer. The text mentions it can be withdrawn at any time from day 1, during the 6 months of investment.",
         
         // Demographics Questions
-        demoQ1: "Do you usually research prices before making your purchase?",
+        demoQ1: "Do you usually do extensive price research before making a purchase?",
         demoQ2: "Do you prefer to shop in person or online?",
         demoQ3: "About your experience with benefits:",
         demoQ3_1: "Have you ever used traditional cashback?",
@@ -334,10 +334,10 @@ const translations = {
         demoQ5: "Gender",
         demoQ6: "Education Level",
         demoQ7: "Do you have the habit of investing in financial markets or consider yourself familiar with this topic?",
-        demoQ8: "What benefit attracts you most when making your purchase?",
+        demoQ8: "What benefit attracts you most when making a purchase?",
         demoQ9: "Do you smoke regularly?",
         demoQ10: "Do you usually place bets (e.g., lottery, casino games, sports betting)?",
-        demoQ11: "What is your net monthly income (after taxes)? Please select the range that best represents your average monthly income.",
+        demoQ11: "What is your net monthly income? Please select the range that best represents your average monthly income.",
         
         // Options
         yes: "Yes",
@@ -534,8 +534,8 @@ const translations = {
         quizQ3Incorrect: "No es la respuesta correcta. El texto menciona que se puede retirar en cualquier momento desde el primer día, durante los 6 meses de inversión.",
         
         // Demographics Questions
-        demoQ1: "¿Sueles investigar precios antes de realizar tu compra?",
-        demoQ2: "¿Prefieres realizar compras presencialmente u online?",
+        demoQ1: "¿Sueles hacer investigación extensiva de precios antes de realizar una compra?",
+        demoQ2: "¿Prefieres hacer compras presencialmente u online?",
         demoQ3: "Sobre tu experiencia con beneficios:",
         demoQ3_1: "¿Alguna vez has utilizado cashback tradicional?",
         demoQ3_2: "¿Cómo calificas tu experiencia?",
@@ -544,10 +544,10 @@ const translations = {
         demoQ5: "Género",
         demoQ6: "Nivel de Escolaridad",
         demoQ7: "¿Tienes el hábito de invertir en mercados financieros o te consideras familiarizado(a) con este tema?",
-        demoQ8: "¿Qué beneficio te atrae más a la hora de realizar tu compra?",
-        demoQ9: "¿Fumas habitualmente?",
+        demoQ8: "¿Qué beneficio te atrae más a la hora de hacer una compra?",
+        demoQ9: "¿Sueles fumar habitualmente?",
         demoQ10: "¿Sueles hacer apuestas (ej: lotería, juegos de casino, apuestas deportivas)?",
-        demoQ11: "¿Cuál es tu ingreso mensual neto (después de impuestos)? Por favor, selecciona el rango que mejor represente tu ingreso mensual promedio.",
+        demoQ11: "¿Cuál es tu ingreso mensual neto? Por favor, selecciona el rango que mejor represente tu ingreso mensual promedio.",
         
         // Options
         yes: "Sí",

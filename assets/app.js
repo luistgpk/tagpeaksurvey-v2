@@ -37,9 +37,9 @@ const translations = {
         
         // Explanation Screen
         explanationTitle: "NOVO MODELO DE CASHBACK CHEGA AO MERCADO",
-        explanationText1: "O novo benefício tem como missão oferecer aos consumidores um cashback elevado, que pode chegar a 100% do valor da compra inicial, sem custos ou riscos adicionais.",
-        explanationText2: "A cada compra realizada, a marca financia um investimento em empresas de alto potencial listadas nos mercados de ações, escolhidas por especialistas em investimentos. Os resultados desses investimentos determinam o crescimento do cashback, que nunca será inferior a 0,5%.",
-        explanationText3: "Os usuários podem acompanhar todo o processo em tempo real durante os 6 meses em que o investimento está ativo e realizar o resgate a qualquer momento desde o primeiro dia.",
+        explanationText1: "O novo benefício tem como missão oferecer aos consumidores um cashback elevado, que pode chegar a até 100% do valor da compra inicial, sem custo adicional.",
+        explanationText2: "A cada compra realizada, a marca financia um investimento em empresas cotadas em bolsa, escolhidas por especialistas em mercados financeiros. Os resultados desses investimentos determinam o valor do cashback, que nunca será inferior a 0,5%.",
+        explanationText3: "Os utilizadores podem acompanhar todo o processo em tempo real durante os 6 meses em que o investimento está ativo e realizar o resgate a qualquer momento desde o primeiro dia.",
         proceed: "Para prosseguir, clique em 'Avançar'.",
         
         // Testimonials

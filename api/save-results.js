@@ -50,7 +50,10 @@ export default async function handler(req, res) {
                 timestamp: new Date().toISOString(),
                 indifference_points: resultsData.indifferencePoints,
                 raw_history: resultsData.rawHistory,
-                experience_quiz: resultsData.experienceQuiz
+                experience_quiz: resultsData.experienceQuiz,
+                concept_quiz: resultsData.conceptQuiz,
+                user_email: resultsData.userEmail,
+                user_feedback: resultsData.userFeedback
             }]);
 
         if (resultsError) {

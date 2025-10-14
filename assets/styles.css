@@ -351,6 +351,62 @@ input:focus, select:focus, textarea:focus {
     transform: translateY(-1px);
 }
 
+/* === SLIDER STYLES === */
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.slider::-webkit-slider-track {
+    background: var(--border-color);
+    height: 8px;
+    border-radius: 4px;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--primary-color);
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    background: var(--primary-hover);
+    transform: scale(1.1);
+    box-shadow: var(--shadow-lg);
+}
+
+.slider::-moz-range-track {
+    background: var(--border-color);
+    height: 8px;
+    border-radius: 4px;
+    border: none;
+}
+
+.slider::-moz-range-thumb {
+    background: var(--primary-color);
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+    background: var(--primary-hover);
+    transform: scale(1.1);
+    box-shadow: var(--shadow-lg);
+}
+
 /* === TESTIMONIAL CARDS === */
 .testimonial-card {
     background: white;

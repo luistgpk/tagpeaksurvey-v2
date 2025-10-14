@@ -7,6 +7,7 @@ const supabaseAnonKey = 'VERCEL_SUPABASE_ANON_KEY_PLACEHOLDER';
 let userId = 'initializing...'; // Inicialização
 let isApiReady = false;
 let selectedLanguage = 'pt'; // Default to Portuguese
+let userEmail = null; // Email collection
 
 // --- TRANSLATIONS ---
 const translations = {
@@ -27,6 +28,12 @@ const translations = {
         confidentialityText: "As suas respostas são anónimas e serão utilizadas exclusivamente para fins internos, com o objetivo de gerar insights e melhorar os nossos serviços.",
         voluntary: "Participação Voluntária:",
         voluntaryText: "A participação é totalmente voluntária e pode ser interrompida a qualquer momento. Ao continuar, está a concordar com os termos acima.",
+        emailCollection: "Contacto (Opcional):",
+        emailLabel: "Endereço de email:",
+        emailPlaceholder: "exemplo@email.com",
+        emailOptional: "Opcional - apenas se desejar receber os resultados do estudo",
+        gdprConsent: "Consentimento GDPR:",
+        gdprText: "Ao fornecer o seu email, consente que os seus dados sejam processados para fins de investigação. Pode retirar o consentimento a qualquer momento. Os seus dados serão mantidos seguros e não serão partilhados com terceiros.",
         next: "Avançar",
         
         // Attention Screen
@@ -37,9 +44,9 @@ const translations = {
         
         // Explanation Screen
         explanationTitle: "NOVO MODELO DE CASHBACK CHEGA AO MERCADO",
-        explanationText1: "O novo benefício tem como missão oferecer aos consumidores um cashback elevado, que pode chegar a até 100% do valor da compra inicial, sem custo adicional.",
-        explanationText2: "A cada compra realizada, a marca financia um investimento em empresas cotadas em bolsa, escolhidas por especialistas em mercados financeiros. Os resultados desses investimentos determinam o valor do cashback, que nunca será inferior a 0,5%.",
-        explanationText3: "Os utilizadores podem acompanhar todo o processo em tempo real durante os 6 meses em que o investimento está ativo e realizar o resgate a qualquer momento desde o primeiro dia.",
+        explanationText1: "O novo benefício tem como missão oferecer aos consumidores um <strong>cashback elevado</strong>, que pode chegar a até <strong>100% do valor da compra inicial</strong>, sem custo adicional.",
+        explanationText2: "A cada compra realizada, a marca financia um investimento em <strong>empresas cotadas em bolsa</strong>, escolhidas por <strong>especialistas em mercados financeiros</strong>. Os resultados desses investimentos determinam o valor do cashback, que nunca será inferior a <strong>0,5%</strong>.",
+        explanationText3: "Os utilizadores podem acompanhar todo o processo <strong>em tempo real</strong> durante os <strong>6 meses</strong> em que o investimento está ativo e realizar o resgate <strong>a qualquer momento desde o primeiro dia</strong>.",
         proceed: "Para prosseguir, clique em 'Avançar'.",
         
         // Testimonials
@@ -68,7 +75,7 @@ const translations = {
         
         // Staircase
         productProgress: "Produto {current} de {total}",
-        imagineBuying: "Imagine que você está comprando {product}. Qual das seguintes opções prefere?",
+        imagineBuying: "Imagina que vais comprar {product}. Qual das seguintes opções preferes?",
         optionA: "Opção A: Cashback Investido",
         optionB: "Opção B: Desconto Imediato",
         
@@ -81,6 +88,10 @@ const translations = {
         thankYouText1: "O seu estudo está completo e as suas respostas foram guardadas com sucesso.",
         thankYouText2: "Agradecemos o seu tempo e contribuição.",
         userIdLabel: "O seu ID de Utilizador para verificação é:",
+        feedbackTitle: "Feedback (Opcional):",
+        feedbackLabel: "Tem algum comentário ou sugestão sobre este estudo?",
+        feedbackPlaceholder: "Partilhe os seus pensamentos...",
+        feedbackOptional: "Opcional - os seus comentários são muito valiosos para nós",
         
         // Common
         age: "Idade",
@@ -237,6 +248,12 @@ const translations = {
         confidentialityText: "Your responses are anonymous and will be used exclusively for internal purposes, with the goal of generating insights and improving our services.",
         voluntary: "Voluntary Participation:",
         voluntaryText: "Participation is completely voluntary and can be interrupted at any time. By continuing, you agree to the terms above.",
+        emailCollection: "Contact (Optional):",
+        emailLabel: "Email address:",
+        emailPlaceholder: "example@email.com",
+        emailOptional: "Optional - only if you wish to receive study results",
+        gdprConsent: "GDPR Consent:",
+        gdprText: "By providing your email, you consent to your data being processed for research purposes. You can withdraw consent at any time. Your data will be kept secure and will not be shared with third parties.",
         next: "Next",
         
         // Attention Screen
@@ -247,9 +264,9 @@ const translations = {
         
         // Explanation Screen
         explanationTitle: "NEW CASHBACK MODEL ARRIVES IN THE MARKET",
-        explanationText1: "The new benefit aims to offer consumers high cashback, which can reach 100% of the initial purchase value, without additional costs or risks.",
-        explanationText2: "With each purchase made, the brand finances an investment in high-potential companies listed on stock markets, chosen by investment specialists. The results of these investments determine cashback growth, which will never be less than 0.5%.",
-        explanationText3: "Users can follow the entire process in real time during the 6 months that the investment is active and withdraw at any time from day 1.",
+        explanationText1: "The new benefit aims to offer consumers <strong>high cashback</strong>, which can reach <strong>100% of the initial purchase value</strong>, without additional costs or risks.",
+        explanationText2: "With each purchase made, the brand finances an investment in <strong>high-potential companies listed on stock markets</strong>, chosen by <strong>investment specialists</strong>. The results of these investments determine cashback growth, which will never be less than <strong>0.5%</strong>.",
+        explanationText3: "Users can follow the entire process <strong>in real time</strong> during the <strong>6 months</strong> that the investment is active and withdraw <strong>at any time from day 1</strong>.",
         proceed: "To proceed, click 'Next'.",
         
         // Testimonials
@@ -291,6 +308,10 @@ const translations = {
         thankYouText1: "Your study is complete and your responses have been saved successfully.",
         thankYouText2: "We appreciate your time and contribution.",
         userIdLabel: "Your User ID for verification is:",
+        feedbackTitle: "Feedback (Optional):",
+        feedbackLabel: "Do you have any comments or suggestions about this study?",
+        feedbackPlaceholder: "Share your thoughts...",
+        feedbackOptional: "Optional - your comments are very valuable to us",
         
         // Common
         age: "Age",
@@ -447,6 +468,12 @@ const translations = {
         confidentialityText: "Tus respuestas son anónimas y serán utilizadas exclusivamente para fines internos, con el objetivo de generar insights y mejorar nuestros servicios.",
         voluntary: "Participación Voluntaria:",
         voluntaryText: "La participación es completamente voluntaria y puede ser interrumpida en cualquier momento. Al continuar, estás de acuerdo con los términos anteriores.",
+        emailCollection: "Contacto (Opcional):",
+        emailLabel: "Dirección de email:",
+        emailPlaceholder: "ejemplo@email.com",
+        emailOptional: "Opcional - solo si deseas recibir los resultados del estudio",
+        gdprConsent: "Consentimiento GDPR:",
+        gdprText: "Al proporcionar tu email, consientes que tus datos sean procesados para fines de investigación. Puedes retirar el consentimiento en cualquier momento. Tus datos se mantendrán seguros y no serán compartidos con terceros.",
         next: "Siguiente",
         
         // Attention Screen
@@ -457,9 +484,9 @@ const translations = {
         
         // Explanation Screen
         explanationTitle: "NUEVO MODELO DE CASHBACK LLEGA AL MERCADO",
-        explanationText1: "El nuevo beneficio tiene como misión ofrecer a los consumidores un cashback elevado, que puede llegar al 100% del valor de la compra inicial, sin costos o riesgos adicionales.",
-        explanationText2: "Con cada compra realizada, la marca financia una inversión en empresas de alto potencial listadas en los mercados de valores, elegidas por especialistas en inversiones. Los resultados de estas inversiones determinan el crecimiento del cashback, que nunca será inferior al 0,5%.",
-        explanationText3: "Los usuarios pueden seguir todo el proceso en tiempo real durante los 6 meses en que la inversión está activa y realizar el rescate en cualquier momento desde el primer día.",
+        explanationText1: "El nuevo beneficio tiene como misión ofrecer a los consumidores un <strong>cashback elevado</strong>, que puede llegar al <strong>100% del valor de la compra inicial</strong>, sin costos o riesgos adicionales.",
+        explanationText2: "Con cada compra realizada, la marca financia una inversión en <strong>empresas de alto potencial listadas en los mercados de valores</strong>, elegidas por <strong>especialistas en inversiones</strong>. Los resultados de estas inversiones determinan el crecimiento del cashback, que nunca será inferior al <strong>0,5%</strong>.",
+        explanationText3: "Los usuarios pueden seguir todo el proceso <strong>en tiempo real</strong> durante los <strong>6 meses</strong> en que la inversión está activa y realizar el rescate <strong>en cualquier momento desde el primer día</strong>.",
         proceed: "Para proceder, haz clic en 'Siguiente'.",
         
         // Testimonials
@@ -501,6 +528,10 @@ const translations = {
         thankYouText1: "Tu estudio está completo y tus respuestas han sido guardadas exitosamente.",
         thankYouText2: "Agradecemos tu tiempo y contribución.",
         userIdLabel: "Tu ID de Usuario para verificación es:",
+        feedbackTitle: "Feedback (Opcional):",
+        feedbackLabel: "¿Tienes algún comentario o sugerencia sobre este estudio?",
+        feedbackPlaceholder: "Comparte tus pensamientos...",
+        feedbackOptional: "Opcional - tus comentarios son muy valiosos para nosotros",
         
         // Common
         age: "Edad",
@@ -792,7 +823,10 @@ async function saveResultsToSupabase(indifferencePoints, demographicsData) {
                 ratingJustification: state.ratingJustification, 
             },
             // QUIZ RESULTS FOR CONCEPT UNDERSTANDING
-            conceptQuiz: state.quizResults || null
+            conceptQuiz: state.quizResults || null,
+            // NEW FIELDS
+            userEmail: userEmail,
+            userFeedback: state.userFeedback || null
         };
 
         // Envia dados para a API Vercel
@@ -1611,6 +1645,43 @@ window.continueWithLanguage = () => {
     renderScreen('welcome');
 };
 
+window.handleWelcomeSubmit = () => {
+    const emailInput = document.getElementById('user-email');
+    if (emailInput) {
+        userEmail = emailInput.value.trim() || null;
+    }
+    renderScreen('demographics');
+};
+
+window.handleFeedbackSubmit = () => {
+    const feedbackInput = document.getElementById('user-feedback');
+    let feedback = null;
+    if (feedbackInput) {
+        feedback = feedbackInput.value.trim() || null;
+    }
+    
+    // Save feedback to state for database storage
+    state.userFeedback = feedback;
+    
+    // Show completion message
+    const feedbackSection = document.querySelector('#thank-you-screen .bg-gray-50');
+    if (feedbackSection) {
+        feedbackSection.innerHTML = `
+            <div class="text-center">
+                <div class="text-green-600 text-lg font-semibold mb-2">✅ ${t('thankYouText1')}</div>
+                <p class="text-gray-600">${feedback ? t('thankYouText2') + ' ' + t('feedbackOptional') : t('thankYouText2')}</p>
+            </div>
+        `;
+    }
+};
+
+window.updateAgeDisplay = (value) => {
+    const ageDisplay = document.getElementById('age-display');
+    if (ageDisplay) {
+        ageDisplay.textContent = value;
+    }
+};
+
 function renderWelcomeScreen() {
     return `
         <div id="welcome-screen">
@@ -1636,9 +1707,26 @@ function renderWelcomeScreen() {
                 </p>
             </div>
             
+            <!-- Email Collection Section -->
+            <div class="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">${t('emailCollection')}</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label for="user-email" class="block text-sm font-medium text-gray-700 mb-2">${t('emailLabel')}</label>
+                        <input type="email" id="user-email" placeholder="${t('emailPlaceholder')}" 
+                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                        <p class="text-sm text-gray-500 mt-1">${t('emailOptional')}</p>
+                    </div>
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <h4 class="font-semibold text-blue-800 mb-2">${t('gdprConsent')}</h4>
+                        <p class="text-sm text-blue-700">${t('gdprText')}</p>
+                    </div>
+                </div>
+            </div>
+            
             <p class="text-gray-600 mt-8 mb-8 text-center text-xl">👉 ${t('next')} ${t('toStartResearch')}.</p>
             <div class="text-center">
-                <button onclick="renderScreen('demographics')" class="btn-primary">${t('next')}</button>
+                <button onclick="handleWelcomeSubmit()" class="btn-primary">${t('next')}</button>
             </div>
         </div>
     `;
@@ -1963,18 +2051,19 @@ function renderQuestionScreen(staircase) {
     
     // Opção A: Cashback Investido
     const optionADescription = `
-        ${t('upTo')} <strong class="${uniformValueClass}">${formatPercent(100)}%</strong> 
+        <p>${t('upTo')} <strong class="${uniformValueClass}">${formatPercent(100)}%</strong> 
         (<strong class="${uniformValueClass}">${formattedCashbackMax}</strong>) 
-        ${t('ofCashback')}, ${t('with')} <strong class="${uniformValueClass}">${t('cashbackGuarantee')}</strong> 
+        ${t('ofCashback')}.</p>
+        <p>${t('with')} <strong class="${uniformValueClass}">${t('cashbackGuarantee')}</strong> 
         (<strong class="${uniformValueClass}">${formattedCashbackGuaranteed}</strong>) 
-        ${t('cashbackGuaranteeAmount')} <strong class="${uniformValueClass}">${t('cashbackFlexibility')}</strong> ${t('during6Months')}.
+        ${t('cashbackGuaranteeAmount')} <strong class="${uniformValueClass}">${t('cashbackFlexibility')}</strong> ${t('during6Months')}.</p>
     `;
 
     // Opção B: Desconto Imediato
     const optionBDescription = `
-        ${t('immediateDiscount')} 
+        <p>${t('immediateDiscount')} 
         <strong class="${uniformValueClass} discount-value" id="discount-percentage" data-old-value="${initialDiscountFormatted}%" data-new-value="${displayDiscountFormatted}%">${initialDiscountFormatted}%</strong> 
-        (<strong class="${uniformValueClass} discount-amount" id="discount-amount" data-old-amount="${formatCurrency(staircase.price * (initialDiscount / 100), staircase.currency)}" data-new-amount="${formattedDiscount}">${formatCurrency(staircase.price * (initialDiscount / 100), staircase.currency)}</strong>).
+        (<strong class="${uniformValueClass} discount-amount" id="discount-amount" data-old-amount="${formatCurrency(staircase.price * (initialDiscount / 100), staircase.currency)}" data-new-amount="${formattedDiscount}">${formatCurrency(staircase.price * (initialDiscount / 100), staircase.currency)}</strong>).</p>
     `;
 
 
@@ -2050,8 +2139,20 @@ function renderDemographicsScreen() {
                 <hr class="my-6 border-t border-gray-200">
 
                 <div>
-                    <label for="age" class="block text-sm font-medium text-gray-700 mb-1">4. ${t('demoQ4')}</label>
-                    <input type="number" id="age" name="age" min="18" max="100" required class="w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    <label for="age" class="block text-sm font-medium text-gray-700 mb-2">4. ${t('demoQ4')}</label>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-gray-600">15</span>
+                            <input type="range" id="age" name="age" min="15" max="99" value="25" 
+                                   class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                                   oninput="updateAgeDisplay(this.value)">
+                            <span class="text-sm text-gray-600">99</span>
+                        </div>
+                        <div class="text-center">
+                            <span id="age-display" class="text-lg font-semibold text-indigo-600">25</span>
+                            <span class="text-gray-600 ml-1">anos</span>
+                        </div>
+                    </div>
                 </div>
                 
                 <div>
@@ -2191,7 +2292,25 @@ function renderThankYouScreen() {
         <div id="thank-you-screen" class="text-center p-8">
             <h1 class="text-4xl font-bold text-indigo-600 mb-6">${t('thankYouTitle')}</h1>
             <p class="text-gray-700 text-lg mb-4">${t('thankYouText1')}</p>
-            <p class="text-gray-500 text-md">${t('thankYouText2')}</p>
+            <p class="text-gray-500 text-md mb-8">${t('thankYouText2')}</p>
+            
+            <!-- Feedback Collection Section -->
+            <div class="max-w-2xl mx-auto mb-8">
+                <div class="bg-gray-50 p-6 rounded-lg border border-gray-200 text-left">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">${t('feedbackTitle')}</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="user-feedback" class="block text-sm font-medium text-gray-700 mb-2">${t('feedbackLabel')}</label>
+                            <textarea id="user-feedback" rows="4" placeholder="${t('feedbackPlaceholder')}" 
+                                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                            <p class="text-sm text-gray-500 mt-1">${t('feedbackOptional')}</p>
+                        </div>
+                        <div class="text-center">
+                            <button onclick="handleFeedbackSubmit()" class="btn-primary">${t('submit')}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <div class="mt-8 p-4 bg-yellow-100 rounded-lg max-w-xl mx-auto border border-yellow-300">
                 <p class="text-sm font-medium text-gray-700">${t('userIdLabel')}</p>

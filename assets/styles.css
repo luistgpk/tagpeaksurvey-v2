@@ -61,19 +61,15 @@ body {
 }
 /* === OPTION CARDS === */
 .option-card {
-    border: 3px solid var(--border-color);
+    border: 2px solid var(--border-color);
     border-radius: var(--radius-xl);
-    padding: 2rem;
+    padding: 1.75rem;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     user-select: none;
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     position: relative;
     overflow: hidden;
-    min-height: 280px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
 .option-card::before {
@@ -89,10 +85,9 @@ body {
 }
 
 .option-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-xl);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
     border-color: var(--primary-color);
-    border-width: 3px;
 }
 
 .option-card:hover::before {
@@ -101,10 +96,10 @@ body {
 
 .option-card.selected {
     border-color: var(--primary-color);
-    border-width: 4px;
-    box-shadow: 0 0 0 6px rgba(79, 70, 229, 0.15), var(--shadow-xl);
+    border-width: 2px;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1), var(--shadow-lg);
     background: linear-gradient(135deg, var(--primary-light) 0%, #ffffff 100%);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .option-card.selected::before {
@@ -152,26 +147,33 @@ body {
 }
 
 /* === STAIRCASE OPTION STYLING === */
-.option-card h3 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    margin-bottom: 1.5rem;
+#question-screen .option-card {
+    padding: 1.5rem;
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.option-card p {
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 0.75rem;
+#question-screen .option-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
 }
 
-.option-card p:last-child {
+#question-screen .option-card p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+#question-screen .option-card p:last-child {
     margin-bottom: 0;
 }
 
-.option-card strong {
-    font-weight: 700;
-    font-size: 1.1em;
+#question-screen .option-card strong {
+    font-weight: 600;
 }
 
 /* === DISCOUNT VALUE ANIMATION === */

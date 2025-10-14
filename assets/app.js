@@ -75,7 +75,8 @@ const translations = {
         
         // Staircase
         productProgress: "Produto {current} de {total}",
-        imagineBuying: "Imagina que vais comprar {product}. Qual das seguintes opções preferes?",
+        imagineBuying: "Imagina que vais comprar {product}.",
+        whichOptionPrefer: "Qual das seguintes opções preferes?",
         optionA: "Opção A: Cashback Investido",
         optionB: "Opção B: Desconto Imediato",
         
@@ -295,7 +296,8 @@ const translations = {
         
         // Staircase
         productProgress: "Product {current} of {total}",
-        imagineBuying: "Imagine you are buying {product}. Which of the following options do you prefer?",
+        imagineBuying: "Imagine you are buying {product}.",
+        whichOptionPrefer: "Which of the following options do you prefer?",
         optionA: "Option A: Invested Cashback",
         optionB: "Option B: Immediate Discount",
         
@@ -515,7 +517,8 @@ const translations = {
         
         // Staircase
         productProgress: "Producto {current} de {total}",
-        imagineBuying: "Imagina que estás comprando {product}. ¿Cuál de las siguientes opciones prefieres?",
+        imagineBuying: "Imagina que estás comprando {product}.",
+        whichOptionPrefer: "¿Cuál de las siguientes opciones prefieres?",
         optionA: "Opción A: Cashback Invertido",
         optionB: "Opción B: Descuento Inmediato",
         
@@ -2072,6 +2075,7 @@ function renderQuestionScreen(staircase) {
             <div class="text-center mb-6">
                 <p class="progress-indicator inline-block" id="progress-indicator">${t('productProgress', {current: state.currentStaircaseIndex + 1, total: config.priceLevels.length})}</p>
                 <h2 class="text-2xl font-bold text-gray-800 mt-2">${t('imagineBuying', {product: `<span id="product-full-name" class="${accentClass} font-extrabold">${productNameAndPrice}</span>`})}</h2>
+                <p class="text-lg text-gray-600 mt-4">${t('whichOptionPrefer')}</p>
             </div>
 
             <div class="product-image-container">

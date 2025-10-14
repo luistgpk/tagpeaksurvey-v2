@@ -7,7 +7,7 @@ const supabaseAnonKey = 'VERCEL_SUPABASE_ANON_KEY_PLACEHOLDER';
 let userId = 'initializing...'; // Inicialização
 let isApiReady = false;
 let selectedLanguage = 'pt'; // Default to Portuguese
-let userEmail = null; // Email collection
+// Email collection removed - contact info provided instead
 
 // --- TRANSLATIONS ---
 const translations = {
@@ -28,12 +28,8 @@ const translations = {
         confidentialityText: "As suas respostas são anónimas e serão utilizadas exclusivamente para fins internos, com o objetivo de gerar insights e melhorar os nossos serviços.",
         voluntary: "Participação Voluntária:",
         voluntaryText: "A participação é totalmente voluntária e pode ser interrompida a qualquer momento. Ao continuar, está a concordar com os termos acima.",
-        emailCollection: "Contacto (Opcional):",
-        emailLabel: "Endereço de email:",
-        emailPlaceholder: "exemplo@email.com",
-        emailOptional: "Opcional - apenas se desejar receber os resultados do estudo",
-        gdprConsent: "Consentimento GDPR:",
-        gdprText: "Ao fornecer o seu email, consente que os seus dados sejam processados para fins de investigação. Pode retirar o consentimento a qualquer momento. Os seus dados serão mantidos seguros e não serão partilhados com terceiros.",
+        contactInfo: "Para questões ou feedback:",
+        contactEmail: "luis@tagpeak.com",
         next: "Avançar",
         
         // Attention Screen
@@ -77,8 +73,10 @@ const translations = {
         productProgress: "Produto {current} de {total}",
         imagineBuying: "Imagina que vais comprar {product}.",
         whichOptionPrefer: "Qual das seguintes opções preferes?",
-        optionA: "Opção A: Cashback Investido",
-        optionB: "Opção B: Desconto Imediato",
+        optionA: "Opção A",
+        optionB: "Opção B",
+        cashbackInvestido: "Cashback Investido",
+        descontoImediato: "Desconto Imediato",
         
         // Demographics
         demographicsTitle: "Informação Sociodemográfica",
@@ -249,12 +247,8 @@ const translations = {
         confidentialityText: "Your responses are anonymous and will be used exclusively for internal purposes, with the goal of generating insights and improving our services.",
         voluntary: "Voluntary Participation:",
         voluntaryText: "Participation is completely voluntary and can be interrupted at any time. By continuing, you agree to the terms above.",
-        emailCollection: "Contact (Optional):",
-        emailLabel: "Email address:",
-        emailPlaceholder: "example@email.com",
-        emailOptional: "Optional - only if you wish to receive study results",
-        gdprConsent: "GDPR Consent:",
-        gdprText: "By providing your email, you consent to your data being processed for research purposes. You can withdraw consent at any time. Your data will be kept secure and will not be shared with third parties.",
+        contactInfo: "For questions or feedback:",
+        contactEmail: "luis@tagpeak.com",
         next: "Next",
         
         // Attention Screen
@@ -298,8 +292,10 @@ const translations = {
         productProgress: "Product {current} of {total}",
         imagineBuying: "Imagine you are buying {product}.",
         whichOptionPrefer: "Which of the following options do you prefer?",
-        optionA: "Option A: Invested Cashback",
-        optionB: "Option B: Immediate Discount",
+        optionA: "Option A",
+        optionB: "Option B",
+        cashbackInvestido: "Invested Cashback",
+        descontoImediato: "Immediate Discount",
         
         // Demographics
         demographicsTitle: "Sociodemographic Information",
@@ -470,12 +466,8 @@ const translations = {
         confidentialityText: "Tus respuestas son anónimas y serán utilizadas exclusivamente para fines internos, con el objetivo de generar insights y mejorar nuestros servicios.",
         voluntary: "Participación Voluntaria:",
         voluntaryText: "La participación es completamente voluntaria y puede ser interrumpida en cualquier momento. Al continuar, estás de acuerdo con los términos anteriores.",
-        emailCollection: "Contacto (Opcional):",
-        emailLabel: "Dirección de email:",
-        emailPlaceholder: "ejemplo@email.com",
-        emailOptional: "Opcional - solo si deseas recibir los resultados del estudio",
-        gdprConsent: "Consentimiento GDPR:",
-        gdprText: "Al proporcionar tu email, consientes que tus datos sean procesados para fines de investigación. Puedes retirar el consentimiento en cualquier momento. Tus datos se mantendrán seguros y no serán compartidos con terceros.",
+        contactInfo: "Para preguntas o comentarios:",
+        contactEmail: "luis@tagpeak.com",
         next: "Siguiente",
         
         // Attention Screen
@@ -519,8 +511,10 @@ const translations = {
         productProgress: "Producto {current} de {total}",
         imagineBuying: "Imagina que estás comprando {product}.",
         whichOptionPrefer: "¿Cuál de las siguientes opciones prefieres?",
-        optionA: "Opción A: Cashback Invertido",
-        optionB: "Opción B: Descuento Inmediato",
+        optionA: "Opción A",
+        optionB: "Opción B",
+        cashbackInvestido: "Cashback Invertido",
+        descontoImediato: "Descuento Inmediato",
         
         // Demographics
         demographicsTitle: "Información Sociodemográfica",
@@ -828,7 +822,6 @@ async function saveResultsToSupabase(indifferencePoints, demographicsData) {
             // QUIZ RESULTS FOR CONCEPT UNDERSTANDING
             conceptQuiz: state.quizResults || null,
             // NEW FIELDS
-            userEmail: userEmail,
             userFeedback: state.userFeedback || null
         };
 
@@ -1649,10 +1642,6 @@ window.continueWithLanguage = () => {
 };
 
 window.handleWelcomeSubmit = () => {
-    const emailInput = document.getElementById('user-email');
-    if (emailInput) {
-        userEmail = emailInput.value.trim() || null;
-    }
     renderScreen('demographics');
 };
 
@@ -1710,21 +1699,12 @@ function renderWelcomeScreen() {
                 </p>
             </div>
             
-            <!-- Email Collection Section -->
-            <div class="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">${t('emailCollection')}</h3>
-                <div class="space-y-4">
-                    <div>
-                        <label for="user-email" class="block text-sm font-medium text-gray-700 mb-2">${t('emailLabel')}</label>
-                        <input type="email" id="user-email" placeholder="${t('emailPlaceholder')}" 
-                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
-                        <p class="text-sm text-gray-500 mt-1">${t('emailOptional')}</p>
-                    </div>
-                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                        <h4 class="font-semibold text-blue-800 mb-2">${t('gdprConsent')}</h4>
-                        <p class="text-sm text-blue-700">${t('gdprText')}</p>
-                    </div>
-                </div>
+            <!-- Contact Information -->
+            <div class="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <p class="text-sm text-blue-800 text-center">
+                    <strong>${t('contactInfo')}</strong> 
+                    <a href="mailto:luis@tagpeak.com" class="text-blue-600 hover:text-blue-800 underline">${t('contactEmail')}</a>
+                </p>
             </div>
             
             <p class="text-gray-600 mt-8 mb-8 text-center text-xl">👉 ${t('next')} ${t('toStartResearch')}.</p>
@@ -2054,6 +2034,7 @@ function renderQuestionScreen(staircase) {
     
     // Opção A: Cashback Investido
     const optionADescription = `
+        <p><strong>${t('cashbackInvestido')}</strong></p>
         <p>${t('upTo')} <strong class="${uniformValueClass}">${formatPercent(100)}%</strong> 
         (<strong class="${uniformValueClass}">${formattedCashbackMax}</strong>) 
         ${t('ofCashback')}.</p>
@@ -2064,6 +2045,7 @@ function renderQuestionScreen(staircase) {
 
     // Opção B: Desconto Imediato
     const optionBDescription = `
+        <p><strong>${t('descontoImediato')}</strong></p>
         <p>${t('immediateDiscount')} 
         <strong class="${uniformValueClass} discount-value" id="discount-percentage" data-old-value="${initialDiscountFormatted}%" data-new-value="${displayDiscountFormatted}%">${initialDiscountFormatted}%</strong> 
         (<strong class="${uniformValueClass} discount-amount" id="discount-amount" data-old-amount="${formatCurrency(staircase.price * (initialDiscount / 100), staircase.currency)}" data-new-amount="${formattedDiscount}">${formatCurrency(staircase.price * (initialDiscount / 100), staircase.currency)}</strong>).</p>

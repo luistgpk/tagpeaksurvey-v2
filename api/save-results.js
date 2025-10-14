@@ -52,7 +52,6 @@ export default async function handler(req, res) {
                 raw_history: resultsData.rawHistory,
                 experience_quiz: resultsData.experienceQuiz,
                 concept_quiz: resultsData.conceptQuiz,
-                user_email: resultsData.userEmail,
                 user_feedback: resultsData.userFeedback
             }]);
 

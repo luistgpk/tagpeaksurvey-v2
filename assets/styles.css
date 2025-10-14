@@ -61,15 +61,19 @@ body {
 }
 /* === OPTION CARDS === */
 .option-card {
-    border: 2px solid var(--border-color);
+    border: 3px solid var(--border-color);
     border-radius: var(--radius-xl);
-    padding: 1.75rem;
+    padding: 2rem;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     user-select: none;
     background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
     position: relative;
     overflow: hidden;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .option-card::before {
@@ -85,9 +89,10 @@ body {
 }
 
 .option-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
     border-color: var(--primary-color);
+    border-width: 3px;
 }
 
 .option-card:hover::before {
@@ -96,10 +101,10 @@ body {
 
 .option-card.selected {
     border-color: var(--primary-color);
-    border-width: 2px;
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1), var(--shadow-lg);
+    border-width: 4px;
+    box-shadow: 0 0 0 6px rgba(79, 70, 229, 0.15), var(--shadow-xl);
     background: linear-gradient(135deg, var(--primary-light) 0%, #ffffff 100%);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
 .option-card.selected::before {
@@ -144,6 +149,29 @@ body {
 .product-high-accent { 
     color: #3b82f6;
     font-weight: 600;
+}
+
+/* === STAIRCASE OPTION STYLING === */
+.option-card h3 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    margin-bottom: 1.5rem;
+}
+
+.option-card p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.option-card p:last-child {
+    margin-bottom: 0;
+}
+
+.option-card strong {
+    font-weight: 700;
+    font-size: 1.1em;
 }
 
 /* === DISCOUNT VALUE ANIMATION === */

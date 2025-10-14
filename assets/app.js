@@ -2063,18 +2063,22 @@ function renderQuestionScreen(staircase) {
             <div class="product-image-container">
                 <img src="${productImageURL}" alt="${staircase.name}" class="product-image"/>
             </div>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div id="cashback-option" class="option-card flex flex-col items-center text-center" onclick="handleStaircaseChoice('cashback')">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">${t('optionA')}</h3>
-                    <p class="text-gray-600">
-                        ${optionADescription}
-                    </p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div id="cashback-option" class="option-card flex flex-col items-center text-center p-8" onclick="handleStaircaseChoice('cashback')">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">${t('optionA')}</h3>
+                        <div class="text-gray-700 space-y-3 text-left">
+                            ${optionADescription}
+                        </div>
+                    </div>
                 </div>
-                <div id="discount-option" class="option-card flex flex-col items-center text-center" onclick="handleStaircaseChoice('discount')">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">${t('optionB')}</h3>
-                    <p class="text-gray-600">
-                        ${optionBDescription}
-                    </p>
+                <div id="discount-option" class="option-card flex flex-col items-center text-center p-8" onclick="handleStaircaseChoice('discount')">
+                    <div class="mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">${t('optionB')}</h3>
+                        <div class="text-gray-700 space-y-3 text-left">
+                            ${optionBDescription}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

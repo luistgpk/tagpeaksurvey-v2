@@ -240,7 +240,7 @@ const translations = {
         
         // Updated Staircase Options
         cashbackGrows: "Cashback que cresce",
-        cashbackGrowsDescription: "Começa em 0,5% e pode crescer até 100%."
+        cashbackGrowsDescription: "Garantia de 0,5% ({guaranteedAmount}) com potencial de crescimento até 100% ({maxAmount}) em até 6 meses."
     },
     
     en: {
@@ -472,7 +472,7 @@ const translations = {
         
         // Updated Staircase Options
         cashbackGrows: "Cashback that grows",
-        cashbackGrowsDescription: "Starts at 0.5% and can grow up to 100%."
+        cashbackGrowsDescription: "0.5% guarantee ({guaranteedAmount}) with growth potential up to 100% ({maxAmount}) within 6 months."
     },
     
     es: {
@@ -704,7 +704,7 @@ const translations = {
         
         // Updated Staircase Options
         cashbackGrows: "Cashback que crece",
-        cashbackGrowsDescription: "Comienza en 0,5% y puede crecer hasta 100%."
+        cashbackGrowsDescription: "Garantía del 0,5% ({guaranteedAmount}) con potencial de crecimiento hasta 100% ({maxAmount}) en hasta 6 meses."
     }
 };
 
@@ -1692,6 +1692,17 @@ window.handleProlificIdInput = (value) => {
     state.prolificId = value;
 };
 
+window.handleFinalizeSurvey = () => {
+    // Check if user has Prolific ID and redirect automatically
+    if (state.demographicsData && state.demographicsData.prolificId && state.demographicsData.prolificId.trim() !== '') {
+        // Redirect to Prolific completion URL
+        window.location.href = 'https://app.prolific.com/submissions/complete?cc=CEAIWFCA';
+    } else {
+        // Show thank you screen for non-Prolific users
+        renderScreen('thank_you');
+    }
+};
+
 function renderWelcomeScreen() {
     return `
         <div id="welcome-screen">
@@ -2050,11 +2061,11 @@ function renderQuestionScreen(staircase) {
     const displayDiscountFormatted = formatPercent(displayDiscount);
     const initialDiscountFormatted = formatPercent(initialDiscount);
     
-    // Opção A: Cashback que cresce (Updated)
+    // Opção A: Cashback que cresce (Updated with monetary values)
     const optionADescription = `
         <p><strong>${t('cashbackGrows')}</strong></p>
-        <p>${t('cashbackGrowsDescription')}</p>
-        <p><strong class="${uniformValueClass}">${t('cashbackGuarantee')}</strong> ${t('cashbackFlexibility')}</p>
+        <p>${t('cashbackGrowsDescription', {guaranteedAmount: formattedCashbackGuaranteed, maxAmount: formattedCashbackMax})}</p>
+        <p><strong class="${uniformValueClass}">${t('cashbackFlexibility')}</strong></p>
     `;
 
     // Opção B: Desconto Imediato (With absolute values)
@@ -2297,34 +2308,13 @@ function renderDemographicsScreen() {
 }
 
 function renderPromotionalScreen() {
-    // Check if user has Prolific ID and redirect automatically
-    if (state.demographicsData && state.demographicsData.prolificId && state.demographicsData.prolificId.trim() !== '') {
-        // Redirect to Prolific completion URL after a short delay
-        setTimeout(() => {
-            window.location.href = 'https://app.prolific.com/submissions/complete?cc=CEAIWFCA';
-        }, 2000); // 2 second delay to show completion message
-        
-        return `
-            <div id="promotional-screen" class="text-center p-8">
-                <h1 class="text-4xl font-bold text-indigo-600 mb-6">${t('promotionalTitle')}</h1>
-                <p class="text-gray-700 text-lg mb-8">${t('promotionalSubtitle')}</p>
-                
-                <div class="mt-8 p-4 bg-blue-100 rounded-lg max-w-xl mx-auto border border-blue-300">
-                    <p class="text-sm font-medium text-blue-800">Redirecting to Prolific...</p>
-                    <p class="text-xs text-blue-600 mt-1">You will be automatically redirected in a few seconds.</p>
-                </div>
-            </div>
-        `;
-    }
-    
-    // Regular promotional screen for non-Prolific users
     return `
         <div id="promotional-screen" class="text-center p-8">
             <h1 class="text-4xl font-bold text-indigo-600 mb-6">${t('promotionalTitle')}</h1>
             <p class="text-gray-700 text-lg mb-8">${t('promotionalSubtitle')}</p>
             
             <div class="mt-8">
-                <button onclick="renderScreen('thank_you')" class="btn-primary">${t('finalizeSurvey')}</button>
+                <button onclick="handleFinalizeSurvey()" class="btn-primary">${t('finalizeSurvey')}</button>
             </div>
         </div>
     `;

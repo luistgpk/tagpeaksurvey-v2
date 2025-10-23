@@ -2064,7 +2064,7 @@ function renderQuestionScreen(staircase) {
     // Opção A: Cashback que cresce (Updated with monetary values)
     const optionADescription = `
         <p><strong>${t('cashbackGrows')}</strong></p>
-        <p>${t('cashbackGrowsDescription', {guaranteedAmount: formattedCashbackGuaranteed, maxAmount: formattedCashbackMax})}</p>
+        <p>${t('cashbackGrowsDescription', {guaranteedAmount: `<strong class="${uniformValueClass}">${formattedCashbackGuaranteed}</strong>`, maxAmount: `<strong class="${uniformValueClass}">${formattedCashbackMax}</strong>`})}</p>
     `;
 
     // Opção B: Desconto Imediato (With absolute values)

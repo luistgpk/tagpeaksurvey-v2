@@ -875,7 +875,8 @@ async function saveResultsToSupabase(indifferencePoints, demographicsData) {
 
     } catch (e) {
         console.error("Erro ao salvar dados no servidor:", e);
-        alert("Erro ao salvar dados no servidor. Verifique o console para mais detalhes.");
+        // Don't show alert to user, just log the error and continue
+        console.warn("Continuando sem salvar dados no servidor...");
     }
 }
 
@@ -1675,6 +1676,10 @@ window.updateAgeDisplay = (value) => {
     }
 };
 
+window.handleProlificIdInput = (value) => {
+    state.prolificId = value;
+};
+
 function renderWelcomeScreen() {
     return `
         <div id="welcome-screen">
@@ -2267,7 +2272,7 @@ function renderDemographicsScreen() {
                     <input type="text" id="prolific-id" name="prolific_id" 
                            placeholder="${t('prolificIdPlaceholder')}"
                            class="w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-                           oninput="state.prolificId = this.value">
+                           oninput="handleProlificIdInput(this.value)">
                     <p class="text-sm text-gray-500 mt-1">Optional - only if you came through Prolific</p>
                 </div>
                 
@@ -2280,6 +2285,27 @@ function renderDemographicsScreen() {
 }
 
 function renderPromotionalScreen() {
+    // Check if user has Prolific ID and redirect automatically
+    if (state.demographicsData && state.demographicsData.prolificId && state.demographicsData.prolificId.trim() !== '') {
+        // Redirect to Prolific completion URL after a short delay
+        setTimeout(() => {
+            window.location.href = 'https://app.prolific.com/submissions/complete?cc=CEAIWFCA';
+        }, 2000); // 2 second delay to show completion message
+        
+        return `
+            <div id="promotional-screen" class="text-center p-8">
+                <h1 class="text-4xl font-bold text-indigo-600 mb-6">${t('promotionalTitle')}</h1>
+                <p class="text-gray-700 text-lg mb-8">${t('promotionalSubtitle')}</p>
+                
+                <div class="mt-8 p-4 bg-blue-100 rounded-lg max-w-xl mx-auto border border-blue-300">
+                    <p class="text-sm font-medium text-blue-800">Redirecting to Prolific...</p>
+                    <p class="text-xs text-blue-600 mt-1">You will be automatically redirected in a few seconds.</p>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Regular promotional screen for non-Prolific users
     return `
         <div id="promotional-screen" class="text-center p-8">
             <h1 class="text-4xl font-bold text-indigo-600 mb-6">${t('promotionalTitle')}</h1>
@@ -2293,33 +2319,6 @@ function renderPromotionalScreen() {
 }
 
 function renderThankYouScreen() {
-    // Check if user has Prolific ID and redirect automatically
-    if (state.demographicsData && state.demographicsData.prolificId && state.demographicsData.prolificId.trim() !== '') {
-        // Redirect to Prolific completion URL after a short delay
-        setTimeout(() => {
-            window.location.href = 'https://app.prolific.com/submissions/complete?cc=CEAIWFCA';
-        }, 2000); // 2 second delay to show completion message
-        
-        return `
-            <div id="thank-you-screen" class="text-center p-8">
-                <h1 class="text-4xl font-bold text-indigo-600 mb-6">${t('thankYouTitle')}</h1>
-                <p class="text-gray-700 text-lg mb-4">${t('thankYouText1')}</p>
-                <p class="text-gray-500 text-md mb-8">${t('thankYouText2')}</p>
-                
-                <div class="mt-8 p-4 bg-blue-100 rounded-lg max-w-xl mx-auto border border-blue-300">
-                    <p class="text-sm font-medium text-blue-800">Redirecting to Prolific...</p>
-                    <p class="text-xs text-blue-600 mt-1">You will be automatically redirected in a few seconds.</p>
-                </div>
-                
-                <div class="mt-8 p-4 bg-yellow-100 rounded-lg max-w-xl mx-auto border border-yellow-300">
-                    <p class="text-sm font-medium text-gray-700">${t('userIdLabel')}</p>
-                    <p id="user-id-display" class="font-mono text-xs text-red-700 break-all mt-2">${userId}</p>
-                </div>
-            </div>
-        `;
-    }
-    
-    // Regular thank you screen for non-Prolific users
     return `
         <div id="thank-you-screen" class="text-center p-8">
             <h1 class="text-4xl font-bold text-indigo-600 mb-6">${t('thankYouTitle')}</h1>

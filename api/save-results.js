@@ -77,7 +77,7 @@ export default async function handler(req, res) {
             used_traditional_cashback: demographicsData.usedTraditionalCashback,
             experience_rating: demographicsData.experienceRating,
             rating_justification: demographicsData.ratingJustification,
-            prolific_id: demographicsData.prolificId
+            prolific_id: demographicsData.prolificId || null
         };
 
         const { error: demographicsError } = await supabase

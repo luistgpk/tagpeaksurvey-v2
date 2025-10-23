@@ -196,6 +196,7 @@ function createSpssFriendlyCsvs(staircaseData, demographicsData, today) {
         used_traditional_cashback_code: codeYesNo(d.used_traditional_cashback),
         experience_rating: toNumber(d.experience_rating),
         rating_justification: (d.rating_justification || '').replace(/\r?\n/g, ' '),
+        prolific_id: d.prolific_id || '',
         created_at: d.created_at
     }));
 

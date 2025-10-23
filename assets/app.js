@@ -227,7 +227,16 @@ const translations = {
         // Language names
         portuguese: "Português",
         english: "English",
-        spanish: "Español"
+        spanish: "Español",
+        
+        // Prolific
+        prolificIdLabel: "If you are coming through Prolific, please enter your Unique Prolific ID",
+        prolificIdPlaceholder: "Enter your Prolific ID here",
+        
+        // Promotional Screen
+        promotionalTitle: "Se gostou deste conceito, ele já existe e pode utilizá-lo!",
+        promotionalSubtitle: "Visite tagpeak.com para mais informações!",
+        finalizeSurvey: "Finalizar Inquérito"
     },
     
     en: {
@@ -446,7 +455,16 @@ const translations = {
         // Language names
         portuguese: "Portuguese",
         english: "English",
-        spanish: "Spanish"
+        spanish: "Spanish",
+        
+        // Prolific
+        prolificIdLabel: "If you are coming through Prolific, please enter your Unique Prolific ID",
+        prolificIdPlaceholder: "Enter your Prolific ID here",
+        
+        // Promotional Screen
+        promotionalTitle: "If you like this concept, it already exists and you can use it!",
+        promotionalSubtitle: "Visit tagpeak.com for more info!",
+        finalizeSurvey: "Finalize Survey"
     },
     
     es: {
@@ -665,7 +683,16 @@ const translations = {
         // Language names
         portuguese: "Portugués",
         english: "Inglés",
-        spanish: "Español"
+        spanish: "Español",
+        
+        // Prolific
+        prolificIdLabel: "If you are coming through Prolific, please enter your Unique Prolific ID",
+        prolificIdPlaceholder: "Enter your Prolific ID here",
+        
+        // Promotional Screen
+        promotionalTitle: "Si te gusta este concepto, ¡ya existe y puedes usarlo!",
+        promotionalSubtitle: "¡Visita tagpeak.com para más información!",
+        finalizeSurvey: "Finalizar Encuesta"
     }
 };
 
@@ -776,6 +803,8 @@ let state = {
     usedTraditionalCashback: null, 
     experienceRating: null,        
     ratingJustification: "",       
+    // PROLIFIC ID FIELD
+    prolificId: "", // Prolific ID field
 };
 
 // --- FUNÇÕES DE PERSISTÊNCIA (FIRESTORE) ---
@@ -931,6 +960,9 @@ function renderScreen(screenName, data = {}) {
                         updateDemographicsUI();
                     });
                 }, 0); 
+                break;
+            case 'promotional':
+                contentArea.innerHTML = renderPromotionalScreen();
                 break;
             case 'thank_you':
                 contentArea.innerHTML = renderThankYouScreen();
@@ -1415,41 +1447,9 @@ async function saveAllAndThankYou() {
         state.demographicsData = { error: "Demographics Missing" }; 
     }
     await saveResultsToSupabase(state.indifferencePoints, state.demographicsData);
-    renderScreen('thank_you');
+    renderScreen('promotional');
 }
 
-
-window.handleDemographicsSubmit = async (event) => {
-    event.preventDefault();
-    
-    // 1. Validação do Bloco Customizado (inclui Q1, Q2, Q3.1-3.2 e Justificação)
-    // Se a validação falhar, a UI já deve ter bloqueado o botão, mas esta é a checagem final.
-    if (!updateDemographicsUI()) {
-        alert(t('fillRequiredQuestions'));
-        return; 
-    }
-    
-    // 2. Coletar dados do formulário HTML
-    const data = {};
-    const formData = new FormData(document.getElementById('demographics-form'));
-    for (const [key, value] of formData.entries()) {
-        data[key] = value;
-    }
-    
-    // 3. Adicionar as respostas das questões de escolha rápida e do quiz que não são parte do FormData
-    data.priceResearch = state.priceResearch;
-    data.purchasePreference = state.purchasePreference;
-    data.usedTraditionalCashback = state.usedTraditionalCashback;
-    data.experienceRating = state.experienceRating;
-    data.ratingJustification = state.ratingJustification;
-    
-    state.demographicsData = data;
-    
-    // 4. REMOVIDO: Salvar no Firestore neste momento. Os dados demográficos estão agora no 'state'.
-    
-    // 5. Mostrar Ecrã de Aviso (Attention Screen) para CONTINUAR o estudo.
-    renderScreen('attention_screen');
-}
 
 // NOVO: Atualiza o estado visual e do botão de submissão do formulário de Demografia
 function updateDemographicsUI() {
@@ -1560,6 +1560,7 @@ window.handleDemographicsSubmit = async (event) => {
     data.usedTraditionalCashback = state.usedTraditionalCashback;
     data.experienceRating = state.experienceRating;
     data.ratingJustification = state.ratingJustification;
+    data.prolificId = state.prolificId;
     
     state.demographicsData = data;
     
@@ -2032,23 +2033,18 @@ function renderQuestionScreen(staircase) {
     const displayDiscountFormatted = formatPercent(displayDiscount);
     const initialDiscountFormatted = formatPercent(initialDiscount);
     
-    // Opção A: Cashback Investido
+    // Opção A: Cashback Investido (Simplified)
     const optionADescription = `
         <p><strong>${t('cashbackInvestido')}</strong></p>
-        <p>${t('upTo')} <strong class="${uniformValueClass}">${formatPercent(100)}%</strong> 
-        (<strong class="${uniformValueClass}">${formattedCashbackMax}</strong>) 
-        ${t('ofCashback')}.</p>
-        <p>${t('with')} <strong class="${uniformValueClass}">${t('cashbackGuarantee')}</strong> 
-        (<strong class="${uniformValueClass}">${formattedCashbackGuaranteed}</strong>) 
-        ${t('cashbackGuaranteeAmount')} <strong class="${uniformValueClass}">${t('cashbackFlexibility')}</strong> ${t('during6Months')}.</p>
+        <p>${t('upTo')} <strong class="${uniformValueClass}">${formatPercent(100)}%</strong> ${t('ofCashback')}</p>
+        <p><strong class="${uniformValueClass}">${t('cashbackGuarantee')}</strong> ${t('cashbackFlexibility')}</p>
     `;
 
-    // Opção B: Desconto Imediato
+    // Opção B: Desconto Imediato (Fixed duplicate text)
     const optionBDescription = `
         <p><strong>${t('descontoImediato')}</strong></p>
-        <p>${t('immediateDiscount')} 
-        <strong class="${uniformValueClass} discount-value" id="discount-percentage" data-old-value="${initialDiscountFormatted}%" data-new-value="${displayDiscountFormatted}%">${initialDiscountFormatted}%</strong> 
-        (<strong class="${uniformValueClass} discount-amount" id="discount-amount" data-old-amount="${formatCurrency(staircase.price * (initialDiscount / 100), staircase.currency)}" data-new-amount="${formattedDiscount}">${formatCurrency(staircase.price * (initialDiscount / 100), staircase.currency)}</strong>).</p>
+        <p><strong class="${uniformValueClass} discount-value" id="discount-percentage" data-old-value="${initialDiscountFormatted}%" data-new-value="${displayDiscountFormatted}%">${initialDiscountFormatted}%</strong> 
+        (<strong class="${uniformValueClass} discount-amount" id="discount-amount" data-old-amount="${formatCurrency(staircase.price * (initialDiscount / 100), staircase.currency)}" data-new-amount="${formattedDiscount}">${formatCurrency(staircase.price * (initialDiscount / 100), staircase.currency)}</strong>)</p>
     `;
 
 
@@ -2265,6 +2261,16 @@ function renderDemographicsScreen() {
                     </div>
                 </div>
                 
+                <!-- Prolific ID Field -->
+                <div>
+                    <label for="prolific-id" class="block text-sm font-medium text-gray-700 mb-2">${t('prolificIdLabel')}</label>
+                    <input type="text" id="prolific-id" name="prolific_id" 
+                           placeholder="${t('prolificIdPlaceholder')}"
+                           class="w-full p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+                           oninput="state.prolificId = this.value">
+                    <p class="text-sm text-gray-500 mt-1">Optional - only if you came through Prolific</p>
+                </div>
+                
                 <div class="text-center pt-4">
                     <button type="submit" id="demog-submit-btn" class="btn-primary" disabled>${t('submit')}</button>
                 </div>
@@ -2273,7 +2279,47 @@ function renderDemographicsScreen() {
     `;
 }
 
+function renderPromotionalScreen() {
+    return `
+        <div id="promotional-screen" class="text-center p-8">
+            <h1 class="text-4xl font-bold text-indigo-600 mb-6">${t('promotionalTitle')}</h1>
+            <p class="text-gray-700 text-lg mb-8">${t('promotionalSubtitle')}</p>
+            
+            <div class="mt-8">
+                <button onclick="renderScreen('thank_you')" class="btn-primary">${t('finalizeSurvey')}</button>
+            </div>
+        </div>
+    `;
+}
+
 function renderThankYouScreen() {
+    // Check if user has Prolific ID and redirect automatically
+    if (state.demographicsData && state.demographicsData.prolificId && state.demographicsData.prolificId.trim() !== '') {
+        // Redirect to Prolific completion URL after a short delay
+        setTimeout(() => {
+            window.location.href = 'https://app.prolific.com/submissions/complete?cc=CEAIWFCA';
+        }, 2000); // 2 second delay to show completion message
+        
+        return `
+            <div id="thank-you-screen" class="text-center p-8">
+                <h1 class="text-4xl font-bold text-indigo-600 mb-6">${t('thankYouTitle')}</h1>
+                <p class="text-gray-700 text-lg mb-4">${t('thankYouText1')}</p>
+                <p class="text-gray-500 text-md mb-8">${t('thankYouText2')}</p>
+                
+                <div class="mt-8 p-4 bg-blue-100 rounded-lg max-w-xl mx-auto border border-blue-300">
+                    <p class="text-sm font-medium text-blue-800">Redirecting to Prolific...</p>
+                    <p class="text-xs text-blue-600 mt-1">You will be automatically redirected in a few seconds.</p>
+                </div>
+                
+                <div class="mt-8 p-4 bg-yellow-100 rounded-lg max-w-xl mx-auto border border-yellow-300">
+                    <p class="text-sm font-medium text-gray-700">${t('userIdLabel')}</p>
+                    <p id="user-id-display" class="font-mono text-xs text-red-700 break-all mt-2">${userId}</p>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Regular thank you screen for non-Prolific users
     return `
         <div id="thank-you-screen" class="text-center p-8">
             <h1 class="text-4xl font-bold text-indigo-600 mb-6">${t('thankYouTitle')}</h1>

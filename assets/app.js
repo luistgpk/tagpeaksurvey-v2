@@ -240,7 +240,7 @@ const translations = {
         
         // Updated Staircase Options
         cashbackGrows: "Cashback que cresce",
-        cashbackGrowsDescription: "Garantia de 0,5% ({guaranteedAmount}) com potencial de crescimento até 100% ({maxAmount}) em até 6 meses."
+        cashbackGrowsDescription: "Garantia de {guaranteedPercent} ({guaranteedAmount}) com potencial de crescimento até {maxPercent} ({maxAmount}) em até 6 meses."
     },
     
     en: {
@@ -472,7 +472,7 @@ const translations = {
         
         // Updated Staircase Options
         cashbackGrows: "Cashback that grows",
-        cashbackGrowsDescription: "0.5% guarantee ({guaranteedAmount}) with growth potential up to 100% ({maxAmount}) within 6 months."
+        cashbackGrowsDescription: "{guaranteedPercent} guarantee ({guaranteedAmount}) with growth potential up to {maxPercent} ({maxAmount}) within 6 months."
     },
     
     es: {
@@ -704,7 +704,7 @@ const translations = {
         
         // Updated Staircase Options
         cashbackGrows: "Cashback que crece",
-        cashbackGrowsDescription: "Garantía del 0,5% ({guaranteedAmount}) con potencial de crecimiento hasta 100% ({maxAmount}) en hasta 6 meses."
+        cashbackGrowsDescription: "Garantía de {guaranteedPercent} ({guaranteedAmount}) con potencial de crecimiento hasta {maxPercent} ({maxAmount}) en hasta 6 meses."
     }
 };
 
@@ -2064,7 +2064,12 @@ function renderQuestionScreen(staircase) {
     // Opção A: Cashback que cresce (Updated with monetary values)
     const optionADescription = `
         <p><strong>${t('cashbackGrows')}</strong></p>
-        <p>${t('cashbackGrowsDescription', {guaranteedAmount: `<strong class="${uniformValueClass}">${formattedCashbackGuaranteed}</strong>`, maxAmount: `<strong class="${uniformValueClass}">${formattedCashbackMax}</strong>`})}</p>
+        <p>${t('cashbackGrowsDescription', {
+            guaranteedPercent: `<strong class="${uniformValueClass}">0,5%</strong>`,
+            guaranteedAmount: `<strong class="${uniformValueClass}">${formattedCashbackGuaranteed}</strong>`,
+            maxPercent: `<strong class="${uniformValueClass}">100%</strong>`,
+            maxAmount: `<strong class="${uniformValueClass}">${formattedCashbackMax}</strong>`
+        })}</p>
     `;
 
     // Opção B: Desconto Imediato (With absolute values)

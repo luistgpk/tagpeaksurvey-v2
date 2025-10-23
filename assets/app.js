@@ -2065,7 +2065,6 @@ function renderQuestionScreen(staircase) {
     const optionADescription = `
         <p><strong>${t('cashbackGrows')}</strong></p>
         <p>${t('cashbackGrowsDescription', {guaranteedAmount: formattedCashbackGuaranteed, maxAmount: formattedCashbackMax})}</p>
-        <p><strong class="${uniformValueClass}">${t('cashbackFlexibility')}</strong></p>
     `;
 
     // Opção B: Desconto Imediato (With absolute values)
@@ -2311,7 +2310,7 @@ function renderPromotionalScreen() {
     return `
         <div id="promotional-screen" class="text-center p-8">
             <h1 class="text-4xl font-bold text-indigo-600 mb-6">${t('promotionalTitle')}</h1>
-            <p class="text-gray-700 text-lg mb-8">${t('promotionalSubtitle')}</p>
+            <p class="text-gray-700 text-lg mb-8">${t('promotionalSubtitle').replace('tagpeak.com', '<strong style="color: #F2295B;">tagpeak.com</strong>')}</p>
             
             <div class="mt-8">
                 <button onclick="handleFinalizeSurvey()" class="btn-primary">${t('finalizeSurvey')}</button>

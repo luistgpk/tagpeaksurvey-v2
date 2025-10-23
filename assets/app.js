@@ -236,7 +236,11 @@ const translations = {
         // Promotional Screen
         promotionalTitle: "Se gostou deste conceito, ele já existe e pode utilizá-lo!",
         promotionalSubtitle: "Visite tagpeak.com para mais informações!",
-        finalizeSurvey: "Finalizar Inquérito"
+        finalizeSurvey: "Finalizar Inquérito",
+        
+        // Updated Staircase Options
+        cashbackGrows: "Cashback que cresce",
+        cashbackGrowsDescription: "Começa em 0,5% e pode crescer até 100%."
     },
     
     en: {
@@ -464,7 +468,11 @@ const translations = {
         // Promotional Screen
         promotionalTitle: "If you like this concept, it already exists and you can use it!",
         promotionalSubtitle: "Visit tagpeak.com for more info!",
-        finalizeSurvey: "Finalize Survey"
+        finalizeSurvey: "Finalize Survey",
+        
+        // Updated Staircase Options
+        cashbackGrows: "Cashback that grows",
+        cashbackGrowsDescription: "Starts at 0.5% and can grow up to 100%."
     },
     
     es: {
@@ -692,7 +700,11 @@ const translations = {
         // Promotional Screen
         promotionalTitle: "Si te gusta este concepto, ¡ya existe y puedes usarlo!",
         promotionalSubtitle: "¡Visita tagpeak.com para más información!",
-        finalizeSurvey: "Finalizar Encuesta"
+        finalizeSurvey: "Finalizar Encuesta",
+        
+        // Updated Staircase Options
+        cashbackGrows: "Cashback que crece",
+        cashbackGrowsDescription: "Comienza en 0,5% y puede crecer hasta 100%."
     }
 };
 
@@ -2038,14 +2050,14 @@ function renderQuestionScreen(staircase) {
     const displayDiscountFormatted = formatPercent(displayDiscount);
     const initialDiscountFormatted = formatPercent(initialDiscount);
     
-    // Opção A: Cashback Investido (Simplified)
+    // Opção A: Cashback que cresce (Updated)
     const optionADescription = `
-        <p><strong>${t('cashbackInvestido')}</strong></p>
-        <p>${t('upTo')} <strong class="${uniformValueClass}">${formatPercent(100)}%</strong> ${t('ofCashback')}</p>
+        <p><strong>${t('cashbackGrows')}</strong></p>
+        <p>${t('cashbackGrowsDescription')}</p>
         <p><strong class="${uniformValueClass}">${t('cashbackGuarantee')}</strong> ${t('cashbackFlexibility')}</p>
     `;
 
-    // Opção B: Desconto Imediato (Fixed duplicate text)
+    // Opção B: Desconto Imediato (With absolute values)
     const optionBDescription = `
         <p><strong>${t('descontoImediato')}</strong></p>
         <p><strong class="${uniformValueClass} discount-value" id="discount-percentage" data-old-value="${initialDiscountFormatted}%" data-new-value="${displayDiscountFormatted}%">${initialDiscountFormatted}%</strong> 

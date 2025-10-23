@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     try {
         // Initialize Supabase client with service role key for server-side operations
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-        const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SERVICE_ROLE_KEY;
 
         console.log('Environment check:', {
             hasUrl: !!supabaseUrl,
@@ -38,7 +38,19 @@ export default async function handler(req, res) {
 
         const { resultsData, demographicsData, userId } = req.body;
 
+        console.log('Request body check:', {
+            hasResultsData: !!resultsData,
+            hasDemographicsData: !!demographicsData,
+            hasUserId: !!userId,
+            userId: userId
+        });
+
         if (!resultsData || !demographicsData || !userId) {
+            console.error('Missing required data:', {
+                resultsData: !!resultsData,
+                demographicsData: !!demographicsData,
+                userId: !!userId
+            });
             return res.status(400).json({ error: 'Missing required data' });
         }
 
@@ -57,7 +69,10 @@ export default async function handler(req, res) {
 
         if (resultsError) {
             console.error('Error saving results:', resultsError);
-            return res.status(500).json({ error: 'Failed to save results' });
+            return res.status(500).json({ 
+                error: 'Failed to save results',
+                details: resultsError.message 
+            });
         }
 
         // Save demographics data - map camelCase to snake_case for database
@@ -86,7 +101,10 @@ export default async function handler(req, res) {
 
         if (demographicsError) {
             console.error('Error saving demographics:', demographicsError);
-            return res.status(500).json({ error: 'Failed to save demographics' });
+            return res.status(500).json({ 
+                error: 'Failed to save demographics',
+                details: demographicsError.message 
+            });
         }
 
         return res.status(200).json({ success: true });

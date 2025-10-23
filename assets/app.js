@@ -988,6 +988,11 @@ function renderScreen(screenName, data = {}) {
         // Remove a classe 'fade-out' e o conteúdo volta à opacidade 1 (fade-in)
         contentArea.classList.remove('fade-out');
         
+        // 4. Scroll to top for all screens except staircase
+        if (screenName !== 'staircase') {
+            window.scrollTo(0, 0);
+        }
+        
     }, 300); // Duração do fade-out
 }
 // Torna a função globalmente acessível para ser usada nos 'onclick' do HTML

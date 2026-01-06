@@ -499,3 +499,68 @@ input:focus, select:focus, textarea:focus {
     padding: 1rem 1.5rem;
     color: #065f46;
 }
+
+/* === LIKERT SCALE BUTTONS === */
+.likert-option-btn {
+    min-height: 60px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.likert-option-btn:hover {
+    transform: translateY(-2px);
+}
+
+.likert-option-btn:active {
+    transform: scale(0.95);
+}
+
+.likert-question {
+    margin-bottom: 2rem;
+}
+
+/* === RESPONSIVE GRID FOR LIKERT === */
+@media (max-width: 640px) {
+    .grid.grid-cols-7,
+    .grid.grid-cols-9 {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 0.25rem;
+    }
+    
+    .likert-option-btn {
+        min-height: 50px;
+        padding: 0.5rem 0.25rem;
+    }
+    
+    .likert-option-btn span {
+        font-size: 0.875rem;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    .grid.grid-cols-9 {
+        grid-template-columns: repeat(9, minmax(0, 1fr));
+    }
+}
+
+/* === ERROR STATES === */
+.ring-red-500 {
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* === IMPROVED FORM ELEMENTS === */
+input[type="radio"]:checked + span,
+input[type="radio"]:checked ~ span {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* === EMAIL INBOX STYLING === */
+.email-inbox-frame {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}

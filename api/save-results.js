@@ -56,42 +56,56 @@ export default async function handler(req, res) {
         }
 
         // Save demographics data
+        // Note: timestamp has default NOW() in database, but we'll set it explicitly
         const demographicsData = {
             user_id: userId,
             timestamp: new Date().toISOString(),
-            age: surveyData.age,
-            gender: surveyData.gender,
-            monthly_income: surveyData.monthlyIncome,
-            shopping_preference: surveyData.shoppingPreference,
+            age: surveyData.age || null,
+            gender: surveyData.gender || null,
+            monthly_income: surveyData.monthlyIncome || null,
+            shopping_preference: surveyData.shoppingPreference || null,
             first_name: surveyData.firstName || null,
-            financial_literacy_q1: surveyData.financialLiteracyQ1,
-            financial_literacy_q2: surveyData.financialLiteracyQ2,
-            financial_literacy_q3: surveyData.financialLiteracyQ3,
-            initial_involvement_important: surveyData.initialInvolvementImportant,
-            initial_involvement_relevant: surveyData.initialInvolvementRelevant,
-            initial_involvement_meaningful: surveyData.initialInvolvementMeaningful,
-            initial_involvement_valuable: surveyData.initialInvolvementValuable
+            financial_literacy_q1: surveyData.financialLiteracyQ1 || null,
+            financial_literacy_q2: surveyData.financialLiteracyQ2 || null,
+            financial_literacy_q3: surveyData.financialLiteracyQ3 || null,
+            initial_involvement_important: surveyData.initialInvolvementImportant || null,
+            initial_involvement_relevant: surveyData.initialInvolvementRelevant || null,
+            initial_involvement_meaningful: surveyData.initialInvolvementMeaningful || null,
+            initial_involvement_valuable: surveyData.initialInvolvementValuable || null
         };
+        
+        // Remove null values that might cause issues (optional - Supabase handles nulls fine)
+        // But keep required fields even if null
+        Object.keys(demographicsData).forEach(key => {
+            if (demographicsData[key] === undefined) {
+                delete demographicsData[key];
+            }
+        });
 
-        // Use upsert for demographics to handle UNIQUE constraint on user_id
+        // Save demographics - use insert (since manual SQL insert works)
+        console.log('Attempting to save demographics:', JSON.stringify(demographicsData, null, 2));
+        
+        // Since manual SQL insert works, let's use a simple insert
+        // If user already exists, we'll handle the conflict
         const { error: demographicsError, data: demographicsDataResult } = await supabase
             .from('demographics')
-            .upsert(demographicsData, { 
-                onConflict: 'user_id',
-                ignoreDuplicates: false 
-            })
+            .insert([demographicsData])
             .select();
 
         if (demographicsError) {
             console.error('Error saving demographics:', demographicsError);
+            console.error('Full error object:', JSON.stringify(demographicsError, null, 2));
             console.error('Demographics data attempted:', JSON.stringify(demographicsData, null, 2));
             return res.status(500).json({ 
                 error: 'Failed to save demographics',
                 details: demographicsError.message,
                 code: demographicsError.code,
-                hint: demographicsError.hint
+                hint: demographicsError.hint,
+                fullError: demographicsError
             });
         }
+        
+        console.log('Demographics saved successfully:', demographicsDataResult);
 
         // Save framing study results
         const framingResultsData = {
@@ -127,6 +141,8 @@ export default async function handler(req, res) {
             user_feedback: surveyData.userFeedback || null
         };
 
+        console.log('Attempting to save framing study results:', JSON.stringify(framingResultsData, null, 2));
+        
         const { error: resultsError, data: resultsDataResult } = await supabase
             .from('framing_study_results')
             .insert([framingResultsData])
@@ -134,14 +150,18 @@ export default async function handler(req, res) {
 
         if (resultsError) {
             console.error('Error saving results:', resultsError);
+            console.error('Full error object:', JSON.stringify(resultsError, null, 2));
             console.error('Results data attempted:', JSON.stringify(framingResultsData, null, 2));
             return res.status(500).json({ 
                 error: 'Failed to save results',
                 details: resultsError.message,
                 code: resultsError.code,
-                hint: resultsError.hint
+                hint: resultsError.hint,
+                fullError: resultsError
             });
         }
+        
+        console.log('Framing study results saved successfully:', resultsDataResult);
 
         return res.status(200).json({ success: true });
 

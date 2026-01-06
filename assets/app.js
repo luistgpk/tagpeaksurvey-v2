@@ -1068,16 +1068,21 @@ async function saveResults() {
         console.log('Response status:', response.status);
         const responseData = await response.json();
         console.log('Response data:', responseData);
+        console.log('Full error details:', responseData.details, responseData.code, responseData.hint);
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}, message: ${responseData.error || 'Unknown error'}`);
+            const errorMessage = responseData.details || responseData.error || 'Unknown error';
+            const errorHint = responseData.hint ? `\n\nHint: ${responseData.hint}` : '';
+            const errorCode = responseData.code ? `\n\nCode: ${responseData.code}` : '';
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorMessage}${errorCode}${errorHint}`);
         }
 
         console.log('Results saved successfully');
         renderScreen('thank_you');
     } catch (error) {
         console.error('Error saving results:', error);
-        alert('Erro ao guardar os dados: ' + error.message);
+        console.error('Full error:', error);
+        alert('Erro ao guardar os dados: ' + error.message + '\n\nPor favor, verifique a consola do navegador para mais detalhes.');
         // Still show thank you screen even if save fails
         renderScreen('thank_you');
     }

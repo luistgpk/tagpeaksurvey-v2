@@ -773,9 +773,13 @@ const brands = ['Adidas', 'Booking.com', 'Sephora', 'Samsung', 'New Balance', 'C
 
 // Email framings - dynamically use selected brand
 function getEmailFraming(brandName) {
+    const positiveSubject2 = t('emailPositiveSubject2');
+    const negativeSubject2 = t('emailNegativeSubject2');
+    const neutralSubject2 = t('emailNeutralSubject2');
+    
     return {
         positive: {
-            subject: `${t('emailPositiveSubject')} ${brandName} ${t('emailPositiveSubject2')}`,
+            subject: `${t('emailPositiveSubject')} ${brandName}${positiveSubject2 ? ' ' + positiveSubject2 : ''}`.trim(),
             greeting: `${t('emailPositiveGreeting')} [Nome da pessoa],`,
             body1: `${brandName} ${t('emailPositiveBody1')}`,
             body2: t('emailPositiveBody2'),
@@ -784,7 +788,7 @@ function getEmailFraming(brandName) {
             body5: t('emailPositiveBody5')
         },
         negative: {
-            subject: `${t('emailNegativeSubject')} ${brandName} ${t('emailNegativeSubject2')}`,
+            subject: `${t('emailNegativeSubject')} ${brandName}${negativeSubject2 ? ' ' + negativeSubject2 : ''}`.trim(),
             greeting: `${t('emailPositiveGreeting')} [Nome da pessoa],`,
             body1: `${brandName} ${t('emailNegativeBody1')}`,
             body2: t('emailNegativeBody2'),
@@ -793,7 +797,7 @@ function getEmailFraming(brandName) {
             body5: t('emailPositiveBody5')
         },
         neutral: {
-            subject: `${t('emailNeutralSubject')} ${brandName} ${t('emailNeutralSubject2')}`,
+            subject: `${t('emailNeutralSubject')} ${brandName}${neutralSubject2 ? ' ' + neutralSubject2 : ''}`.trim(),
             greeting: `${t('emailPositiveGreeting')} [Nome da pessoa],`,
             body1: `${brandName} ${t('emailNeutralBody1')}`,
             body2: t('emailNeutralBody2'),

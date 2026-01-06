@@ -1023,20 +1023,36 @@ function validateAndContinue(currentScreen, nextScreen) {
 }
 
 function validateConcernsAndSubmit() {
-    const concernsText = document.getElementById('concerns').value.trim();
+    console.log('validateConcernsAndSubmit called');
+    const concernsTextarea = document.getElementById('concerns');
+    
+    if (!concernsTextarea) {
+        console.error('Concerns textarea not found!');
+        alert('Erro: campo de texto não encontrado. Por favor, recarregue a página.');
+        return;
+    }
+    
+    const concernsText = concernsTextarea.value.trim();
+    console.log('Concerns text length:', concernsText.length);
+    
     if (!concernsText || concernsText.length < 5) {
         alert('Por favor, escreva pelo menos algumas palavras sobre as suas dúvidas ou receios.');
         return;
     }
     
     surveyData.concernsText = concernsText;
+    console.log('Calling saveResults...');
     saveResults();
 }
 
 // --- SAVE RESULTS ---
 
 async function saveResults() {
+    console.log('saveResults called');
+    console.log('Data to save:', { userId, framingCondition, surveyData });
+    
     try {
+        console.log('Making API request to /api/save-results');
         const response = await fetch('/api/save-results', {
             method: 'POST',
             headers: {
@@ -1049,14 +1065,19 @@ async function saveResults() {
             })
         });
 
+        console.log('Response status:', response.status);
+        const responseData = await response.json();
+        console.log('Response data:', responseData);
+
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}, message: ${responseData.error || 'Unknown error'}`);
         }
 
         console.log('Results saved successfully');
         renderScreen('thank_you');
     } catch (error) {
         console.error('Error saving results:', error);
+        alert('Erro ao guardar os dados: ' + error.message);
         // Still show thank you screen even if save fails
         renderScreen('thank_you');
     }
@@ -1068,6 +1089,7 @@ window.validateAndContinue = validateAndContinue;
 window.validateConcernsAndSubmit = validateConcernsAndSubmit;
 window.updateLikertLabel = updateLikertLabel;
 window.assignFramingCondition = assignFramingCondition;
+window.saveResults = saveResults;
 window.surveyData = surveyData;
 
 // Initialize

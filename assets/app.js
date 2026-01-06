@@ -123,6 +123,11 @@ const translations = {
         // Message involvement
         evaluateExperience: "Evaluate your experience reading the email:",
         invQ1: "1. Would you say that, while reading, you:",
+        invQ2: "2. Would you say that, while reading, you:",
+        invQ3: "3. Would you say that, while reading, you:",
+        invQ4: "4. Would you say you found the message:",
+        invQ5: "5. Would you say you found the message:",
+        invQ6: "6. Would you say you found the message:",
         notInterested: "were not interested",
         veryInterested: "were very interested",
         notAbsorbed: "were not absorbed",
@@ -139,6 +144,7 @@ const translations = {
         // Intention
         imaginePurchase: "Imagine you are about to make a purchase at",
         indicateLikelihood: "Indicate how likely you are to use this new benefit on your next purchase:",
+        selectedBrandFallback: "the selected brand",
         unlikely: "unlikely",
         likely: "likely",
         impossible: "impossible",
@@ -162,6 +168,7 @@ const translations = {
         
         // Emotions / Ease of use
         evaluateStatements: "According to the information presented, evaluate the following statements:",
+        evaluateStatementsShort: "Evaluate the following statements:",
         easeQ1: "\"It is difficult to use the benefit\"",
         easeQ2: "\"I believe it is easy to use the benefit\"",
         easeQ3: "\"I could easily explain how the benefit works\"",
@@ -338,6 +345,11 @@ const translations = {
         // Message involvement
         evaluateExperience: "Evalúe su experiencia al leer el correo:",
         invQ1: "1. ¿Diría que, mientras leía, usted:",
+        invQ2: "2. ¿Diría que, mientras leía, usted:",
+        invQ3: "3. ¿Diría que, mientras leía, usted:",
+        invQ4: "4. ¿Diría que encontró el mensaje:",
+        invQ5: "5. ¿Diría que encontró el mensaje:",
+        invQ6: "6. ¿Diría que encontró el mensaje:",
         notInterested: "no estaba interesado",
         veryInterested: "estaba muy interesado",
         notAbsorbed: "no estaba absorto",
@@ -354,6 +366,7 @@ const translations = {
         // Intention
         imaginePurchase: "Imagine que está a punto de hacer una compra en",
         indicateLikelihood: "Indique qué tan probable es que utilice este nuevo beneficio en su próxima compra:",
+        selectedBrandFallback: "la marca seleccionada",
         unlikely: "improbable",
         likely: "probable",
         impossible: "imposible",
@@ -377,6 +390,7 @@ const translations = {
         
         // Emotions / Ease of use
         evaluateStatements: "Según la información presentada, evalúe las siguientes afirmaciones:",
+        evaluateStatementsShort: "Evalúe las siguientes afirmaciones:",
         easeQ1: "\"Es difícil usar el beneficio\"",
         easeQ2: "\"Creo que es fácil usar el beneficio\"",
         easeQ3: "\"Podría explicar fácilmente cómo funciona el beneficio\"",
@@ -487,7 +501,7 @@ const translations = {
         pleaseSelectOption: "Por favor, selecione uma opção.",
         
         // Brand selection
-        selectBrand: "Escolha uma marca que gosta ou utiliza:",
+        selectBrand: "Selecione uma marca de que gosta ou que utiliza:",
         pleaseSelectBrand: "Por favor, selecione uma marca.",
         
         // Financial literacy
@@ -507,14 +521,14 @@ const translations = {
         pleaseAnswerAll: "Por favor, responda a todas as questões.",
         
         // Initial involvement
-        initialInvolvementPrompt: "\"Para mim, benefícios promocionais (como cashback, descontos, cupões, etc.) são:\"",
+        initialInvolvementPrompt: "\"Para si, benefícios promocionais (como cashback, descontos, cupões, etc.) são:\"",
         reversedItems: "*itens cotados em reverso",
         important: "importantes",
         notImportant: "nada importantes",
         relevant: "relevantes",
         irrelevant: "irrelevantes",
         meanNothing: "não significam nada",
-        meanALot: "significam muito para mim",
+        meanALot: "significam muito para si",
         worthless: "sem valor",
         valuable: "valiosos",
         
@@ -547,12 +561,17 @@ const translations = {
         lossesNotUsing: "Perdas por NÃO usar o benefício",
         benefitsUsing: "Benefícios de USAR o benefício",
         manipQ2: "\"Globalmente, a mensagem transmite mais a ideia de…\"",
-        notMissingSomething: "Não deixar passar algo que poderia me beneficiar",
+        notMissingSomething: "Não deixar passar algo que poderia beneficiar",
         takingAdvantage: "Tirar partido de algo que pode trazer benefícios",
         
         // Message involvement
         evaluateExperience: "Avalie a sua experiência ao ler o e-mail:",
-        invQ1: "1. Você diria que, enquanto lia, você:",
+        invQ1: "1. Diria que, enquanto lia:",
+        invQ2: "2. Diria que, enquanto lia:",
+        invQ3: "3. Diria que, enquanto lia:",
+        invQ4: "4. Diria que achou a mensagem:",
+        invQ5: "5. Diria que achou a mensagem:",
+        invQ6: "6. Diria que achou a mensagem:",
         notInterested: "não estava interessado",
         veryInterested: "estava muito interessado",
         notAbsorbed: "não estava absorvido",
@@ -569,6 +588,7 @@ const translations = {
         // Intention
         imaginePurchase: "Imagine que está prestes a fazer uma compra na",
         indicateLikelihood: "Indique o quanto é provável que utilize este novo benefício na sua próxima compra:",
+        selectedBrandFallback: "a marca selecionada",
         unlikely: "improvável",
         likely: "provável",
         impossible: "impossível",
@@ -592,23 +612,24 @@ const translations = {
         
         // Emotions / Ease of use
         evaluateStatements: "De acordo com as informações apresentadas, avalie as seguintes afirmações:",
+        evaluateStatementsShort: "Avalie as seguintes afirmações:",
         easeQ1: "\"É difícil de utilizar o benefício\"",
-        easeQ2: "\"Eu acredito que é fácil utilizar o benefício\"",
-        easeQ3: "\"Poderia explicar facilmente o funcionamento associado ao benefício\"",
-        easeQ4: "\"Não é difícil de dar fazer uma descrição precisa sobre o benefício.\"",
-        easeQ5: "\"As etapas do processo de utilização do benefício são claras para mim\"",
-        easeQ6: "\"Sinto‑me segura/o quanto à forma de utilizar o benefício de forma eficaz.\"",
+        easeQ2: "\"Acredita que é fácil utilizar o benefício\"",
+        easeQ3: "\"Consegue explicar facilmente o funcionamento associado ao benefício\"",
+        easeQ4: "\"Não é difícil fazer uma descrição precisa sobre o benefício.\"",
+        easeQ5: "\"As etapas do processo de utilização do benefício são claras\"",
+        easeQ6: "\"Sente-se seguro/a quanto à forma de utilizar o benefício de forma eficaz.\"",
         disagreeTotally: "Discordo totalmente",
         agreeTotally: "Concordo totalmente",
         
         // Advantage
-        advantageQ1: "\"Este benefício parece‑me mais vantajoso do que outras opções de desconto ou cashback que conheço.\"",
-        advantageQ2: "\"Com este benefício, sinto que fico em melhor posição do que com benefícios tradicionais.\"",
+        advantageQ1: "\"Este benefício parece mais vantajoso do que outras opções de desconto ou cashback que conhece.\"",
+        advantageQ2: "\"Com este benefício, sente que fica em melhor posição do que com benefícios tradicionais.\"",
         
         // Willingness
-        willingnessQ1: "\"Tenho interesse em usar este benefício.\"",
-        willingnessQ2: "\"É provável que eu utilize este benefício sempre que tiver oportunidade.\"",
-        willingnessQ3: "\"Pretendo utilizar este benefício no futuro.\"",
+        willingnessQ1: "\"Tem interesse em usar este benefício.\"",
+        willingnessQ2: "\"É provável que utilize este benefício sempre que tiver oportunidade.\"",
+        willingnessQ3: "\"Pretende utilizar este benefício no futuro.\"",
         
         // Concerns
         concernsTitle: "Após as informações apresentadas sobre o produto, há alguma dúvida ou receio que ainda tenha em mente?",
@@ -638,16 +659,16 @@ const translations = {
         emailPositiveSubject2: "",
         emailPositiveGreeting: "Olá,",
         emailPositiveBody1: "em parceria com a Tagpeak, uniu forças para multiplicar as vantagens sempre que faz compras connosco.",
-        emailPositiveBody2: "Agora podes ter uma percentagem do valor que paga nas suas compras automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si.",
-        emailPositiveBody3: "Tudo isso para permitir que ganhe um cashback de até <strong>100% do valor gasto nas suas compras</strong>. Aproveite estes benefícios exclusivos!",
+        emailPositiveBody2: "Agora pode ter uma percentagem do valor que paga nas suas compras automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si.",
+        emailPositiveBody3: "Tudo isto para permitir que ganhe um cashback de até <strong>100% do valor gasto nas suas compras</strong>. Aproveite estes benefícios exclusivos!",
         emailPositiveBody4: "Comece a ganhar agora! É muito simples, basta escrever <strong>\"tagpeak\"</strong> no campo de desconto/cupão no checkout da sua próxima compra na",
         emailPositiveBody5: "Para mais informações, visite: www.tagpeak.com",
         
         emailNegativeSubject: "Não deixe escapar os benefícios nas suas compras",
         emailNegativeSubject2: "",
         emailNegativeBody1: "em parceria com a Tagpeak, uniu forças para aumentar as vantagens sempre que faz compras connosco.",
-        emailNegativeBody2: "Agora podes ter uma percentagem do valor que paga nas suas compras automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si, mas somente se ativar a parceria.",
-        emailNegativeBody3: "Tudo isso para permitir que evite perder um cashback de até <strong>100% do valor gasto nas suas compras. Vais mesmo renunciar a esta oportunidade?</strong>",
+        emailNegativeBody2: "Agora pode ter uma percentagem do valor que paga nas suas compras automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si, mas somente se ativar a parceria.",
+        emailNegativeBody3: "Tudo isto para permitir que evite perder um cashback de até <strong>100% do valor gasto nas suas compras. Vai mesmo renunciar a esta oportunidade?</strong>",
         emailNegativeBody4: "Para não perder, basta escrever <strong>\"tagpeak\"</strong> no campo de desconto/cupão no checkout da sua próxima compra na",
         
         emailNeutralSubject: "Nova parceria",
@@ -1460,27 +1481,27 @@ function renderMessageInvolvementScreen() {
                 </div>
                 
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">2. ${t('invQ1').replace('1. ', '')}</p>
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('invQ2')}</p>
                     ${renderLikertScale('inv_absorbed', 'involvementAbsorbed', t('notAbsorbed'), t('veryAbsorbed'), 1, 9, surveyData.involvementAbsorbed)}
                 </div>
                 
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">3. ${t('invQ1').replace('1. ', '')}</p>
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('invQ3')}</p>
                     ${renderLikertScale('inv_attention', 'involvementAttention', t('readQuickly'), t('readWithAttention'), 1, 9, surveyData.involvementAttention)}
                 </div>
                 
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">4. ${currentLanguage === 'en' ? 'Would you say you found the message:' : currentLanguage === 'es' ? '¿Diría que encontró el mensaje:' : 'Você diria que achou a mensagem:'}</p>
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('invQ4')}</p>
                     ${renderLikertScale('inv_relevant_msg', 'involvementRelevant', t('irrelevantToYou'), t('relevantToYou'), 1, 9, surveyData.involvementRelevant)}
                 </div>
                 
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">5. ${currentLanguage === 'en' ? 'Would you say you found the message:' : currentLanguage === 'es' ? '¿Diría que encontró el mensaje:' : 'Você diria que achou a mensagem:'}</p>
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('invQ5')}</p>
                     ${renderLikertScale('inv_interesting', 'involvementInteresting', t('boring'), t('interesting'), 1, 9, surveyData.involvementInteresting)}
                 </div>
                 
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">6. ${currentLanguage === 'en' ? 'Would you say you found the message:' : currentLanguage === 'es' ? '¿Diría que encontró el mensaje:' : 'Você diria que achou a mensagem:'}</p>
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('invQ6')}</p>
                     ${renderLikertScale('inv_engaging', 'involvementEngaging', t('notEngaging'), t('engaging'), 1, 9, surveyData.involvementEngaging)}
                 </div>
             </div>
@@ -1493,7 +1514,7 @@ function renderMessageInvolvementScreen() {
 }
 
 function renderIntentionScreen() {
-    const brandName = surveyData.selectedBrand || (currentLanguage === 'en' ? 'the selected brand' : currentLanguage === 'es' ? 'la marca seleccionada' : 'a marca selecionada');
+    const brandName = surveyData.selectedBrand || t('selectedBrandFallback');
     return `
         <div class="space-y-5">
             <p class="text-center text-gray-700 mb-2">${t('imaginePurchase')} <strong class="text-blue-600">${brandName}</strong>.</p>
@@ -1579,7 +1600,7 @@ function finishWebsiteView() {
 }
 
 function renderIntentionAfterWebsiteScreen() {
-    const brandName = surveyData.selectedBrand || (currentLanguage === 'en' ? 'the selected brand' : currentLanguage === 'es' ? 'la marca seleccionada' : 'a marca selecionada');
+    const brandName = surveyData.selectedBrand || t('selectedBrandFallback');
     return `
         <div class="space-y-5">
             <p class="text-center text-gray-700 mb-2">${t('nowThatYouKnow')} <strong class="text-blue-600">${brandName}</strong>.</p>
@@ -1655,7 +1676,7 @@ function renderEmotionsScreen1() {
 function renderEmotionsScreen2() {
     return `
         <div class="space-y-5">
-            <p class="text-center text-gray-600 mb-4">${currentLanguage === 'en' ? 'Evaluate the following statements:' : currentLanguage === 'es' ? 'Evalúe las siguientes afirmaciones:' : 'Avalie as seguintes afirmações:'}</p>
+            <p class="text-center text-gray-600 mb-4">${t('evaluateStatementsShort')}</p>
             
             <div class="space-y-4">
                 <div class="bg-gray-50 p-4 rounded-2xl">

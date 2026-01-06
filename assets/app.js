@@ -6,8 +6,663 @@ const supabaseAnonKey = 'your-anon-key';
 // --- ESTADO DA APLICAÇÃO ---
 let userId = crypto.randomUUID();
 let isApiReady = false;
-let currentScreen = 'welcome';
+let currentScreen = 'language_selection';
+let currentLanguage = 'pt'; // 'en', 'es', 'pt'
 let framingCondition = null; // Will be randomly assigned: 'positive', 'negative', or 'neutral'
+
+// --- TRANSLATIONS ---
+const translations = {
+    en: {
+        // Language selection
+        selectLanguage: "Select Language",
+        english: "English",
+        spanish: "Spanish",
+        portuguese: "Portuguese",
+        
+        // Welcome screen
+        welcome: "Welcome!",
+        welcomeMessage: "Thank you for participating in this study on benefit programs.",
+        surveyDuration: "The survey takes approximately <strong>7-10 minutes</strong> and your responses are <strong>anonymous and confidential</strong>.",
+        participationVoluntary: "Participation is voluntary and can be interrupted at any time.",
+        questionsContact: "Questions:",
+        continue: "Continue",
+        
+        // Demographics
+        demographicsTitle: "Your data will be kept confidential and used only for statistical analysis purposes.",
+        age: "1. Age",
+        lessThan25: "Less than 25",
+        age26_35: "26-35",
+        age36_50: "36-50",
+        age51_65: "51-65",
+        age66Plus: "66 years or older",
+        gender: "2. Gender",
+        woman: "Woman",
+        man: "Man",
+        other: "Other",
+        monthlyIncome: "3. Average monthly income",
+        incomeLess1500: "Less than €1500",
+        income1500_2500: "€1500 - €2500",
+        income2500_4000: "€2500 - €4000",
+        income4000_6000: "€4000 - €6000",
+        incomeMore6000: "More than €6000",
+        shoppingPreference: "4. Most common way to shop",
+        online: "Online (internet / e-commerce)",
+        inPerson: "In person (at physical store)",
+        firstName: "5. First name",
+        firstNameOptional: "(optional)",
+        firstNamePlaceholder: "Your first name",
+        firstNameNote: "This information will only be used to improve the experience.",
+        prolificId: "6. Prolific ID",
+        prolificIdPlaceholder: "Your Prolific ID",
+        pleaseSelectOption: "Please select an option.",
+        
+        // Brand selection
+        selectBrand: "Choose a brand you like or use:",
+        pleaseSelectBrand: "Please select a brand.",
+        
+        // Financial literacy
+        pleaseAnswerQuestions: "Please answer the following questions:",
+        flQ1: "Suppose you have €100 in an account that earns 2% per year. After 5 years, how much will you have in the account?",
+        moreThan102: "More than €102",
+        exactly102: "Exactly €102",
+        lessThan102: "Less than €102",
+        dontKnow: "Don't know",
+        flQ2: "If your account interest rate is 1% per year and inflation is 2%, after one year the money allows you to buy:",
+        more: "More",
+        same: "The same",
+        less: "Less",
+        flQ3: "Buying shares of a single company is normally safer than investing in a diversified fund.",
+        true: "True",
+        false: "False",
+        pleaseAnswerAll: "Please answer all questions.",
+        
+        // Initial involvement
+        initialInvolvementPrompt: "\"For me, promotional benefits (such as cashback, discounts, coupons, etc.) are:\"",
+        reversedItems: "*items rated in reverse",
+        important: "important",
+        notImportant: "not important",
+        relevant: "relevant",
+        irrelevant: "irrelevant",
+        meanNothing: "mean nothing",
+        meanALot: "mean a lot to me",
+        worthless: "worthless",
+        valuable: "valuable",
+        
+        // Email notification
+        newEmail: "You received a new email!",
+        pleaseOpenEmail: "Please open and read the email you just received.",
+        emailInfoImportant: "The information contained in the email will be important for the next questions.",
+        openEmail: "Open Email",
+        
+        // Email framing
+        inbox: "Inbox",
+        today: "Today",
+        to: "To:",
+        errorBrandNotSelected: "Error: Brand not selected. Please go back.",
+        emailSentTo: "This email was sent to",
+        platform: "Your shopping platform",
+        
+        // Exclusion questions
+        answerBasedOnEmail: "Answer the following questions based on the email you just read:",
+        exclusionQ1: "\"What type of benefit does the email refer to?\"",
+        discount: "Discount",
+        cashback: "Cashback",
+        coupon: "Coupon",
+        noneOfThese: "None of these",
+        exclusionQ2: "\"The mentioned benefit allows receiving/subtracting up to what % of the amount spent?\"",
+        
+        // Manipulation check
+        basedOnEmail: "Based on the email you read, answer the following questions:",
+        manipQ1: "\"The presented message mainly emphasized:\"",
+        lossesNotUsing: "Losses from NOT using the benefit",
+        benefitsUsing: "Benefits from USING the benefit",
+        manipQ2: "\"Overall, the message conveys more the idea of…\"",
+        notMissingSomething: "Not missing something that could benefit me",
+        takingAdvantage: "Taking advantage of something that can bring benefits",
+        
+        // Message involvement
+        evaluateExperience: "Evaluate your experience reading the email:",
+        invQ1: "1. Would you say that, while reading, you:",
+        notInterested: "were not interested",
+        veryInterested: "were very interested",
+        notAbsorbed: "were not absorbed",
+        veryAbsorbed: "were very absorbed",
+        readQuickly: "read the message quickly",
+        readWithAttention: "read the message with attention",
+        irrelevantToYou: "irrelevant",
+        relevantToYou: "relevant to you",
+        boring: "boring",
+        interesting: "interesting",
+        notEngaging: "not engaging",
+        engaging: "engaging",
+        
+        // Intention
+        imaginePurchase: "Imagine you are about to make a purchase at",
+        indicateLikelihood: "Indicate how likely you are to use this new benefit on your next purchase:",
+        unlikely: "unlikely",
+        likely: "likely",
+        impossible: "impossible",
+        possible: "possible",
+        definitelyNotUse: "definitely would not use",
+        definitelyUse: "definitely would use",
+        notFrequent: "not frequent",
+        veryFrequent: "very frequent",
+        
+        // Tagpeak info
+        moreInfoTagpeak: "Let's give you more information about Tagpeak that may have been missing in the email.",
+        browseWebsite: "You can freely browse the Tagpeak website to learn more about the product.",
+        
+        // Website view
+        browseWebsiteNote: "Browse the website",
+        websiteNote: "Note:",
+        websiteNoteText: "If the website doesn't load, it may be due to security restrictions. Please click \"Continue\" when you're ready.",
+        
+        // Intention after website
+        nowThatYouKnow: "Now that you know Tagpeak better, imagine you are about to make a purchase at",
+        
+        // Emotions / Ease of use
+        evaluateStatements: "According to the information presented, evaluate the following statements:",
+        easeQ1: "\"It is difficult to use the benefit\"",
+        easeQ2: "\"I believe it is easy to use the benefit\"",
+        easeQ3: "\"I could easily explain how the benefit works\"",
+        easeQ4: "\"It is not difficult to give an accurate description of the benefit.\"",
+        easeQ5: "\"The steps in the benefit usage process are clear to me\"",
+        easeQ6: "\"I feel secure about how to use the benefit effectively.\"",
+        disagreeTotally: "Totally disagree",
+        agreeTotally: "Totally agree",
+        
+        // Advantage
+        advantageQ1: "\"This benefit seems more advantageous to me than other discount or cashback options I know.\"",
+        advantageQ2: "\"With this benefit, I feel I am in a better position than with traditional benefits.\"",
+        
+        // Willingness
+        willingnessQ1: "\"I am interested in using this benefit.\"",
+        willingnessQ2: "\"I am likely to use this benefit whenever I have the opportunity.\"",
+        willingnessQ3: "\"I intend to use this benefit in the future.\"",
+        
+        // Concerns
+        concernsTitle: "After the information presented about the product, do you have any doubts or concerns still in mind?",
+        concernsSubtitle: "Please share your concerns or questions.",
+        yourConcerns: "Your doubts or concerns:",
+        concernsPlaceholder: "Write your doubts or concerns here...",
+        concernsError: "Please write at least a few words about your doubts or concerns.",
+        minimumCharacters: "Minimum 5 characters",
+        submit: "Submit",
+        
+        // Thank you
+        thankYou: "Thank you!",
+        studyComplete: "Your study is complete",
+        responsesSaved: "Your responses have been saved successfully.",
+        userIdVerification: "Your User ID for verification:",
+        saveThisId: "Save this ID in case you need to verify your participation.",
+        thankYouTime: "Thank you for your time and contribution!",
+        
+        // Errors
+        error: "Error",
+        errorScreenNotFound: "Screen not found",
+        errorSavingData: "Error saving data:",
+        checkConsole: "Please check the browser console for more details.",
+        
+        // Email framings
+        emailPositiveSubject: "Earn more with your",
+        emailPositiveSubject2: "purchases",
+        emailPositiveGreeting: "Hello,",
+        emailPositiveBody1: "has partnered with Tagpeak to multiply the advantages whenever you shop with us.",
+        emailPositiveBody2: "Now you can have a percentage of the amount you pay on your purchases automatically invested in shares of companies listed on the stock exchange by Tagpeak's specialized team, at no cost or risk to you.",
+        emailPositiveBody3: "All this to allow you to earn cashback of up to <strong>100% of the amount spent on your purchases</strong>. Take advantage of these exclusive benefits!",
+        emailPositiveBody4: "Start earning now! It's very simple, just write <strong>\"tagpeak\"</strong> in the discount/coupon field at checkout for your next purchase at",
+        emailPositiveBody5: "For more information, visit: www.tagpeak.com",
+        
+        emailNegativeSubject: "Don't miss out on the benefits in your",
+        emailNegativeSubject2: "purchases",
+        emailNegativeBody1: "has partnered with Tagpeak to increase the advantages whenever you shop with us.",
+        emailNegativeBody2: "Now you can have a percentage of the amount you pay on your purchases automatically invested in shares of companies listed on the stock exchange by Tagpeak's specialized team, at no cost or risk to you, but only if you activate the partnership.",
+        emailNegativeBody3: "All this to allow you to avoid missing out on cashback of up to <strong>100% of the amount spent on your purchases. Are you really going to give up this opportunity?</strong>",
+        emailNegativeBody4: "To not miss out, just write <strong>\"tagpeak\"</strong> in the discount/coupon field at checkout for your next purchase at",
+        
+        emailNeutralSubject: "New partnership",
+        emailNeutralSubject2: "and Tagpeak",
+        emailNeutralBody1: "has established a partnership with Tagpeak with the aim of providing an additional benefit to purchases.",
+        emailNeutralBody2: "This benefit allows a percentage of the amount paid on purchases to be automatically invested in shares of companies listed on the stock exchange, managed by Tagpeak's specialized team, at no cost or risk to the user.",
+        emailNeutralBody3: "This mechanism allows you to obtain cashback of up to 100% of the amount spent on the purchase.",
+        emailNeutralBody4: "To use, simply enter <strong>\"tagpeak\"</strong> in the discount/coupon field during checkout for your next purchase at",
+    },
+    es: {
+        // Language selection
+        selectLanguage: "Seleccionar idioma",
+        english: "Inglés",
+        spanish: "Español",
+        portuguese: "Portugués",
+        
+        // Welcome screen
+        welcome: "¡Bienvenido/a!",
+        welcomeMessage: "Gracias por participar en este estudio sobre programas de beneficios.",
+        surveyDuration: "La encuesta toma aproximadamente <strong>7-10 minutos</strong> y sus respuestas son <strong>anónimas y confidenciales</strong>.",
+        participationVoluntary: "La participación es voluntaria y puede ser interrumpida en cualquier momento.",
+        questionsContact: "Preguntas:",
+        continue: "Continuar",
+        
+        // Demographics
+        demographicsTitle: "Sus datos se mantendrán confidenciales y se utilizarán solo para fines de análisis estadístico.",
+        age: "1. Edad",
+        lessThan25: "Menos de 25",
+        age26_35: "26-35",
+        age36_50: "36-50",
+        age51_65: "51-65",
+        age66Plus: "66 años o más",
+        gender: "2. Sexo",
+        woman: "Mujer",
+        man: "Hombre",
+        other: "Otro",
+        monthlyIncome: "3. Ingreso mensual promedio",
+        incomeLess1500: "Menos de €1500",
+        income1500_2500: "€1500 - €2500",
+        income2500_4000: "€2500 - €4000",
+        income4000_6000: "€4000 - €6000",
+        incomeMore6000: "Más de €6000",
+        shoppingPreference: "4. Forma más utilizada de realizar compras",
+        online: "En línea (internet / comercio electrónico)",
+        inPerson: "Presencial (en tienda física)",
+        firstName: "5. Primer nombre",
+        firstNameOptional: "(opcional)",
+        firstNamePlaceholder: "Su primer nombre",
+        firstNameNote: "Esta información solo se utilizará para mejorar la experiencia.",
+        prolificId: "6. ID de Prolific",
+        prolificIdPlaceholder: "Su ID de Prolific",
+        pleaseSelectOption: "Por favor, seleccione una opción.",
+        
+        // Brand selection
+        selectBrand: "Elija una marca que le guste o utilice:",
+        pleaseSelectBrand: "Por favor, seleccione una marca.",
+        
+        // Financial literacy
+        pleaseAnswerQuestions: "Por favor, responda las siguientes preguntas:",
+        flQ1: "Suponga que tiene €100 en una cuenta que rinde 2% al año. Después de 5 años, ¿cuánto tendrá en la cuenta?",
+        moreThan102: "Más de €102",
+        exactly102: "Exactamente €102",
+        lessThan102: "Menos de €102",
+        dontKnow: "No sabe",
+        flQ2: "Si la tasa de interés de su cuenta es 1% al año y la inflación es 2%, después de un año el dinero le permite comprar:",
+        more: "Más",
+        same: "Lo mismo",
+        less: "Menos",
+        flQ3: "Comprar acciones de una sola empresa es normalmente más seguro que invertir en un fondo diversificado.",
+        true: "Verdadero",
+        false: "Falso",
+        pleaseAnswerAll: "Por favor, responda todas las preguntas.",
+        
+        // Initial involvement
+        initialInvolvementPrompt: "\"Para mí, los beneficios promocionales (como cashback, descuentos, cupones, etc.) son:\"",
+        reversedItems: "*elementos calificados en reverso",
+        important: "importantes",
+        notImportant: "nada importantes",
+        relevant: "relevantes",
+        irrelevant: "irrelevantes",
+        meanNothing: "no significan nada",
+        meanALot: "significan mucho para mí",
+        worthless: "sin valor",
+        valuable: "valiosos",
+        
+        // Email notification
+        newEmail: "¡Recibió un nuevo correo electrónico!",
+        pleaseOpenEmail: "Por favor, abra y lea el correo electrónico que acaba de recibir.",
+        emailInfoImportant: "La información contenida en el correo será importante para las próximas preguntas.",
+        openEmail: "Abrir correo",
+        
+        // Email framing
+        inbox: "Bandeja de entrada",
+        today: "Hoy",
+        to: "Para:",
+        errorBrandNotSelected: "Error: Marca no seleccionada. Por favor, vuelva atrás.",
+        emailSentTo: "Este correo fue enviado a",
+        platform: "Su plataforma de compras",
+        
+        // Exclusion questions
+        answerBasedOnEmail: "Responda las siguientes preguntas basándose en el correo que acaba de leer:",
+        exclusionQ1: "\"¿A qué tipo de beneficio se refiere el correo?\"",
+        discount: "Descuento",
+        cashback: "Cashback",
+        coupon: "Cupón",
+        noneOfThese: "Ninguno de estos",
+        exclusionQ2: "\"¿El beneficio mencionado permite recibir/substraer hasta qué % del valor gastado?\"",
+        
+        // Manipulation check
+        basedOnEmail: "Basándose en el correo que leyó, responda las siguientes preguntas:",
+        manipQ1: "\"El mensaje presentado enfatizó principalmente:\"",
+        lossesNotUsing: "Pérdidas por NO usar el beneficio",
+        benefitsUsing: "Beneficios de USAR el beneficio",
+        manipQ2: "\"En general, el mensaje transmite más la idea de…\"",
+        notMissingSomething: "No perder algo que podría beneficiarme",
+        takingAdvantage: "Aprovechar algo que puede traer beneficios",
+        
+        // Message involvement
+        evaluateExperience: "Evalúe su experiencia al leer el correo:",
+        invQ1: "1. ¿Diría que, mientras leía, usted:",
+        notInterested: "no estaba interesado",
+        veryInterested: "estaba muy interesado",
+        notAbsorbed: "no estaba absorto",
+        veryAbsorbed: "estaba muy absorto",
+        readQuickly: "leyó el mensaje rápidamente",
+        readWithAttention: "leyó el mensaje con atención",
+        irrelevantToYou: "irrelevante",
+        relevantToYou: "relevante para usted",
+        boring: "aburrido",
+        interesting: "interesante",
+        notEngaging: "no atractivo",
+        engaging: "atractivo",
+        
+        // Intention
+        imaginePurchase: "Imagine que está a punto de hacer una compra en",
+        indicateLikelihood: "Indique qué tan probable es que utilice este nuevo beneficio en su próxima compra:",
+        unlikely: "improbable",
+        likely: "probable",
+        impossible: "imposible",
+        possible: "posible",
+        definitelyNotUse: "definitivamente no usaría",
+        definitelyUse: "definitivamente usaría",
+        notFrequent: "nada frecuente",
+        veryFrequent: "muy frecuente",
+        
+        // Tagpeak info
+        moreInfoTagpeak: "Vamos a darle más información sobre Tagpeak que puede haber faltado en el correo.",
+        browseWebsite: "Puede navegar libremente por el sitio web de Tagpeak para conocer mejor el producto.",
+        
+        // Website view
+        browseWebsiteNote: "Navegar por el sitio web",
+        websiteNote: "Nota:",
+        websiteNoteText: "Si el sitio web no carga, puede deberse a restricciones de seguridad. Por favor, haga clic en \"Continuar\" cuando esté listo.",
+        
+        // Intention after website
+        nowThatYouKnow: "Ahora que conoce mejor Tagpeak, imagine que está a punto de hacer una compra en",
+        
+        // Emotions / Ease of use
+        evaluateStatements: "Según la información presentada, evalúe las siguientes afirmaciones:",
+        easeQ1: "\"Es difícil usar el beneficio\"",
+        easeQ2: "\"Creo que es fácil usar el beneficio\"",
+        easeQ3: "\"Podría explicar fácilmente cómo funciona el beneficio\"",
+        easeQ4: "\"No es difícil dar una descripción precisa del beneficio.\"",
+        easeQ5: "\"Los pasos en el proceso de uso del beneficio son claros para mí\"",
+        easeQ6: "\"Me siento seguro/a sobre cómo usar el beneficio de manera efectiva.\"",
+        disagreeTotally: "Totalmente en desacuerdo",
+        agreeTotally: "Totalmente de acuerdo",
+        
+        // Advantage
+        advantageQ1: "\"Este beneficio me parece más ventajoso que otras opciones de descuento o cashback que conozco.\"",
+        advantageQ2: "\"Con este beneficio, siento que estoy en una mejor posición que con beneficios tradicionales.\"",
+        
+        // Willingness
+        willingnessQ1: "\"Tengo interés en usar este beneficio.\"",
+        willingnessQ2: "\"Es probable que use este beneficio siempre que tenga la oportunidad.\"",
+        willingnessQ3: "\"Tengo la intención de usar este beneficio en el futuro.\"",
+        
+        // Concerns
+        concernsTitle: "Después de la información presentada sobre el producto, ¿tiene alguna duda o preocupación aún en mente?",
+        concernsSubtitle: "Por favor, comparta sus preocupaciones o preguntas.",
+        yourConcerns: "Sus dudas o preocupaciones:",
+        concernsPlaceholder: "Escriba sus dudas o preocupaciones aquí...",
+        concernsError: "Por favor, escriba al menos algunas palabras sobre sus dudas o preocupaciones.",
+        minimumCharacters: "Mínimo 5 caracteres",
+        submit: "Enviar",
+        
+        // Thank you
+        thankYou: "¡Gracias!",
+        studyComplete: "Su estudio está completo",
+        responsesSaved: "Sus respuestas se han guardado exitosamente.",
+        userIdVerification: "Su ID de usuario para verificación:",
+        saveThisId: "Guarde este ID en caso de que necesite verificar su participación.",
+        thankYouTime: "¡Gracias por su tiempo y contribución!",
+        
+        // Errors
+        error: "Error",
+        errorScreenNotFound: "Pantalla no encontrada",
+        errorSavingData: "Error al guardar los datos:",
+        checkConsole: "Por favor, revise la consola del navegador para más detalles.",
+        
+        // Email framings
+        emailPositiveSubject: "Gane más con sus compras",
+        emailPositiveSubject2: "",
+        emailPositiveGreeting: "Hola,",
+        emailPositiveBody1: "se ha asociado con Tagpeak para multiplicar las ventajas siempre que compre con nosotros.",
+        emailPositiveBody2: "Ahora puede tener un porcentaje del monto que paga en sus compras automáticamente invertido en acciones de empresas cotizadas en bolsa por el equipo especializado de Tagpeak, sin costo ni riesgo para usted.",
+        emailPositiveBody3: "Todo esto para permitirle ganar cashback de hasta <strong>100% del monto gastado en sus compras</strong>. ¡Aproveche estos beneficios exclusivos!",
+        emailPositiveBody4: "¡Comience a ganar ahora! Es muy simple, solo escriba <strong>\"tagpeak\"</strong> en el campo de descuento/cupón al finalizar la compra para su próxima compra en",
+        emailPositiveBody5: "Para más información, visite: www.tagpeak.com",
+        
+        emailNegativeSubject: "No se pierda los beneficios en sus compras",
+        emailNegativeSubject2: "",
+        emailNegativeBody1: "se ha asociado con Tagpeak para aumentar las ventajas siempre que compre con nosotros.",
+        emailNegativeBody2: "Ahora puede tener un porcentaje del monto que paga en sus compras automáticamente invertido en acciones de empresas cotizadas en bolsa por el equipo especializado de Tagpeak, sin costo ni riesgo para usted, pero solo si activa la asociación.",
+        emailNegativeBody3: "Todo esto para permitirle evitar perder cashback de hasta <strong>100% del monto gastado en sus compras. ¿Realmente va a renunciar a esta oportunidad?</strong>",
+        emailNegativeBody4: "Para no perderse, solo escriba <strong>\"tagpeak\"</strong> en el campo de descuento/cupón al finalizar la compra para su próxima compra en",
+        
+        emailNeutralSubject: "Nueva asociación",
+        emailNeutralSubject2: "y Tagpeak",
+        emailNeutralBody1: "ha establecido una asociación con Tagpeak con el objetivo de proporcionar un beneficio adicional a las compras.",
+        emailNeutralBody2: "Este beneficio permite que un porcentaje del monto pagado en las compras se invierta automáticamente en acciones de empresas cotizadas en bolsa, gestionadas por el equipo especializado de Tagpeak, sin costo ni riesgo para el usuario.",
+        emailNeutralBody3: "Este mecanismo le permite obtener cashback de hasta 100% del monto gastado en la compra.",
+        emailNeutralBody4: "Para usar, simplemente ingrese <strong>\"tagpeak\"</strong> en el campo de descuento/cupón durante el pago de su próxima compra en",
+    },
+    pt: {
+        // Language selection
+        selectLanguage: "Selecionar idioma",
+        english: "Inglês",
+        spanish: "Espanhol",
+        portuguese: "Português",
+        
+        // Welcome screen
+        welcome: "Bem-vindo(a)!",
+        welcomeMessage: "Agradecemos por participar neste estudo sobre programas de benefícios.",
+        surveyDuration: "A pesquisa leva cerca de <strong>7-10 minutos</strong> e as suas respostas são <strong>anónimas e confidenciais</strong>.",
+        participationVoluntary: "A participação é voluntária e pode ser interrompida a qualquer momento.",
+        questionsContact: "Questões:",
+        continue: "Continuar",
+        
+        // Demographics
+        demographicsTitle: "Os seus dados serão mantidos confidenciais e utilizados apenas para fins de análise estatística.",
+        age: "1. Idade",
+        lessThan25: "Menos de 25",
+        age26_35: "26-35",
+        age36_50: "36-50",
+        age51_65: "51-65",
+        age66Plus: "66 anos ou mais",
+        gender: "2. Sexo",
+        woman: "Mulher",
+        man: "Homem",
+        other: "Outro",
+        monthlyIncome: "3. Rendimento médio mensal",
+        incomeLess1500: "Menos de 1500€",
+        income1500_2500: "1500€ - 2500€",
+        income2500_4000: "2500€ - 4000€",
+        income4000_6000: "4000€ - 6000€",
+        incomeMore6000: "Mais de 6000€",
+        shoppingPreference: "4. Forma mais utilizada de realizar compras",
+        online: "Online (internet / e-commerce)",
+        inPerson: "Presencial (em loja física)",
+        firstName: "5. Primeiro nome",
+        firstNameOptional: "(opcional)",
+        firstNamePlaceholder: "O seu primeiro nome",
+        firstNameNote: "Esta informação será utilizada somente para melhorar a experiência.",
+        prolificId: "6. Prolific ID",
+        prolificIdPlaceholder: "O seu ID do Prolific",
+        pleaseSelectOption: "Por favor, selecione uma opção.",
+        
+        // Brand selection
+        selectBrand: "Escolha uma marca que gosta ou utiliza:",
+        pleaseSelectBrand: "Por favor, selecione uma marca.",
+        
+        // Financial literacy
+        pleaseAnswerQuestions: "Por favor, responda às seguintes perguntas:",
+        flQ1: "Suponha que tem €100 numa conta que rende 2% ao ano. Após 5 anos, quanto terá na conta?",
+        moreThan102: "Mais de €102",
+        exactly102: "Exatamente €102",
+        lessThan102: "Menos de €102",
+        dontKnow: "Não sabe",
+        flQ2: "Se a taxa de juros da sua conta for 1% ao ano e a inflação for 2%, após um ano o dinheiro permite comprar:",
+        more: "Mais",
+        same: "O mesmo",
+        less: "Menos",
+        flQ3: "Comprar ações de uma única empresa é normalmente mais seguro do que investir num fundo diversificado.",
+        true: "Verdadeiro",
+        false: "Falso",
+        pleaseAnswerAll: "Por favor, responda a todas as questões.",
+        
+        // Initial involvement
+        initialInvolvementPrompt: "\"Para mim, benefícios promocionais (como cashback, descontos, cupões, etc.) são:\"",
+        reversedItems: "*itens cotados em reverso",
+        important: "importantes",
+        notImportant: "nada importantes",
+        relevant: "relevantes",
+        irrelevant: "irrelevantes",
+        meanNothing: "não significam nada",
+        meanALot: "significam muito para mim",
+        worthless: "sem valor",
+        valuable: "valiosos",
+        
+        // Email notification
+        newEmail: "Recebeu um novo e-mail!",
+        pleaseOpenEmail: "Por favor, abra e leia o e-mail que acabou de receber.",
+        emailInfoImportant: "As informações contidas no e-mail serão importantes para as próximas questões.",
+        openEmail: "Abrir E-mail",
+        
+        // Email framing
+        inbox: "Caixa de entrada",
+        today: "Hoje",
+        to: "Para:",
+        errorBrandNotSelected: "Erro: Marca não selecionada. Por favor, volte atrás.",
+        emailSentTo: "Este e-mail foi enviado para",
+        platform: "A sua plataforma de compras",
+        
+        // Exclusion questions
+        answerBasedOnEmail: "Responda às seguintes questões com base no e-mail que acabou de ler:",
+        exclusionQ1: "\"O e-mail refere qual tipo de benefício?\"",
+        discount: "Desconto",
+        cashback: "Cashback",
+        coupon: "Cupão",
+        noneOfThese: "Nenhum destes",
+        exclusionQ2: "\"O benefício mencionado permite recebimento/subtração de até quantos % do valor gasto?\"",
+        
+        // Manipulation check
+        basedOnEmail: "Com base no e-mail que leu, responda às seguintes questões:",
+        manipQ1: "\"A mensagem apresentada enfatizou principalmente:\"",
+        lossesNotUsing: "Perdas por NÃO usar o benefício",
+        benefitsUsing: "Benefícios de USAR o benefício",
+        manipQ2: "\"Globalmente, a mensagem transmite mais a ideia de…\"",
+        notMissingSomething: "Não deixar passar algo que poderia me beneficiar",
+        takingAdvantage: "Tirar partido de algo que pode trazer benefícios",
+        
+        // Message involvement
+        evaluateExperience: "Avalie a sua experiência ao ler o e-mail:",
+        invQ1: "1. Você diria que, enquanto lia, você:",
+        notInterested: "não estava interessado",
+        veryInterested: "estava muito interessado",
+        notAbsorbed: "não estava absorvido",
+        veryAbsorbed: "estava muito absorvido",
+        readQuickly: "leu a mensagem rapidamente por alto",
+        readWithAttention: "leu a mensagem com atenção",
+        irrelevantToYou: "irrelevante",
+        relevantToYou: "relevante para si",
+        boring: "chata",
+        interesting: "interessante",
+        notEngaging: "não envolvente",
+        engaging: "envolvente",
+        
+        // Intention
+        imaginePurchase: "Imagine que está prestes a fazer uma compra na",
+        indicateLikelihood: "Indique o quanto é provável que utilize este novo benefício na sua próxima compra:",
+        unlikely: "improvável",
+        likely: "provável",
+        impossible: "impossível",
+        possible: "possível",
+        definitelyNotUse: "definitivamente não usaria",
+        definitelyUse: "definitivamente usaria",
+        notFrequent: "nada frequente",
+        veryFrequent: "muito frequente",
+        
+        // Tagpeak info
+        moreInfoTagpeak: "Vamos dar-lhe mais informações sobre a Tagpeak que podem ter faltado no e-mail.",
+        browseWebsite: "Poderá navegar livremente pelo website da Tagpeak para conhecer melhor o produto.",
+        
+        // Website view
+        browseWebsiteNote: "Navegue pelo website",
+        websiteNote: "Nota:",
+        websiteNoteText: "Se o website não carregar, pode ser devido a restrições de segurança. Por favor, clique em \"Continuar\" quando estiver pronto.",
+        
+        // Intention after website
+        nowThatYouKnow: "Agora que conhece melhor a Tagpeak, imagine que está prestes a fazer uma compra na",
+        
+        // Emotions / Ease of use
+        evaluateStatements: "De acordo com as informações apresentadas, avalie as seguintes afirmações:",
+        easeQ1: "\"É difícil de utilizar o benefício\"",
+        easeQ2: "\"Eu acredito que é fácil utilizar o benefício\"",
+        easeQ3: "\"Poderia explicar facilmente o funcionamento associado ao benefício\"",
+        easeQ4: "\"Não é difícil de dar fazer uma descrição precisa sobre o benefício.\"",
+        easeQ5: "\"As etapas do processo de utilização do benefício são claras para mim\"",
+        easeQ6: "\"Sinto‑me segura/o quanto à forma de utilizar o benefício de forma eficaz.\"",
+        disagreeTotally: "Discordo totalmente",
+        agreeTotally: "Concordo totalmente",
+        
+        // Advantage
+        advantageQ1: "\"Este benefício parece‑me mais vantajoso do que outras opções de desconto ou cashback que conheço.\"",
+        advantageQ2: "\"Com este benefício, sinto que fico em melhor posição do que com benefícios tradicionais.\"",
+        
+        // Willingness
+        willingnessQ1: "\"Tenho interesse em usar este benefício.\"",
+        willingnessQ2: "\"É provável que eu utilize este benefício sempre que tiver oportunidade.\"",
+        willingnessQ3: "\"Pretendo utilizar este benefício no futuro.\"",
+        
+        // Concerns
+        concernsTitle: "Após as informações apresentadas sobre o produto, há alguma dúvida ou receio que ainda tenha em mente?",
+        concernsSubtitle: "Por favor, partilhe as suas preocupações ou questões.",
+        yourConcerns: "As suas dúvidas ou receios:",
+        concernsPlaceholder: "Escreva aqui as suas dúvidas ou receios...",
+        concernsError: "Por favor, escreva pelo menos algumas palavras sobre as suas dúvidas ou receios.",
+        minimumCharacters: "Mínimo de 5 caracteres",
+        submit: "Submeter",
+        
+        // Thank you
+        thankYou: "Obrigado(a)!",
+        studyComplete: "O seu estudo está completo",
+        responsesSaved: "As suas respostas foram guardadas com sucesso.",
+        userIdVerification: "O seu ID de Utilizador para verificação:",
+        saveThisId: "Guarde este ID caso precise de verificar a sua participação.",
+        thankYouTime: "Agradecemos o seu tempo e contribuição!",
+        
+        // Errors
+        error: "Erro",
+        errorScreenNotFound: "Ecrã não encontrado",
+        errorSavingData: "Erro ao guardar os dados:",
+        checkConsole: "Por favor, verifique a consola do navegador para mais detalhes.",
+        
+        // Email framings
+        emailPositiveSubject: "Ganhe mais com as suas compras",
+        emailPositiveSubject2: "",
+        emailPositiveGreeting: "Olá,",
+        emailPositiveBody1: "em parceria com a Tagpeak, uniu forças para multiplicar as vantagens sempre que faz compras connosco.",
+        emailPositiveBody2: "Agora podes ter uma percentagem do valor que paga nas suas compras automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si.",
+        emailPositiveBody3: "Tudo isso para permitir que ganhe um cashback de até <strong>100% do valor gasto nas suas compras</strong>. Aproveite estes benefícios exclusivos!",
+        emailPositiveBody4: "Comece a ganhar agora! É muito simples, basta escrever <strong>\"tagpeak\"</strong> no campo de desconto/cupão no checkout da sua próxima compra na",
+        emailPositiveBody5: "Para mais informações, visite: www.tagpeak.com",
+        
+        emailNegativeSubject: "Não deixe escapar os benefícios nas suas compras",
+        emailNegativeSubject2: "",
+        emailNegativeBody1: "em parceria com a Tagpeak, uniu forças para aumentar as vantagens sempre que faz compras connosco.",
+        emailNegativeBody2: "Agora podes ter uma percentagem do valor que paga nas suas compras automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si, mas somente se ativar a parceria.",
+        emailNegativeBody3: "Tudo isso para permitir que evite perder um cashback de até <strong>100% do valor gasto nas suas compras. Vais mesmo renunciar a esta oportunidade?</strong>",
+        emailNegativeBody4: "Para não perder, basta escrever <strong>\"tagpeak\"</strong> no campo de desconto/cupão no checkout da sua próxima compra na",
+        
+        emailNeutralSubject: "Nova parceria",
+        emailNeutralSubject2: "e Tagpeak",
+        emailNeutralBody1: "estabeleceu uma parceria com a Tagpeak com o objetivo de disponibilizar um benefício adicional às compras.",
+        emailNeutralBody2: "Este benefício permite que uma percentagem do valor pago nas compras seja automaticamente investido em ações de empresas cotadas em bolsa, geridas pela equipa especializada da Tagpeak, sem custos ou riscos para o utilizador.",
+        emailNeutralBody3: "Este mecanismo permite obter um cashback de até 100% do valor gasto na compra.",
+        emailNeutralBody4: "Para utilizar, basta inserir <strong>\"tagpeak\"</strong> no campo de desconto/cupão durante o checkout da sua próxima compra na",
+    }
+};
+
+// Translation helper function
+function t(key) {
+    return translations[currentLanguage][key] || key;
+}
 
 // Survey state
 let surveyData = {
@@ -99,31 +754,31 @@ const brands = ['Adidas', 'Booking.com', 'Sephora', 'Samsung', 'New Balance', 'C
 function getEmailFraming(brandName) {
     return {
         positive: {
-            subject: `Ganhe mais com suas compras ${brandName}`,
-            greeting: "Olá, [Nome da pessoa],",
-            body1: `A ${brandName}, em parceria com a Tagpeak, uniu forças para multiplicar as vantagens sempre que faz compras conosco.`,
-            body2: "Agora podes ter uma percentagem do valor que paga nas suas compras automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si.",
-            body3: "Tudo isso para permitir que ganhe um cashback de até <strong>100% do valor gasto nas suas compras</strong>. Aproveite estes benefícios exclusivos!",
-            body4: "Comece a ganhar agora! É muito simples, basta escrever <strong>\"tagpeak\"</strong> no campo de desconto/cupão no checkout da sua próxima compra na ${brandName}.",
-            body5: "Para mais informações, visite: www.tagpeak.com"
+            subject: `${t('emailPositiveSubject')} ${brandName} ${t('emailPositiveSubject2')}`,
+            greeting: `${t('emailPositiveGreeting')} [Nome da pessoa],`,
+            body1: `${brandName} ${t('emailPositiveBody1')}`,
+            body2: t('emailPositiveBody2'),
+            body3: t('emailPositiveBody3'),
+            body4: `${t('emailPositiveBody4')} ${brandName}.`,
+            body5: t('emailPositiveBody5')
         },
         negative: {
-            subject: `Não deixei escapar os benefícios nas suas compras ${brandName}`,
-            greeting: "Olá, [Nome da pessoa],",
-            body1: `A ${brandName}, em parceria com a Tagpeak, uniu forças para aumentar as vantagens sempre que faz compras conosco.`,
-            body2: "Agora podes ter uma percentagem do valor que paga nas suas compras automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si, mas somente se ativar a parceria.",
-            body3: "Tudo isso para permitir que evite perder um cashback de até <strong>100% do valor gasto nas suas compras. Vais mesmo abrir mão desta oportunidade?</strong>",
-            body4: "Para não perder, basta escrever <strong>\"tagpeak\"</strong> no campo de desconto/cupão no checkout da sua próxima compra na ${brandName}.",
-            body5: "Para mais informações, visite: www.tagpeak.com"
+            subject: `${t('emailNegativeSubject')} ${brandName} ${t('emailNegativeSubject2')}`,
+            greeting: `${t('emailPositiveGreeting')} [Nome da pessoa],`,
+            body1: `${brandName} ${t('emailNegativeBody1')}`,
+            body2: t('emailNegativeBody2'),
+            body3: t('emailNegativeBody3'),
+            body4: `${t('emailNegativeBody4')} ${brandName}.`,
+            body5: t('emailPositiveBody5')
         },
         neutral: {
-            subject: `Nova parceria ${brandName} e Tagpeak`,
-            greeting: "Olá, [Nome da pessoa],",
-            body1: `A ${brandName} estabeleceu uma parceria com a Tagpeak com o objetivo de disponibilizar um benefício adicional às compras.`,
-            body2: "Este benefício permite que uma percentagem do valor pago nas compras seja automaticamente investido em ações de empresas cotadas em bolsa, geridas pela equipa especializada da Tagpeak, sem custos ou riscos para o utilizador.",
-            body3: "Esse mecanismo permite obter um cashback de até 100% do valor gasto na compra.",
-            body4: "Para utilizar, basta inserir <strong>\"tagpeak\"</strong> no campo de desconto/cupão durante o checkout da sua próxima compra na ${brandName}.",
-            body5: "Para mais informações, visite: www.tagpeak.com"
+            subject: `${t('emailNeutralSubject')} ${brandName} ${t('emailNeutralSubject2')}`,
+            greeting: `${t('emailPositiveGreeting')} [Nome da pessoa],`,
+            body1: `${brandName} ${t('emailNeutralBody1')}`,
+            body2: t('emailNeutralBody2'),
+            body3: t('emailNeutralBody3'),
+            body4: `${t('emailNeutralBody4')} ${brandName}.`,
+            body5: t('emailPositiveBody5')
         }
     };
 }
@@ -171,6 +826,9 @@ function renderScreen(screenName) {
         contentArea.innerHTML = '';
         
         switch (screenName) {
+            case 'language_selection':
+                contentArea.innerHTML = renderLanguageSelectionScreen();
+                break;
             case 'welcome':
                 contentArea.innerHTML = renderWelcomeScreen();
                 break;
@@ -226,7 +884,7 @@ function renderScreen(screenName) {
                 contentArea.innerHTML = renderThankYouScreen();
                 break;
             default:
-                contentArea.innerHTML = '<p class="text-center text-red-500">Erro: Ecrã não encontrado</p>';
+                contentArea.innerHTML = `<p class="text-center text-red-500">${t('error')}: ${t('errorScreenNotFound')}</p>`;
         }
         
         contentArea.classList.remove('fade-out');
@@ -236,22 +894,76 @@ function renderScreen(screenName) {
 
 // --- RENDER FUNCTIONS ---
 
+function renderLanguageSelectionScreen() {
+    // Use a default language for the selection screen text
+    const lang = currentLanguage || 'en';
+    const tempT = (key) => translations[lang][key] || key;
+    
+    return `
+        <div class="text-center space-y-8">
+            <div>
+                <h1 class="text-4xl font-bold mb-3">${tempT('selectLanguage')}</h1>
+                <p class="text-lg text-gray-700">${lang === 'en' ? 'Please select your preferred language' : lang === 'es' ? 'Por favor, seleccione su idioma preferido' : 'Por favor, selecione o seu idioma preferido'}</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                <button 
+                    onclick="selectLanguage('en')" 
+                    class="language-btn p-8 border-2 border-gray-300 rounded-2xl font-semibold text-gray-700 transition-all hover:scale-105 hover:border-blue-400 hover:bg-blue-50"
+                >
+                    <div class="text-4xl mb-3">🇬🇧</div>
+                    <div class="text-xl">English</div>
+                </button>
+                <button 
+                    onclick="selectLanguage('es')" 
+                    class="language-btn p-8 border-2 border-gray-300 rounded-2xl font-semibold text-gray-700 transition-all hover:scale-105 hover:border-blue-400 hover:bg-blue-50"
+                >
+                    <div class="text-4xl mb-3">🇪🇸</div>
+                    <div class="text-xl">Español</div>
+                </button>
+                <button 
+                    onclick="selectLanguage('pt')" 
+                    class="language-btn p-8 border-2 border-gray-300 rounded-2xl font-semibold text-gray-700 transition-all hover:scale-105 hover:border-blue-400 hover:bg-blue-50"
+                >
+                    <div class="text-4xl mb-3">🇵🇹</div>
+                    <div class="text-xl">Português</div>
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function selectLanguage(lang) {
+    currentLanguage = lang;
+    // Update HTML lang attribute
+    document.documentElement.lang = lang;
+    // Update page title
+    if (lang === 'en') {
+        document.title = 'Study: Benefit Framing';
+    } else if (lang === 'es') {
+        document.title = 'Estudio: Encuadre de Beneficios';
+    } else {
+        document.title = 'Estudo: Framing de Benefícios';
+    }
+    renderScreen('welcome');
+}
+
 function renderWelcomeScreen() {
     return `
         <div class="text-center space-y-6">
             <div>
-                <h1 class="text-4xl font-bold mb-3">Bem-vindo(a)!</h1>
-                <p class="text-lg text-gray-700">Agradecemos por participar neste estudo sobre programas de benefícios.</p>
+                <h1 class="text-4xl font-bold mb-3">${t('welcome')}</h1>
+                <p class="text-lg text-gray-700">${t('welcomeMessage')}</p>
             </div>
             
             <div class="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-2xl border border-gray-200">
-                <p class="text-gray-700 mb-4">A pesquisa leva cerca de <strong>7-10 minutos</strong> e as suas respostas são <strong>anónimas e confidenciais</strong>.</p>
-                <p class="text-sm text-gray-600">A participação é voluntária e pode ser interrompida a qualquer momento.</p>
-                <p class="text-xs text-gray-500 mt-3">Questões: <a href="mailto:luis@tagpeak.com" class="text-blue-600 hover:underline">luis@tagpeak.com</a></p>
+                <p class="text-gray-700 mb-4">${t('surveyDuration')}</p>
+                <p class="text-sm text-gray-600">${t('participationVoluntary')}</p>
+                <p class="text-xs text-gray-500 mt-3">${t('questionsContact')} <a href="mailto:luis@tagpeak.com" class="text-blue-600 hover:underline">luis@tagpeak.com</a></p>
             </div>
             
             <button onclick="renderScreen('demographics')" class="btn-primary mt-4">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -260,107 +972,111 @@ function renderWelcomeScreen() {
 function renderDemographicsScreen() {
     return `
         <div class="space-y-6">
-            <p class="text-center text-gray-600 mb-4">Os seus dados serão mantidos confidenciais e utilizados apenas para fins de análise estatística.</p>
+            <p class="text-center text-gray-600 mb-4">${t('demographicsTitle')}</p>
             
             <div class="space-y-5">
                 <div>
-                    <label class="block text-base font-semibold text-gray-800 mb-3">1. Idade</label>
+                    <label class="block text-base font-semibold text-gray-800 mb-3">${t('age')}</label>
                     <div class="space-y-2" id="age-group">
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.age === 'less_25' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('age', 'less_25', 'age-group')">
                             <input type="radio" name="age" value="less_25" class="mr-3 w-5 h-5" ${surveyData.age === 'less_25' ? 'checked' : ''} onchange="surveyData.age = this.value; clearError('age-error')">
-                            <span class="text-gray-700">Menos de 25</span>
+                            <span class="text-gray-700">${t('lessThan25')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.age === '26_35' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('age', '26_35', 'age-group')">
                             <input type="radio" name="age" value="26_35" class="mr-3 w-5 h-5" ${surveyData.age === '26_35' ? 'checked' : ''} onchange="surveyData.age = this.value; clearError('age-error')">
-                            <span class="text-gray-700">26-35</span>
+                            <span class="text-gray-700">${t('age26_35')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.age === '36_50' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('age', '36_50', 'age-group')">
                             <input type="radio" name="age" value="36_50" class="mr-3 w-5 h-5" ${surveyData.age === '36_50' ? 'checked' : ''} onchange="surveyData.age = this.value; clearError('age-error')">
-                            <span class="text-gray-700">36-50</span>
+                            <span class="text-gray-700">${t('age36_50')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.age === '51_65' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('age', '51_65', 'age-group')">
                             <input type="radio" name="age" value="51_65" class="mr-3 w-5 h-5" ${surveyData.age === '51_65' ? 'checked' : ''} onchange="surveyData.age = this.value; clearError('age-error')">
-                            <span class="text-gray-700">51-65</span>
+                            <span class="text-gray-700">${t('age51_65')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.age === '66_plus' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('age', '66_plus', 'age-group')">
                             <input type="radio" name="age" value="66_plus" class="mr-3 w-5 h-5" ${surveyData.age === '66_plus' ? 'checked' : ''} onchange="surveyData.age = this.value; clearError('age-error')">
-                            <span class="text-gray-700">66 anos ou mais</span>
+                            <span class="text-gray-700">${t('age66Plus')}</span>
                         </label>
                     </div>
-                    <p id="age-error" class="text-red-500 text-sm mt-2 hidden">Por favor, selecione uma opção.</p>
+                    <p id="age-error" class="text-red-500 text-sm mt-2 hidden">${t('pleaseSelectOption')}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-base font-semibold text-gray-800 mb-3">2. Sexo</label>
+                    <label class="block text-base font-semibold text-gray-800 mb-3">${t('gender')}</label>
                     <div class="space-y-2" id="gender-group">
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.gender === 'mulher' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('gender', 'mulher', 'gender-group')">
                             <input type="radio" name="gender" value="mulher" class="mr-3 w-5 h-5" ${surveyData.gender === 'mulher' ? 'checked' : ''} onchange="surveyData.gender = this.value; clearError('gender-error')">
-                            <span class="text-gray-700">Mulher</span>
+                            <span class="text-gray-700">${t('woman')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.gender === 'homem' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('gender', 'homem', 'gender-group')">
                             <input type="radio" name="gender" value="homem" class="mr-3 w-5 h-5" ${surveyData.gender === 'homem' ? 'checked' : ''} onchange="surveyData.gender = this.value; clearError('gender-error')">
-                            <span class="text-gray-700">Homem</span>
+                            <span class="text-gray-700">${t('man')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.gender === 'outro' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('gender', 'outro', 'gender-group')">
                             <input type="radio" name="gender" value="outro" class="mr-3 w-5 h-5" ${surveyData.gender === 'outro' ? 'checked' : ''} onchange="surveyData.gender = this.value; clearError('gender-error')">
-                            <span class="text-gray-700">Outro</span>
+                            <span class="text-gray-700">${t('other')}</span>
                         </label>
                     </div>
-                    <p id="gender-error" class="text-red-500 text-sm mt-2 hidden">Por favor, selecione uma opção.</p>
+                    <p id="gender-error" class="text-red-500 text-sm mt-2 hidden">${t('pleaseSelectOption')}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-base font-semibold text-gray-800 mb-3">3. Rendimento médio mensal</label>
+                    <label class="block text-base font-semibold text-gray-800 mb-3">${t('monthlyIncome')}</label>
                     <div class="space-y-2" id="income-group">
-                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === 'less_750' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', 'less_750', 'income-group')">
-                            <input type="radio" name="income" value="less_750" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === 'less_750' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
-                            <span class="text-gray-700">&lt; 750€</span>
+                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === 'less_1500' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', 'less_1500', 'income-group')">
+                            <input type="radio" name="income" value="less_1500" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === 'less_1500' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
+                            <span class="text-gray-700">${t('incomeLess1500')}</span>
                         </label>
-                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === '750_1500' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', '750_1500', 'income-group')">
-                            <input type="radio" name="income" value="750_1500" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === '750_1500' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
-                            <span class="text-gray-700">750€ - 1500€</span>
+                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === '1500_2500' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', '1500_2500', 'income-group')">
+                            <input type="radio" name="income" value="1500_2500" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === '1500_2500' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
+                            <span class="text-gray-700">${t('income1500_2500')}</span>
                         </label>
-                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === '1500_3000' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', '1500_3000', 'income-group')">
-                            <input type="radio" name="income" value="1500_3000" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === '1500_3000' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
-                            <span class="text-gray-700">1500€ - 3000€</span>
+                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === '2500_4000' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', '2500_4000', 'income-group')">
+                            <input type="radio" name="income" value="2500_4000" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === '2500_4000' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
+                            <span class="text-gray-700">${t('income2500_4000')}</span>
                         </label>
-                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === 'more_3000' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', 'more_3000', 'income-group')">
-                            <input type="radio" name="income" value="more_3000" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === 'more_3000' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
-                            <span class="text-gray-700">&gt; 3000€</span>
+                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === '4000_6000' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', '4000_6000', 'income-group')">
+                            <input type="radio" name="income" value="4000_6000" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === '4000_6000' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
+                            <span class="text-gray-700">${t('income4000_6000')}</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === 'more_6000' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', 'more_6000', 'income-group')">
+                            <input type="radio" name="income" value="more_6000" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === 'more_6000' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
+                            <span class="text-gray-700">${t('incomeMore6000')}</span>
                         </label>
                     </div>
-                    <p id="income-error" class="text-red-500 text-sm mt-2 hidden">Por favor, selecione uma opção.</p>
+                    <p id="income-error" class="text-red-500 text-sm mt-2 hidden">${t('pleaseSelectOption')}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-base font-semibold text-gray-800 mb-3">4. Forma mais utilizada de realizar compras</label>
+                    <label class="block text-base font-semibold text-gray-800 mb-3">${t('shoppingPreference')}</label>
                     <div class="space-y-2" id="shopping-group">
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.shoppingPreference === 'online' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('shopping', 'online', 'shopping-group')">
                             <input type="radio" name="shopping" value="online" class="mr-3 w-5 h-5" ${surveyData.shoppingPreference === 'online' ? 'checked' : ''} onchange="surveyData.shoppingPreference = this.value; clearError('shopping-error')">
-                            <span class="text-gray-700">Online (internet / e-commerce)</span>
+                            <span class="text-gray-700">${t('online')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.shoppingPreference === 'presencial' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('shopping', 'presencial', 'shopping-group')">
                             <input type="radio" name="shopping" value="presencial" class="mr-3 w-5 h-5" ${surveyData.shoppingPreference === 'presencial' ? 'checked' : ''} onchange="surveyData.shoppingPreference = this.value; clearError('shopping-error')">
-                            <span class="text-gray-700">Presencial (em loja física)</span>
+                            <span class="text-gray-700">${t('inPerson')}</span>
                         </label>
                     </div>
-                    <p id="shopping-error" class="text-red-500 text-sm mt-2 hidden">Por favor, selecione uma opção.</p>
+                    <p id="shopping-error" class="text-red-500 text-sm mt-2 hidden">${t('pleaseSelectOption')}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-base font-semibold text-gray-800 mb-3">5. Primeiro nome <span class="text-sm font-normal text-gray-500">(opcional)</span></label>
-                    <input type="text" id="firstName" class="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="Seu primeiro nome" value="${surveyData.firstName || ''}" onchange="surveyData.firstName = this.value">
-                    <p class="text-sm text-gray-500 mt-2">Esta informação será utilizada somente para melhorar a experiência.</p>
+                    <label class="block text-base font-semibold text-gray-800 mb-3">${t('firstName')} <span class="text-sm font-normal text-gray-500">${t('firstNameOptional')}</span></label>
+                    <input type="text" id="firstName" class="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="${t('firstNamePlaceholder')}" value="${surveyData.firstName || ''}" onchange="surveyData.firstName = this.value">
+                    <p class="text-sm text-gray-500 mt-2">${t('firstNameNote')}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-base font-semibold text-gray-800 mb-3">6. Prolific ID</label>
-                    <input type="text" id="prolificId" class="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="Seu ID do Prolific" value="${surveyData.prolificId || ''}" onchange="surveyData.prolificId = this.value">
+                    <label class="block text-base font-semibold text-gray-800 mb-3">${t('prolificId')}</label>
+                    <input type="text" id="prolificId" class="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="${t('prolificIdPlaceholder')}" value="${surveyData.prolificId || ''}" onchange="surveyData.prolificId = this.value">
                 </div>
             </div>
             
             <button onclick="validateAndContinue('demographics', 'financial_literacy')" class="btn-primary mt-8 w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -369,7 +1085,7 @@ function renderDemographicsScreen() {
 function renderBrandSelectionScreen() {
     return `
         <div class="space-y-6">
-            <p class="text-center text-lg text-gray-700 mb-6">Escolha uma marca que gosta ou utiliza:</p>
+            <p class="text-center text-lg text-gray-700 mb-6">${t('selectBrand')}</p>
             
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 ${brands.map(brand => `
@@ -381,10 +1097,10 @@ function renderBrandSelectionScreen() {
                     </button>
                 `).join('')}
             </div>
-            <p id="brand-error" class="text-red-500 text-sm text-center mt-2 hidden">Por favor, selecione uma marca.</p>
+            <p id="brand-error" class="text-red-500 text-sm text-center mt-2 hidden">${t('pleaseSelectBrand')}</p>
             
             <button onclick="validateBrandSelection()" class="btn-primary mt-6 w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -411,74 +1127,74 @@ function validateBrandSelection() {
 function renderFinancialLiteracyScreen() {
     return `
         <div class="space-y-5">
-            <p class="text-center text-gray-600 mb-4">Por favor, responda às seguintes perguntas:</p>
+            <p class="text-center text-gray-600 mb-4">${t('pleaseAnswerQuestions')}</p>
             
             <div class="space-y-4">
                 <div class="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-2xl border border-gray-200">
-                    <p class="text-base font-semibold text-gray-800 mb-4">Suponha que tem €100 numa conta que rende 2% ao ano. Após 5 anos, quanto terá na conta?</p>
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('flQ1')}</p>
                     <div class="space-y-2">
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.financialLiteracyQ1 === 'more_102' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('fl_q1', 'more_102', 'fl_q1-group')">
                             <input type="radio" name="fl_q1" value="more_102" class="mr-3 w-5 h-5" ${surveyData.financialLiteracyQ1 === 'more_102' ? 'checked' : ''} onchange="surveyData.financialLiteracyQ1 = this.value">
-                            <span class="text-gray-700">Mais de €102</span>
+                            <span class="text-gray-700">${t('moreThan102')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.financialLiteracyQ1 === 'exactly_102' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('fl_q1', 'exactly_102', 'fl_q1-group')">
                             <input type="radio" name="fl_q1" value="exactly_102" class="mr-3 w-5 h-5" ${surveyData.financialLiteracyQ1 === 'exactly_102' ? 'checked' : ''} onchange="surveyData.financialLiteracyQ1 = this.value">
-                            <span class="text-gray-700">Exatamente €102</span>
+                            <span class="text-gray-700">${t('exactly102')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.financialLiteracyQ1 === 'less_102' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('fl_q1', 'less_102', 'fl_q1-group')">
                             <input type="radio" name="fl_q1" value="less_102" class="mr-3 w-5 h-5" ${surveyData.financialLiteracyQ1 === 'less_102' ? 'checked' : ''} onchange="surveyData.financialLiteracyQ1 = this.value">
-                            <span class="text-gray-700">Menos de €102</span>
+                            <span class="text-gray-700">${t('lessThan102')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.financialLiteracyQ1 === 'dont_know' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('fl_q1', 'dont_know', 'fl_q1-group')">
                             <input type="radio" name="fl_q1" value="dont_know" class="mr-3 w-5 h-5" ${surveyData.financialLiteracyQ1 === 'dont_know' ? 'checked' : ''} onchange="surveyData.financialLiteracyQ1 = this.value">
-                            <span class="text-gray-700">Não sabe</span>
+                            <span class="text-gray-700">${t('dontKnow')}</span>
                         </label>
                     </div>
                 </div>
                 
                 <div class="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-2xl border border-gray-200">
-                    <p class="text-base font-semibold text-gray-800 mb-4">Se a taxa de juros da sua conta for 1% ao ano e a inflação for 2%, após um ano o dinheiro permite comprar:</p>
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('flQ2')}</p>
                     <div class="space-y-2">
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.financialLiteracyQ2 === 'more' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('fl_q2', 'more', 'fl_q2-group')">
                             <input type="radio" name="fl_q2" value="more" class="mr-3 w-5 h-5" ${surveyData.financialLiteracyQ2 === 'more' ? 'checked' : ''} onchange="surveyData.financialLiteracyQ2 = this.value">
-                            <span class="text-gray-700">Mais</span>
+                            <span class="text-gray-700">${t('more')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.financialLiteracyQ2 === 'same' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('fl_q2', 'same', 'fl_q2-group')">
                             <input type="radio" name="fl_q2" value="same" class="mr-3 w-5 h-5" ${surveyData.financialLiteracyQ2 === 'same' ? 'checked' : ''} onchange="surveyData.financialLiteracyQ2 = this.value">
-                            <span class="text-gray-700">O mesmo</span>
+                            <span class="text-gray-700">${t('same')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.financialLiteracyQ2 === 'less' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('fl_q2', 'less', 'fl_q2-group')">
                             <input type="radio" name="fl_q2" value="less" class="mr-3 w-5 h-5" ${surveyData.financialLiteracyQ2 === 'less' ? 'checked' : ''} onchange="surveyData.financialLiteracyQ2 = this.value">
-                            <span class="text-gray-700">Menos</span>
+                            <span class="text-gray-700">${t('less')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.financialLiteracyQ2 === 'dont_know' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('fl_q2', 'dont_know', 'fl_q2-group')">
                             <input type="radio" name="fl_q2" value="dont_know" class="mr-3 w-5 h-5" ${surveyData.financialLiteracyQ2 === 'dont_know' ? 'checked' : ''} onchange="surveyData.financialLiteracyQ2 = this.value">
-                            <span class="text-gray-700">Não sabe</span>
+                            <span class="text-gray-700">${t('dontKnow')}</span>
                         </label>
                     </div>
                 </div>
                 
                 <div class="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-2xl border border-gray-200">
-                    <p class="text-base font-semibold text-gray-800 mb-4">Comprar ações de uma única empresa é normalmente mais seguro do que investir num fundo diversificado.</p>
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('flQ3')}</p>
                     <div class="space-y-2">
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.financialLiteracyQ3 === 'true' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('fl_q3', 'true', 'fl_q3-group')">
                             <input type="radio" name="fl_q3" value="true" class="mr-3 w-5 h-5" ${surveyData.financialLiteracyQ3 === 'true' ? 'checked' : ''} onchange="surveyData.financialLiteracyQ3 = this.value">
-                            <span class="text-gray-700">Verdadeiro</span>
+                            <span class="text-gray-700">${t('true')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.financialLiteracyQ3 === 'false' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('fl_q3', 'false', 'fl_q3-group')">
                             <input type="radio" name="fl_q3" value="false" class="mr-3 w-5 h-5" ${surveyData.financialLiteracyQ3 === 'false' ? 'checked' : ''} onchange="surveyData.financialLiteracyQ3 = this.value">
-                            <span class="text-gray-700">Falso</span>
+                            <span class="text-gray-700">${t('false')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.financialLiteracyQ3 === 'dont_know' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('fl_q3', 'dont_know', 'fl_q3-group')">
                             <input type="radio" name="fl_q3" value="dont_know" class="mr-3 w-5 h-5" ${surveyData.financialLiteracyQ3 === 'dont_know' ? 'checked' : ''} onchange="surveyData.financialLiteracyQ3 = this.value">
-                            <span class="text-gray-700">Não sabe</span>
+                            <span class="text-gray-700">${t('dontKnow')}</span>
                         </label>
                     </div>
                 </div>
             </div>
             
             <button onclick="validateAndContinue('financial_literacy', 'brand_selection')" class="btn-primary mt-8 w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -487,18 +1203,18 @@ function renderFinancialLiteracyScreen() {
 function renderInitialInvolvementScreen() {
     return `
         <div class="space-y-5">
-            <p class="text-center text-gray-700 mb-2">"Para mim, benefícios promocionais (como cashback, descontos, cupões, etc.) são:"</p>
-            <p class="text-center text-xs text-gray-500 mb-4">*itens cotados em reverso</p>
+            <p class="text-center text-gray-700 mb-2">${t('initialInvolvementPrompt')}</p>
+            <p class="text-center text-xs text-gray-500 mb-4">${t('reversedItems')}</p>
             
             <div class="space-y-5 bg-gray-50 p-4 rounded-2xl">
-                ${renderLikertScale('inv_important', 'initialInvolvementImportant', 'importantes', 'nada importantes', 1, 7, surveyData.initialInvolvementImportant)}
-                ${renderLikertScale('inv_relevant', 'initialInvolvementRelevant', 'relevantes', 'irrelevantes', 1, 7, surveyData.initialInvolvementRelevant)}
-                ${renderLikertScale('inv_meaningful', 'initialInvolvementMeaningful', 'não significam nada', 'significam muito para mim', 1, 7, surveyData.initialInvolvementMeaningful)}
-                ${renderLikertScale('inv_valuable', 'initialInvolvementValuable', 'sem valor', 'valiosos', 1, 7, surveyData.initialInvolvementValuable)}
+                ${renderLikertScale('inv_important', 'initialInvolvementImportant', t('important'), t('notImportant'), 1, 7, surveyData.initialInvolvementImportant)}
+                ${renderLikertScale('inv_relevant', 'initialInvolvementRelevant', t('relevant'), t('irrelevant'), 1, 7, surveyData.initialInvolvementRelevant)}
+                ${renderLikertScale('inv_meaningful', 'initialInvolvementMeaningful', t('meanNothing'), t('meanALot'), 1, 7, surveyData.initialInvolvementMeaningful)}
+                ${renderLikertScale('inv_valuable', 'initialInvolvementValuable', t('worthless'), t('valuable'), 1, 7, surveyData.initialInvolvementValuable)}
             </div>
             
             <button onclick="validateLikertScreen('initial_involvement', ['initialInvolvementImportant', 'initialInvolvementRelevant', 'initialInvolvementMeaningful', 'initialInvolvementValuable'], 'brand_selection')" class="btn-primary mt-8 w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -519,13 +1235,13 @@ function renderEmailNotificationScreen() {
             </div>
             
             <div class="space-y-4">
-                <h2 class="text-3xl font-bold text-gray-800">Recebeu um novo e-mail!</h2>
-                <p class="text-xl text-gray-700">Por favor, abra e leia o e-mail que acabou de receber.</p>
-                <p class="text-gray-600">As informações contidas no e-mail serão importantes para as próximas questões.</p>
+                <h2 class="text-3xl font-bold text-gray-800">${t('newEmail')}</h2>
+                <p class="text-xl text-gray-700">${t('pleaseOpenEmail')}</p>
+                <p class="text-gray-600">${t('emailInfoImportant')}</p>
             </div>
             
             <button onclick="assignFramingCondition(); renderScreen('email_framing')" class="btn-primary mt-8">
-                Abrir E-mail
+                ${t('openEmail')}
             </button>
         </div>
     `;
@@ -537,7 +1253,7 @@ function renderEmailFramingScreen() {
     }
     
     if (!surveyData.selectedBrand) {
-        return '<div class="text-center text-red-500">Erro: Marca não selecionada. Por favor, volte atrás.</div>';
+        return `<div class="text-center text-red-500">${t('errorBrandNotSelected')}</div>`;
     }
     
     const brandName = surveyData.selectedBrand;
@@ -561,12 +1277,12 @@ function renderEmailFramingScreen() {
                         </div>
                         <div>
                             <div class="font-semibold text-gray-800">Mail</div>
-                            <div class="text-xs text-gray-500">Caixa de entrada</div>
+                            <div class="text-xs text-gray-500">${t('inbox')}</div>
                         </div>
                     </div>
                     <div class="flex items-center space-x-2">
                         <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span class="text-xs text-gray-500">Hoje</span>
+                        <span class="text-xs text-gray-500">${t('today')}</span>
                     </div>
                 </div>
                 
@@ -591,7 +1307,7 @@ function renderEmailFramingScreen() {
                                     <div class="text-sm font-medium text-gray-800 truncate mt-1">${email.subject}</div>
                                 </div>
                             </div>
-                            <div class="flex-shrink-0 text-xs text-gray-500 ml-4">Agora</div>
+                            <div class="flex-shrink-0 text-xs text-gray-500 ml-4">${currentLanguage === 'en' ? 'Now' : currentLanguage === 'es' ? 'Ahora' : 'Agora'}</div>
                         </div>
                     </div>
                 </div>
@@ -611,10 +1327,10 @@ function renderEmailFramingScreen() {
                                         <div class="text-sm text-gray-500">noreply@${emailDomain}</div>
                                     </div>
                                 </div>
-                                <div class="text-sm text-gray-500">Hoje às ${new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}</div>
+                                <div class="text-sm text-gray-500">${t('today')} ${currentLanguage === 'en' ? 'at' : currentLanguage === 'es' ? 'a las' : 'às'} ${new Date().toLocaleTimeString(currentLanguage === 'en' ? 'en-US' : currentLanguage === 'es' ? 'es-ES' : 'pt-PT', { hour: '2-digit', minute: '2-digit' })}</div>
                             </div>
                             <div class="mt-4">
-                                <div class="text-sm text-gray-500 mb-1">Para:</div>
+                                <div class="text-sm text-gray-500 mb-1">${t('to')}</div>
                                 <div class="font-medium text-gray-900">${displayName}</div>
                             </div>
                             <div class="mt-3">
@@ -635,8 +1351,8 @@ function renderEmailFramingScreen() {
                         <!-- Email Footer -->
                         <div class="mt-8 pt-6 border-t border-gray-200">
                             <div class="text-xs text-gray-500">
-                                <p>${brandName} - A sua plataforma de compras</p>
-                                <p class="mt-1">Este e-mail foi enviado para ${displayName.toLowerCase()}@email.com</p>
+                                <p>${brandName} - ${t('platform')}</p>
+                                <p class="mt-1">${t('emailSentTo')} ${displayName.toLowerCase()}@email.com</p>
                             </div>
                         </div>
                     </div>
@@ -644,7 +1360,7 @@ function renderEmailFramingScreen() {
             </div>
             
             <button onclick="renderScreen('exclusion')" class="btn-primary mt-8 w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -653,33 +1369,33 @@ function renderEmailFramingScreen() {
 function renderExclusionScreen() {
     return `
         <div class="space-y-5">
-            <p class="text-center text-gray-600 mb-4">Responda às seguintes questões com base no e-mail que acabou de ler:</p>
+            <p class="text-center text-gray-600 mb-4">${t('answerBasedOnEmail')}</p>
             
             <div class="space-y-4">
                 <div class="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-2xl border border-gray-200">
-                    <p class="text-base font-semibold text-gray-800 mb-4">"O e-mail refere qual tipo de benefício?"</p>
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('exclusionQ1')}</p>
                     <div class="space-y-2">
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.exclusionBenefitType === 'Desconto' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('exclusion_type', 'Desconto', 'exclusion_type-group')">
                             <input type="radio" name="exclusion_type" value="Desconto" class="mr-3 w-5 h-5" ${surveyData.exclusionBenefitType === 'Desconto' ? 'checked' : ''} onchange="surveyData.exclusionBenefitType = this.value">
-                            <span class="text-gray-700">Desconto</span>
+                            <span class="text-gray-700">${t('discount')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.exclusionBenefitType === 'Cashback' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('exclusion_type', 'Cashback', 'exclusion_type-group')">
                             <input type="radio" name="exclusion_type" value="Cashback" class="mr-3 w-5 h-5" ${surveyData.exclusionBenefitType === 'Cashback' ? 'checked' : ''} onchange="surveyData.exclusionBenefitType = this.value">
-                            <span class="text-gray-700">Cashback</span>
+                            <span class="text-gray-700">${t('cashback')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.exclusionBenefitType === 'Cupão' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('exclusion_type', 'Cupão', 'exclusion_type-group')">
                             <input type="radio" name="exclusion_type" value="Cupão" class="mr-3 w-5 h-5" ${surveyData.exclusionBenefitType === 'Cupão' ? 'checked' : ''} onchange="surveyData.exclusionBenefitType = this.value">
-                            <span class="text-gray-700">Cupão</span>
+                            <span class="text-gray-700">${t('coupon')}</span>
                         </label>
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.exclusionBenefitType === 'Nenhum destes' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('exclusion_type', 'Nenhum destes', 'exclusion_type-group')">
                             <input type="radio" name="exclusion_type" value="Nenhum destes" class="mr-3 w-5 h-5" ${surveyData.exclusionBenefitType === 'Nenhum destes' ? 'checked' : ''} onchange="surveyData.exclusionBenefitType = this.value">
-                            <span class="text-gray-700">Nenhum destes</span>
+                            <span class="text-gray-700">${t('noneOfThese')}</span>
                         </label>
                     </div>
                 </div>
                 
                 <div class="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-2xl border border-gray-200">
-                    <p class="text-base font-semibold text-gray-800 mb-4">"O benefício mencionado permite recebimento/subtração de até quantos % do valor gasto?"</p>
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('exclusionQ2')}</p>
                     <div class="space-y-2">
                         <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-white hover:border-blue-400 transition-all ${surveyData.exclusionPercentage === '50%' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('exclusion_percent', '50%', 'exclusion_percent-group')">
                             <input type="radio" name="exclusion_percent" value="50%" class="mr-3 w-5 h-5" ${surveyData.exclusionPercentage === '50%' ? 'checked' : ''} onchange="surveyData.exclusionPercentage = this.value">
@@ -702,7 +1418,7 @@ function renderExclusionScreen() {
             </div>
             
             <button onclick="validateAndContinue('exclusion', 'manipulation_check')" class="btn-primary mt-8 w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -711,22 +1427,22 @@ function renderExclusionScreen() {
 function renderManipulationCheckScreen() {
     return `
         <div class="space-y-5">
-            <p class="text-center text-gray-600 mb-4">Com base no e-mail que leu, responda às seguintes questões:</p>
+            <p class="text-center text-gray-600 mb-4">${t('basedOnEmail')}</p>
             
             <div class="space-y-5 bg-gray-50 p-4 rounded-2xl">
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">"A mensagem apresentada enfatizou principalmente:"</p>
-                    ${renderLikertScale('manip_loss', 'manipulationLossEmphasis', 'Perdas por NÃO usar o benefício', 'Benefícios de USAR o benefício', 1, 7, surveyData.manipulationLossEmphasis)}
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('manipQ1')}</p>
+                    ${renderLikertScale('manip_loss', 'manipulationLossEmphasis', t('lossesNotUsing'), t('benefitsUsing'), 1, 7, surveyData.manipulationLossEmphasis)}
                 </div>
                 
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">"Globalmente, a mensagem transmite mais a ideia de…"</p>
-                    ${renderLikertScale('manip_global', 'manipulationGlobalIdea', 'Não deixar passar algo que poderia me beneficiar', 'Tirar partido de algo que pode trazer benefícios', 1, 7, surveyData.manipulationGlobalIdea)}
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('manipQ2')}</p>
+                    ${renderLikertScale('manip_global', 'manipulationGlobalIdea', t('notMissingSomething'), t('takingAdvantage'), 1, 7, surveyData.manipulationGlobalIdea)}
                 </div>
             </div>
             
             <button onclick="validateLikertScreen('manipulation_check', ['manipulationLossEmphasis', 'manipulationGlobalIdea'], 'message_involvement')" class="btn-primary mt-8 w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -735,63 +1451,63 @@ function renderManipulationCheckScreen() {
 function renderMessageInvolvementScreen() {
     return `
         <div class="space-y-5">
-            <p class="text-center text-gray-600 mb-4">Avalie a sua experiência ao ler o e-mail:</p>
+            <p class="text-center text-gray-600 mb-4">${t('evaluateExperience')}</p>
             
             <div class="space-y-5 bg-gray-50 p-4 rounded-2xl">
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">1. Você diria que, enquanto lia, você:</p>
-                    ${renderLikertScale('inv_interested', 'involvementInterested', 'não estava interessado', 'estava muito interessado', 1, 9, surveyData.involvementInterested)}
+                    <p class="text-base font-semibold text-gray-800 mb-4">${t('invQ1')}</p>
+                    ${renderLikertScale('inv_interested', 'involvementInterested', t('notInterested'), t('veryInterested'), 1, 9, surveyData.involvementInterested)}
                 </div>
                 
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">2. Você diria que, enquanto lia, você:</p>
-                    ${renderLikertScale('inv_absorbed', 'involvementAbsorbed', 'não estava absorvido', 'estava muito absorvido', 1, 9, surveyData.involvementAbsorbed)}
+                    <p class="text-base font-semibold text-gray-800 mb-4">2. ${t('invQ1').replace('1. ', '')}</p>
+                    ${renderLikertScale('inv_absorbed', 'involvementAbsorbed', t('notAbsorbed'), t('veryAbsorbed'), 1, 9, surveyData.involvementAbsorbed)}
                 </div>
                 
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">3. Você diria que, enquanto lia, você:</p>
-                    ${renderLikertScale('inv_attention', 'involvementAttention', 'leu a mensagem rapidamente por alto', 'leu a mensagem com atenção', 1, 9, surveyData.involvementAttention)}
+                    <p class="text-base font-semibold text-gray-800 mb-4">3. ${t('invQ1').replace('1. ', '')}</p>
+                    ${renderLikertScale('inv_attention', 'involvementAttention', t('readQuickly'), t('readWithAttention'), 1, 9, surveyData.involvementAttention)}
                 </div>
                 
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">4. Você diria que achou a mensagem:</p>
-                    ${renderLikertScale('inv_relevant_msg', 'involvementRelevant', 'irrelevante', 'relevante para si', 1, 9, surveyData.involvementRelevant)}
+                    <p class="text-base font-semibold text-gray-800 mb-4">4. ${currentLanguage === 'en' ? 'Would you say you found the message:' : currentLanguage === 'es' ? '¿Diría que encontró el mensaje:' : 'Você diria que achou a mensagem:'}</p>
+                    ${renderLikertScale('inv_relevant_msg', 'involvementRelevant', t('irrelevantToYou'), t('relevantToYou'), 1, 9, surveyData.involvementRelevant)}
                 </div>
                 
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">5. Você diria que achou a mensagem:</p>
-                    ${renderLikertScale('inv_interesting', 'involvementInteresting', 'chata', 'interessante', 1, 9, surveyData.involvementInteresting)}
+                    <p class="text-base font-semibold text-gray-800 mb-4">5. ${currentLanguage === 'en' ? 'Would you say you found the message:' : currentLanguage === 'es' ? '¿Diría que encontró el mensaje:' : 'Você diria que achou a mensagem:'}</p>
+                    ${renderLikertScale('inv_interesting', 'involvementInteresting', t('boring'), t('interesting'), 1, 9, surveyData.involvementInteresting)}
                 </div>
                 
                 <div>
-                    <p class="text-base font-semibold text-gray-800 mb-4">6. Você diria que achou a mensagem:</p>
-                    ${renderLikertScale('inv_engaging', 'involvementEngaging', 'não envolvente', 'envolvente', 1, 9, surveyData.involvementEngaging)}
+                    <p class="text-base font-semibold text-gray-800 mb-4">6. ${currentLanguage === 'en' ? 'Would you say you found the message:' : currentLanguage === 'es' ? '¿Diría que encontró el mensaje:' : 'Você diria que achou a mensagem:'}</p>
+                    ${renderLikertScale('inv_engaging', 'involvementEngaging', t('notEngaging'), t('engaging'), 1, 9, surveyData.involvementEngaging)}
                 </div>
             </div>
             
             <button onclick="validateLikertScreen('message_involvement', ['involvementInterested', 'involvementAbsorbed', 'involvementAttention', 'involvementRelevant', 'involvementInteresting', 'involvementEngaging'], 'intention')" class="btn-primary mt-8 w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
 }
 
 function renderIntentionScreen() {
-    const brandName = surveyData.selectedBrand || 'a marca selecionada';
+    const brandName = surveyData.selectedBrand || (currentLanguage === 'en' ? 'the selected brand' : currentLanguage === 'es' ? 'la marca seleccionada' : 'a marca selecionada');
     return `
         <div class="space-y-5">
-            <p class="text-center text-gray-700 mb-2">Imagine que está prestes a fazer uma compra na <strong class="text-blue-600">${brandName}</strong>.</p>
-            <p class="text-center text-gray-600 mb-4">Indique o quanto é provável que utilize este novo benefício na sua próxima compra:</p>
+            <p class="text-center text-gray-700 mb-2">${t('imaginePurchase')} <strong class="text-blue-600">${brandName}</strong>.</p>
+            <p class="text-center text-gray-600 mb-4">${t('indicateLikelihood')}</p>
             
             <div class="space-y-5 bg-gray-50 p-4 rounded-2xl">
-                ${renderLikertScale('int_probable', 'intentionProbable', 'improvável', 'provável', 1, 7, surveyData.intentionProbable)}
-                ${renderLikertScale('int_possible', 'intentionPossible', 'impossível', 'possível', 1, 7, surveyData.intentionPossible)}
-                ${renderLikertScale('int_definitely', 'intentionDefinitelyUse', 'definitivamente não usaria', 'definitivamente usaria', 1, 7, surveyData.intentionDefinitelyUse)}
-                ${renderLikertScale('int_frequent', 'intentionFrequent', 'nada frequente', 'muito frequente', 1, 7, surveyData.intentionFrequent)}
+                ${renderLikertScale('int_probable', 'intentionProbable', t('unlikely'), t('likely'), 1, 7, surveyData.intentionProbable)}
+                ${renderLikertScale('int_possible', 'intentionPossible', t('impossible'), t('possible'), 1, 7, surveyData.intentionPossible)}
+                ${renderLikertScale('int_definitely', 'intentionDefinitelyUse', t('definitelyNotUse'), t('definitelyUse'), 1, 7, surveyData.intentionDefinitelyUse)}
+                ${renderLikertScale('int_frequent', 'intentionFrequent', t('notFrequent'), t('veryFrequent'), 1, 7, surveyData.intentionFrequent)}
             </div>
             
             <button onclick="validateLikertScreen('intention', ['intentionProbable', 'intentionPossible', 'intentionDefinitelyUse', 'intentionFrequent'], 'tagpeak_info')" class="btn-primary mt-6 w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -800,11 +1516,11 @@ function renderIntentionScreen() {
 function renderTagpeakInfoScreen() {
     return `
         <div class="text-center space-y-6">
-            <p class="text-lg text-gray-700">Vamos dar-lhe mais informações sobre a Tagpeak que podem ter faltado no e-mail.</p>
-            <p class="text-gray-600">Poderá navegar livremente pelo website da Tagpeak para conhecer melhor o produto.</p>
+            <p class="text-lg text-gray-700">${t('moreInfoTagpeak')}</p>
+            <p class="text-gray-600">${t('browseWebsite')}</p>
             
             <button onclick="renderScreen('website_view')" class="btn-primary mt-4">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -828,7 +1544,7 @@ function renderWebsiteViewScreen() {
                     <div class="flex-1 mx-4">
                         <div class="bg-white px-3 py-1 rounded text-sm text-gray-600 text-center">https://tagpeak.com</div>
                     </div>
-                    <div class="text-sm text-gray-500">Navegue pelo website</div>
+                    <div class="text-sm text-gray-500">${t('browseWebsiteNote')}</div>
                 </div>
                 <iframe 
                     id="tagpeak-iframe"
@@ -842,12 +1558,12 @@ function renderWebsiteViewScreen() {
             </div>
             
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
-                <p class="font-medium mb-1">Nota:</p>
-                <p>Se o website não carregar, pode ser devido a restrições de segurança. Por favor, clique em "Continuar" quando estiver pronto.</p>
+                <p class="font-medium mb-1">${t('websiteNote')}</p>
+                <p>${t('websiteNoteText')}</p>
             </div>
             
             <button onclick="finishWebsiteView()" class="btn-primary w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -863,21 +1579,21 @@ function finishWebsiteView() {
 }
 
 function renderIntentionAfterWebsiteScreen() {
-    const brandName = surveyData.selectedBrand || 'a marca selecionada';
+    const brandName = surveyData.selectedBrand || (currentLanguage === 'en' ? 'the selected brand' : currentLanguage === 'es' ? 'la marca seleccionada' : 'a marca selecionada');
     return `
         <div class="space-y-5">
-            <p class="text-center text-gray-700 mb-2">Agora que conhece melhor a Tagpeak, imagine que está prestes a fazer uma compra na <strong class="text-blue-600">${brandName}</strong>.</p>
-            <p class="text-center text-gray-600 mb-4">Indique o quanto é provável que utilize este novo benefício na sua próxima compra:</p>
+            <p class="text-center text-gray-700 mb-2">${t('nowThatYouKnow')} <strong class="text-blue-600">${brandName}</strong>.</p>
+            <p class="text-center text-gray-600 mb-4">${t('indicateLikelihood')}</p>
             
             <div class="space-y-5 bg-gray-50 p-4 rounded-2xl">
-                ${renderLikertScale('int_after_probable', 'intentionAfterWebsiteProbable', 'improvável', 'provável', 1, 7, surveyData.intentionAfterWebsiteProbable)}
-                ${renderLikertScale('int_after_possible', 'intentionAfterWebsitePossible', 'impossível', 'possível', 1, 7, surveyData.intentionAfterWebsitePossible)}
-                ${renderLikertScale('int_after_definitely', 'intentionAfterWebsiteDefinitelyUse', 'definitivamente não usaria', 'definitivamente usaria', 1, 7, surveyData.intentionAfterWebsiteDefinitelyUse)}
-                ${renderLikertScale('int_after_frequent', 'intentionAfterWebsiteFrequent', 'nada frequente', 'muito frequente', 1, 7, surveyData.intentionAfterWebsiteFrequent)}
+                ${renderLikertScale('int_after_probable', 'intentionAfterWebsiteProbable', t('unlikely'), t('likely'), 1, 7, surveyData.intentionAfterWebsiteProbable)}
+                ${renderLikertScale('int_after_possible', 'intentionAfterWebsitePossible', t('impossible'), t('possible'), 1, 7, surveyData.intentionAfterWebsitePossible)}
+                ${renderLikertScale('int_after_definitely', 'intentionAfterWebsiteDefinitelyUse', t('definitelyNotUse'), t('definitelyUse'), 1, 7, surveyData.intentionAfterWebsiteDefinitelyUse)}
+                ${renderLikertScale('int_after_frequent', 'intentionAfterWebsiteFrequent', t('notFrequent'), t('veryFrequent'), 1, 7, surveyData.intentionAfterWebsiteFrequent)}
             </div>
             
             <button onclick="validateLikertScreen('intention_after_website', ['intentionAfterWebsiteProbable', 'intentionAfterWebsitePossible', 'intentionAfterWebsiteDefinitelyUse', 'intentionAfterWebsiteFrequent'], 'emotions_1')" class="btn-primary mt-6 w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -886,31 +1602,18 @@ function renderIntentionAfterWebsiteScreen() {
 function renderEmotionsScreen1() {
     return `
         <div class="space-y-5">
-            <p class="text-center text-gray-600 mb-4">De acordo com as informações apresentadas, avalie as seguintes afirmações:</p>
+            <p class="text-center text-gray-600 mb-4">${t('evaluateStatements')}</p>
             
             <div class="space-y-4">
                 <div class="bg-gray-50 p-4 rounded-2xl">
                     <div class="space-y-4">
                         <div>
-                            <p class="text-base font-medium text-gray-800 mb-4">"É difícil de utilizar o benefício"</p>
-                            ${renderLikertScale('ease_difficult', 'easeDifficult', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.easeDifficult)}
+                            <p class="text-base font-medium text-gray-800 mb-4">${t('easeQ1')}</p>
+                            ${renderLikertScale('ease_difficult', 'easeDifficult', t('disagreeTotally'), t('agreeTotally'), 1, 7, surveyData.easeDifficult)}
                         </div>
                         <div>
-                            <p class="text-base font-medium text-gray-800 mb-4">"Eu acredito que é fácil utilizar o benefício"</p>
-                            ${renderLikertScale('ease_easy', 'easeEasy', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.easeEasy)}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-gray-50 p-4 rounded-2xl">
-                    <div class="space-y-4">
-                        <div>
-                            <p class="text-base font-medium text-gray-800 mb-4">"Poderia explicar facilmente o funcionamento associado ao benefício"</p>
-                            ${renderLikertScale('product_explain', 'productExplainEasy', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.productExplainEasy)}
-                        </div>
-                        <div>
-                            <p class="text-base font-medium text-gray-800 mb-4">"Não é difícil de dar fazer uma descrição precisa sobre o benefício."</p>
-                            ${renderLikertScale('product_desc', 'productDescriptionEasy', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.productDescriptionEasy)}
+                            <p class="text-base font-medium text-gray-800 mb-4">${t('easeQ2')}</p>
+                            ${renderLikertScale('ease_easy', 'easeEasy', t('disagreeTotally'), t('agreeTotally'), 1, 7, surveyData.easeEasy)}
                         </div>
                     </div>
                 </div>
@@ -918,19 +1621,32 @@ function renderEmotionsScreen1() {
                 <div class="bg-gray-50 p-4 rounded-2xl">
                     <div class="space-y-4">
                         <div>
-                            <p class="text-base font-medium text-gray-800 mb-4">"As etapas do processo de utilização do benefício são claras para mim"</p>
-                            ${renderLikertScale('clarity_steps', 'clarityStepsClear', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.clarityStepsClear)}
+                            <p class="text-base font-medium text-gray-800 mb-4">${t('easeQ3')}</p>
+                            ${renderLikertScale('product_explain', 'productExplainEasy', t('disagreeTotally'), t('agreeTotally'), 1, 7, surveyData.productExplainEasy)}
                         </div>
                         <div>
-                            <p class="text-base font-medium text-gray-800 mb-4">"Sinto‑me segura/o quanto à forma de utilizar o benefício de forma eficaz."</p>
-                            ${renderLikertScale('clarity_secure', 'clarityFeelSecure', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.clarityFeelSecure)}
+                            <p class="text-base font-medium text-gray-800 mb-4">${t('easeQ4')}</p>
+                            ${renderLikertScale('product_desc', 'productDescriptionEasy', t('disagreeTotally'), t('agreeTotally'), 1, 7, surveyData.productDescriptionEasy)}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-2xl">
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-base font-medium text-gray-800 mb-4">${t('easeQ5')}</p>
+                            ${renderLikertScale('clarity_steps', 'clarityStepsClear', t('disagreeTotally'), t('agreeTotally'), 1, 7, surveyData.clarityStepsClear)}
+                        </div>
+                        <div>
+                            <p class="text-base font-medium text-gray-800 mb-4">${t('easeQ6')}</p>
+                            ${renderLikertScale('clarity_secure', 'clarityFeelSecure', t('disagreeTotally'), t('agreeTotally'), 1, 7, surveyData.clarityFeelSecure)}
                         </div>
                     </div>
                 </div>
             </div>
             
             <button onclick="validateLikertScreen('emotions_1', ['easeDifficult', 'easeEasy', 'productExplainEasy', 'productDescriptionEasy', 'clarityStepsClear', 'clarityFeelSecure'], 'emotions_2')" class="btn-primary mt-6 w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -939,18 +1655,18 @@ function renderEmotionsScreen1() {
 function renderEmotionsScreen2() {
     return `
         <div class="space-y-5">
-            <p class="text-center text-gray-600 mb-4">Avalie as seguintes afirmações:</p>
+            <p class="text-center text-gray-600 mb-4">${currentLanguage === 'en' ? 'Evaluate the following statements:' : currentLanguage === 'es' ? 'Evalúe las siguientes afirmaciones:' : 'Avalie as seguintes afirmações:'}</p>
             
             <div class="space-y-4">
                 <div class="bg-gray-50 p-4 rounded-2xl">
                     <div class="space-y-4">
                         <div>
-                            <p class="text-base font-medium text-gray-800 mb-4">"Este benefício parece‑me mais vantajoso do que outras opções de desconto ou cashback que conheço."</p>
-                            ${renderLikertScale('advantage_more', 'advantageMoreAdvantageous', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.advantageMoreAdvantageous)}
+                            <p class="text-base font-medium text-gray-800 mb-4">${t('advantageQ1')}</p>
+                            ${renderLikertScale('advantage_more', 'advantageMoreAdvantageous', t('disagreeTotally'), t('agreeTotally'), 1, 7, surveyData.advantageMoreAdvantageous)}
                         </div>
                         <div>
-                            <p class="text-base font-medium text-gray-800 mb-4">"Com este benefício, sinto que fico em melhor posição do que com benefícios tradicionais."</p>
-                            ${renderLikertScale('advantage_better', 'advantageBetterPosition', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.advantageBetterPosition)}
+                            <p class="text-base font-medium text-gray-800 mb-4">${t('advantageQ2')}</p>
+                            ${renderLikertScale('advantage_better', 'advantageBetterPosition', t('disagreeTotally'), t('agreeTotally'), 1, 7, surveyData.advantageBetterPosition)}
                         </div>
                     </div>
                 </div>
@@ -958,23 +1674,23 @@ function renderEmotionsScreen2() {
                 <div class="bg-gray-50 p-4 rounded-2xl">
                     <div class="space-y-4">
                         <div>
-                            <p class="text-base font-medium text-gray-800 mb-4">"Tenho interesse em usar este benefício."</p>
-                            ${renderLikertScale('willingness_interest', 'willingnessInterest', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.willingnessInterest)}
+                            <p class="text-base font-medium text-gray-800 mb-4">${t('willingnessQ1')}</p>
+                            ${renderLikertScale('willingness_interest', 'willingnessInterest', t('disagreeTotally'), t('agreeTotally'), 1, 7, surveyData.willingnessInterest)}
                         </div>
                         <div>
-                            <p class="text-base font-medium text-gray-800 mb-4">"É provável que eu utilize este benefício sempre que tiver oportunidade."</p>
-                            ${renderLikertScale('willingness_likely', 'willingnessLikelyUse', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.willingnessLikelyUse)}
+                            <p class="text-base font-medium text-gray-800 mb-4">${t('willingnessQ2')}</p>
+                            ${renderLikertScale('willingness_likely', 'willingnessLikelyUse', t('disagreeTotally'), t('agreeTotally'), 1, 7, surveyData.willingnessLikelyUse)}
                         </div>
                         <div>
-                            <p class="text-base font-medium text-gray-800 mb-4">"Pretendo utilizar este benefício no futuro."</p>
-                            ${renderLikertScale('willingness_future', 'willingnessIntendFuture', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.willingnessIntendFuture)}
+                            <p class="text-base font-medium text-gray-800 mb-4">${t('willingnessQ3')}</p>
+                            ${renderLikertScale('willingness_future', 'willingnessIntendFuture', t('disagreeTotally'), t('agreeTotally'), 1, 7, surveyData.willingnessIntendFuture)}
                         </div>
                     </div>
                 </div>
             </div>
             
             <button onclick="validateLikertScreen('emotions_2', ['advantageMoreAdvantageous', 'advantageBetterPosition', 'willingnessInterest', 'willingnessLikelyUse', 'willingnessIntendFuture'], 'concerns')" class="btn-primary mt-6 w-full">
-                Continuar
+                ${t('continue')}
             </button>
         </div>
     `;
@@ -984,26 +1700,26 @@ function renderConcernsScreen() {
     return `
         <div class="space-y-5">
             <div class="text-center">
-                <p class="text-lg text-gray-700 mb-2">Após as informações apresentadas sobre o produto, há alguma dúvida ou receio que ainda tenha em mente?</p>
-                <p class="text-sm text-gray-500">Por favor, partilhe as suas preocupações ou questões.</p>
+                <p class="text-lg text-gray-700 mb-2">${t('concernsTitle')}</p>
+                <p class="text-sm text-gray-500">${t('concernsSubtitle')}</p>
             </div>
             
             <div class="bg-gray-50 p-6 rounded-2xl">
-                <label for="concerns" class="block text-base font-semibold text-gray-800 mb-3">As suas dúvidas ou receios:</label>
+                <label for="concerns" class="block text-base font-semibold text-gray-800 mb-3">${t('yourConcerns')}</label>
                 <textarea 
                     id="concerns" 
                     rows="6" 
                     class="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all resize-none" 
-                    placeholder="Escreva aqui as suas dúvidas ou receios..."
+                    placeholder="${t('concernsPlaceholder')}"
                     required 
                     oninput="surveyData.concernsText = this.value; clearError('concerns-error')"
                 >${surveyData.concernsText || ''}</textarea>
-                <p id="concerns-error" class="text-red-500 text-sm mt-2 hidden">Por favor, escreva pelo menos algumas palavras sobre as suas dúvidas ou receios.</p>
-                <p class="text-sm text-gray-500 mt-2">Mínimo de 5 caracteres</p>
+                <p id="concerns-error" class="text-red-500 text-sm mt-2 hidden">${t('concernsError')}</p>
+                <p class="text-sm text-gray-500 mt-2">${t('minimumCharacters')}</p>
             </div>
             
             <button onclick="validateConcernsAndSubmit()" class="btn-primary mt-4 w-full">
-                Submeter
+                ${t('submit')}
             </button>
         </div>
     `;
@@ -1018,21 +1734,21 @@ function renderThankYouScreen() {
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                     </svg>
                 </div>
-                <h1 class="text-4xl font-bold mb-4">Obrigado(a)!</h1>
-                <p class="text-xl text-gray-700 mb-2">O seu estudo está completo</p>
-                <p class="text-lg text-gray-600">As suas respostas foram guardadas com sucesso.</p>
+                <h1 class="text-4xl font-bold mb-4">${t('thankYou')}</h1>
+                <p class="text-xl text-gray-700 mb-2">${t('studyComplete')}</p>
+                <p class="text-lg text-gray-600">${t('responsesSaved')}</p>
             </div>
             
             <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-2xl border-2 border-blue-200 shadow-lg max-w-md mx-auto">
-                <p class="text-sm text-gray-600 mb-3 font-medium">O seu ID de Utilizador para verificação:</p>
+                <p class="text-sm text-gray-600 mb-3 font-medium">${t('userIdVerification')}</p>
                 <div class="bg-white p-4 rounded-xl border-2 border-blue-300">
                     <p class="text-2xl font-mono font-bold text-blue-600 tracking-wider">${userId}</p>
                 </div>
-                <p class="text-xs text-gray-500 mt-3">Guarde este ID caso precise de verificar a sua participação.</p>
+                <p class="text-xs text-gray-500 mt-3">${t('saveThisId')}</p>
             </div>
             
             <div class="pt-6">
-                <p class="text-gray-600">Agradecemos o seu tempo e contribuição!</p>
+                <p class="text-gray-600">${t('thankYouTime')}</p>
             </div>
         </div>
     `;
@@ -1089,7 +1805,7 @@ function renderLikertScale(questionId, fieldName, leftLabel, rightLabel, min = 1
             <div class="grid ${gridCols} gap-2 mb-2" id="${questionId}-options">
                 ${options.join('')}
             </div>
-            <p id="${questionId}-error" class="text-red-500 text-sm mt-2 hidden">Por favor, selecione uma opção.</p>
+            <p id="${questionId}-error" class="text-red-500 text-sm mt-2 hidden">${t('pleaseSelectOption')}</p>
         </div>
     `;
 }
@@ -1152,12 +1868,12 @@ function validateAndContinue(currentScreen, nextScreen) {
         }
     } else if (currentScreen === 'financial_literacy') {
         if (!surveyData.financialLiteracyQ1 || !surveyData.financialLiteracyQ2 || !surveyData.financialLiteracyQ3) {
-            alert('Por favor, responda a todas as questões.');
+            alert(t('pleaseAnswerAll'));
             isValid = false;
         }
     } else if (currentScreen === 'exclusion') {
         if (!surveyData.exclusionBenefitType || !surveyData.exclusionPercentage) {
-            alert('Por favor, responda a todas as questões.');
+            alert(t('pleaseAnswerAll'));
             isValid = false;
         }
     }
@@ -1257,7 +1973,7 @@ function validateConcernsAndSubmit() {
     
     if (!concernsTextarea) {
         console.error('Concerns textarea not found!');
-        alert('Erro: campo de texto não encontrado. Por favor, recarregue a página.');
+        alert(t('error') + ': ' + (currentLanguage === 'en' ? 'Text field not found. Please reload the page.' : currentLanguage === 'es' ? 'Campo de texto no encontrado. Por favor, recargue la página.' : 'Campo de texto não encontrado. Por favor, recarregue a página.'));
         return;
     }
     
@@ -1317,7 +2033,7 @@ async function saveResults() {
     } catch (error) {
         console.error('Error saving results:', error);
         console.error('Full error:', error);
-        alert('Erro ao guardar os dados: ' + error.message + '\n\nPor favor, verifique a consola do navegador para mais detalhes.');
+        alert(t('errorSavingData') + ' ' + error.message + '\n\n' + t('checkConsole'));
         // Still show thank you screen even if save fails
         renderScreen('thank_you');
     }
@@ -1338,9 +2054,11 @@ window.assignFramingCondition = assignFramingCondition;
 window.finishWebsiteView = finishWebsiteView;
 window.saveResults = saveResults;
 window.surveyData = surveyData;
+window.selectLanguage = selectLanguage;
+window.t = t;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     initializeSupabase();
-    renderScreen('welcome');
+    renderScreen('language_selection');
 });

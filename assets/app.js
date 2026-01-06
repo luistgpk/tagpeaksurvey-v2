@@ -916,38 +916,29 @@ function renderScreen(screenName) {
 // --- RENDER FUNCTIONS ---
 
 function renderLanguageSelectionScreen() {
-    // Use a default language for the selection screen text
-    const lang = currentLanguage || 'en';
-    const tempT = (key) => translations[lang][key] || key;
-    
     return `
         <div class="text-center space-y-8">
-            <div>
-                <h1 class="text-4xl font-bold mb-3">${tempT('selectLanguage')}</h1>
-                <p class="text-lg text-gray-700">${lang === 'en' ? 'Please select your preferred language' : lang === 'es' ? 'Por favor, seleccione su idioma preferido' : 'Por favor, selecione o seu idioma preferido'}</p>
-            </div>
-            
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
                 <button 
                     onclick="selectLanguage('en')" 
                     class="language-btn p-8 border-2 border-gray-300 rounded-2xl font-semibold text-gray-700 transition-all hover:scale-105 hover:border-blue-400 hover:bg-blue-50"
                 >
                     <div class="text-4xl mb-3">🇬🇧</div>
-                    <div class="text-xl">English</div>
+                    <div class="text-xl">GB in English</div>
                 </button>
                 <button 
                     onclick="selectLanguage('es')" 
                     class="language-btn p-8 border-2 border-gray-300 rounded-2xl font-semibold text-gray-700 transition-all hover:scale-105 hover:border-blue-400 hover:bg-blue-50"
                 >
                     <div class="text-4xl mb-3">🇪🇸</div>
-                    <div class="text-xl">Español</div>
+                    <div class="text-xl">ES en Español</div>
                 </button>
                 <button 
                     onclick="selectLanguage('pt')" 
                     class="language-btn p-8 border-2 border-gray-300 rounded-2xl font-semibold text-gray-700 transition-all hover:scale-105 hover:border-blue-400 hover:bg-blue-50"
                 >
                     <div class="text-4xl mb-3">🇵🇹</div>
-                    <div class="text-xl">Português</div>
+                    <div class="text-xl">PT em Português</div>
                 </button>
             </div>
         </div>

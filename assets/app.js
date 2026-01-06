@@ -924,21 +924,21 @@ function renderLanguageSelectionScreen() {
                     class="language-btn p-8 border-2 border-gray-300 rounded-2xl font-semibold text-gray-700 transition-all hover:scale-105 hover:border-blue-400 hover:bg-blue-50"
                 >
                     <div class="text-4xl mb-3">🇬🇧</div>
-                    <div class="text-xl">GB in English</div>
+                    <div class="text-xl">in English</div>
                 </button>
                 <button 
                     onclick="selectLanguage('es')" 
                     class="language-btn p-8 border-2 border-gray-300 rounded-2xl font-semibold text-gray-700 transition-all hover:scale-105 hover:border-blue-400 hover:bg-blue-50"
                 >
                     <div class="text-4xl mb-3">🇪🇸</div>
-                    <div class="text-xl">ES en Español</div>
+                    <div class="text-xl">en Español</div>
                 </button>
                 <button 
                     onclick="selectLanguage('pt')" 
                     class="language-btn p-8 border-2 border-gray-300 rounded-2xl font-semibold text-gray-700 transition-all hover:scale-105 hover:border-blue-400 hover:bg-blue-50"
                 >
                     <div class="text-4xl mb-3">🇵🇹</div>
-                    <div class="text-xl">PT em Português</div>
+                    <div class="text-xl">em Português</div>
                 </button>
             </div>
         </div>

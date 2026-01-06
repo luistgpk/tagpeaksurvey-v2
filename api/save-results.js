@@ -36,74 +36,98 @@ export default async function handler(req, res) {
 
         const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-        const { resultsData, demographicsData, userId } = req.body;
+        const { userId, framingCondition, surveyData } = req.body;
 
         console.log('Request body check:', {
-            hasResultsData: !!resultsData,
-            hasDemographicsData: !!demographicsData,
             hasUserId: !!userId,
-            userId: userId
+            hasFramingCondition: !!framingCondition,
+            hasSurveyData: !!surveyData,
+            userId: userId,
+            framingCondition: framingCondition
         });
 
-        if (!resultsData || !demographicsData || !userId) {
+        if (!userId || !framingCondition || !surveyData) {
             console.error('Missing required data:', {
-                resultsData: !!resultsData,
-                demographicsData: !!demographicsData,
-                userId: !!userId
+                userId: !!userId,
+                framingCondition: !!framingCondition,
+                surveyData: !!surveyData
             });
             return res.status(400).json({ error: 'Missing required data' });
         }
 
-        // Save staircase results
-        const { error: resultsError } = await supabase
-            .from('staircase_results')
-            .insert([{
-                user_id: userId,
-                timestamp: new Date().toISOString(),
-                indifference_points: resultsData.indifferencePoints,
-                raw_history: resultsData.rawHistory,
-                experience_quiz: resultsData.experienceQuiz,
-                concept_quiz: resultsData.conceptQuiz,
-                user_feedback: resultsData.userFeedback
-            }]);
-
-        if (resultsError) {
-            console.error('Error saving results:', resultsError);
-            return res.status(500).json({ 
-                error: 'Failed to save results',
-                details: resultsError.message 
-            });
-        }
-
-        // Save demographics data - map camelCase to snake_case for database
-        const mappedDemographicsData = {
+        // Save demographics data
+        const demographicsData = {
             user_id: userId,
             timestamp: new Date().toISOString(),
-            age: demographicsData.age,
-            gender: demographicsData.gender,
-            education: demographicsData.education,
-            invests: demographicsData.invests,
-            habit: demographicsData.habit,
-            smokes: demographicsData.smokes,
-            gambles: demographicsData.gambles,
-            monthly_income: demographicsData.monthly_income,
-            price_research: demographicsData.priceResearch,
-            purchase_preference: demographicsData.purchasePreference,
-            used_traditional_cashback: demographicsData.usedTraditionalCashback,
-            experience_rating: demographicsData.experienceRating,
-            rating_justification: demographicsData.ratingJustification,
-            prolific_id: demographicsData.prolificId || null
+            age: surveyData.age,
+            gender: surveyData.gender,
+            monthly_income: surveyData.monthlyIncome,
+            shopping_preference: surveyData.shoppingPreference,
+            first_name: surveyData.firstName || null,
+            financial_literacy_q1: surveyData.financialLiteracyQ1,
+            financial_literacy_q2: surveyData.financialLiteracyQ2,
+            financial_literacy_q3: surveyData.financialLiteracyQ3,
+            initial_involvement_important: surveyData.initialInvolvementImportant,
+            initial_involvement_relevant: surveyData.initialInvolvementRelevant,
+            initial_involvement_meaningful: surveyData.initialInvolvementMeaningful,
+            initial_involvement_valuable: surveyData.initialInvolvementValuable
         };
 
         const { error: demographicsError } = await supabase
             .from('demographics')
-            .insert([mappedDemographicsData]);
+            .insert([demographicsData]);
 
         if (demographicsError) {
             console.error('Error saving demographics:', demographicsError);
             return res.status(500).json({ 
                 error: 'Failed to save demographics',
                 details: demographicsError.message 
+            });
+        }
+
+        // Save framing study results
+        const framingResultsData = {
+            user_id: userId,
+            timestamp: new Date().toISOString(),
+            framing_condition: framingCondition,
+            exclusion_benefit_type: surveyData.exclusionBenefitType,
+            exclusion_percentage: surveyData.exclusionPercentage,
+            manipulation_loss_emphasis: surveyData.manipulationLossEmphasis,
+            manipulation_global_idea: surveyData.manipulationGlobalIdea,
+            involvement_interested: surveyData.involvementInterested,
+            involvement_absorbed: surveyData.involvementAbsorbed,
+            involvement_attention: surveyData.involvementAttention,
+            involvement_relevant: surveyData.involvementRelevant,
+            involvement_interesting: surveyData.involvementInteresting,
+            involvement_engaging: surveyData.involvementEngaging,
+            intention_probable: surveyData.intentionProbable,
+            intention_possible: surveyData.intentionPossible,
+            intention_definitely_use: surveyData.intentionDefinitelyUse,
+            intention_frequent: surveyData.intentionFrequent,
+            ease_difficult: surveyData.easeDifficult,
+            ease_easy: surveyData.easeEasy,
+            product_explain_easy: surveyData.productExplainEasy,
+            product_description_easy: surveyData.productDescriptionEasy,
+            clarity_steps_clear: surveyData.clarityStepsClear,
+            clarity_feel_secure: surveyData.clarityFeelSecure,
+            advantage_more_advantageous: surveyData.advantageMoreAdvantageous,
+            advantage_better_position: surveyData.advantageBetterPosition,
+            willingness_interest: surveyData.willingnessInterest,
+            willingness_likely_use: surveyData.willingnessLikelyUse,
+            willingness_intend_future: surveyData.willingnessIntendFuture,
+            concerns_text: surveyData.concernsText,
+            user_feedback: surveyData.userFeedback || null
+        };
+
+        const { error: resultsError } = await supabase
+            .from('framing_study_results')
+            .insert([framingResultsData]);
+
+        if (resultsError) {
+            console.error('Error saving results:', resultsError);
+            return res.status(500).json({ 
+                error: 'Failed to save results',
+                details: resultsError.message 
             });
         }
 

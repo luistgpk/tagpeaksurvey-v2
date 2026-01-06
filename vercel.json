@@ -1,4 +1,5 @@
 {
+  "name": "tagpeak-survey-frame",
   "buildCommand": "node build.js",
   "outputDirectory": ".",
   "crons": [

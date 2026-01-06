@@ -1,8 +1,8 @@
 {
-  "name": "tagpeak-survey-v2",
+  "name": "tagpeak-framing",
   "version": "1.0.0",
-  "description": "Survey application for cashback vs discount preference study",
-  "main": "21.html",
+  "description": "Survey application for email framing effects study",
+  "main": "index.html",
   "scripts": {
     "dev": "vercel dev",
     "build": "node build.js",

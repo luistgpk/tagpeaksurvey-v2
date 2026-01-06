@@ -1,12 +1,12 @@
-# TagPeak Survey V2
+# TagPeak Framing Study
 
-A survey application for studying cashback vs discount preferences, refactored for Vercel deployment with Supabase backend.
+A survey application for studying email framing effects on consumer behavior, deployed on Vercel with Supabase backend.
 
 ## Features
 
-- **Structured Survey Flow**: Welcome → Demographics → Attention Screen → Explanation → Quiz → Instructions → Staircase Method → Thank You
-- **Staircase Method**: Adaptive questioning to determine indifference points between cashback and discount preferences
-- **Catch Trials**: Built-in attention checks to ensure participant engagement
+- **Structured Survey Flow**: Welcome → Demographics → Financial Literacy → Initial Involvement → Preparation → Email Framing (Positive/Negative/Neutral) → Exclusion Questions → Manipulation Check → Message Involvement → Intention to Use → Website Presentation → Emotion Evaluation → Concerns → Thank You
+- **Randomized Framing Conditions**: Participants are randomly assigned to one of three email framing conditions (positive, negative, or neutral)
+- **Comprehensive Data Collection**: Captures demographics, financial literacy, involvement measures, manipulation checks, and behavioral intentions
 - **Secure Data Collection**: Server-side data persistence via Vercel API routes
 - **Responsive Design**: Mobile-friendly interface with Tailwind CSS
 - **Security Headers**: CSP, XSS protection, and other security measures
@@ -14,17 +14,17 @@ A survey application for studying cashback vs discount preferences, refactored f
 ## Project Structure
 
 ```
-├── 21.html                 # Main application entry point
+├── index.html            # Main application entry point
 ├── assets/
-│   ├── styles.css         # Extracted CSS styles
-│   └── app.js            # Extracted JavaScript application logic
+│   ├── styles.css       # Extracted CSS styles
+│   └── app.js          # Extracted JavaScript application logic
 ├── api/
-│   └── save-results.js   # Vercel serverless function for data persistence
-├── package.json          # Dependencies and scripts
-├── vercel.json          # Vercel configuration with security headers
-├── env.example         # Environment variables template
+│   └── save-results.js # Vercel serverless function for data persistence
+├── package.json        # Dependencies and scripts
+├── vercel.json        # Vercel configuration with security headers
+├── supabase-env-example.txt # Environment variables template
 ├── supabase-schema.sql # Database schema for Supabase
-└── README.md           # This file
+└── README.md          # This file
 ```
 
 ## Setup Instructions
@@ -36,12 +36,14 @@ A survey application for studying cashback vs discount preferences, refactored f
    cp env.example .env.local
    ```
 
-2. Fill in your Supabase credentials in `.env.local`:
+2. Fill in your Supabase credentials. Use `supabase-env-example.txt` as a reference:
    ```
    NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
    SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
    ```
+   
+   **Note**: The Supabase project name is `tgpk-framing`, but credentials remain the same.
 
 ### 2. Supabase Database Setup
 
@@ -83,18 +85,22 @@ A survey application for studying cashback vs discount preferences, refactored f
 
 The application collects two types of data:
 
-### Staircase Results (`staircase_results` table)
+### Framing Study Results (`framing_study_results` table)
 - User ID and timestamp
-- Indifference points for each product
-- Complete trial history with presentation order and anchor points
-- Experience quiz responses
-- Catch trial performance
+- Framing condition (positive, negative, or neutral)
+- Exclusion question responses
+- Manipulation check responses
+- Message involvement measures (6 items, 1-9 scale)
+- Intention to use measures (4 items, 1-7 scale)
+- Ease of use, product clarity, and advantage perceptions
+- Willingness to use measures
+- Concerns and feedback
 
 ### Demographics (`demographics` table)
-- Standard demographic information (age, gender, education, etc.)
-- Behavioral questions (price research, purchase preferences)
-- Experience with traditional cashback
-- Investment and gambling habits
+- Standard demographic information (age, gender, monthly income, shopping preference)
+- Optional first name
+- Financial literacy assessment (3 questions)
+- Initial involvement with promotional benefits (4 items, 1-7 scale)
 
 ## Security Features
 
@@ -112,13 +118,49 @@ Saves survey results to Supabase database.
 **Request Body:**
 ```json
 {
-  "resultsData": {
-    "indifferencePoints": {...},
-    "rawHistory": [...],
-    "experienceQuiz": {...}
-  },
-  "demographicsData": {...},
-  "userId": "unique-user-id"
+  "userId": "unique-user-id",
+  "framingCondition": "positive|negative|neutral",
+  "surveyData": {
+    "age": "26_35",
+    "gender": "mulher",
+    "monthlyIncome": "1500_3000",
+    "shoppingPreference": "online",
+    "firstName": "Optional",
+    "financialLiteracyQ1": "more_102",
+    "financialLiteracyQ2": "less",
+    "financialLiteracyQ3": "false",
+    "initialInvolvementImportant": 3,
+    "initialInvolvementRelevant": 4,
+    "initialInvolvementMeaningful": 5,
+    "initialInvolvementValuable": 6,
+    "exclusionBenefitType": "Cashback",
+    "exclusionPercentage": "100%",
+    "manipulationLossEmphasis": 4,
+    "manipulationGlobalIdea": 5,
+    "involvementInterested": 6,
+    "involvementAbsorbed": 5,
+    "involvementAttention": 7,
+    "involvementRelevant": 6,
+    "involvementInteresting": 5,
+    "involvementEngaging": 6,
+    "intentionProbable": 5,
+    "intentionPossible": 6,
+    "intentionDefinitelyUse": 5,
+    "intentionFrequent": 4,
+    "easeDifficult": 2,
+    "easeEasy": 6,
+    "productExplainEasy": 5,
+    "productDescriptionEasy": 5,
+    "clarityStepsClear": 6,
+    "clarityFeelSecure": 5,
+    "advantageMoreAdvantageous": 6,
+    "advantageBetterPosition": 5,
+    "willingnessInterest": 6,
+    "willingnessLikelyUse": 5,
+    "willingnessIntendFuture": 6,
+    "concernsText": "Some concerns...",
+    "userFeedback": "Optional feedback"
+  }
 }
 ```
 

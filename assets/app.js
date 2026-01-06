@@ -104,7 +104,7 @@ function getEmailFraming(brandName) {
             body1: `A ${brandName}, em parceria com a Tagpeak, uniu forças para multiplicar as vantagens sempre que faz compras conosco.`,
             body2: "Agora podes ter uma percentagem do valor que paga nas suas compras automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si.",
             body3: "Tudo isso para permitir que ganhe um cashback de até <strong>100% do valor gasto nas suas compras</strong>. Aproveite estes benefícios exclusivos!",
-            body4: "Comece a ganhar agora! É muito simples, basta escrever <strong>\"tagpeak\"</strong> no campo de desconto/cupão no checkout da sua próxima compra na ${brandName}.",
+            body4: `Comece a ganhar agora! É muito simples, basta escrever <strong>"tagpeak"</strong> no campo de desconto/cupão no checkout da sua próxima compra na ${brandName}.`,
             body5: "Para mais informações, visite: www.tagpeak.com"
         },
         negative: {
@@ -113,7 +113,7 @@ function getEmailFraming(brandName) {
             body1: `A ${brandName}, em parceria com a Tagpeak, uniu forças para aumentar as vantagens sempre que faz compras conosco.`,
             body2: "Agora podes ter uma percentagem do valor que paga nas suas compras automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si, mas somente se ativar a parceria.",
             body3: "Tudo isso para permitir que evite perder um cashback de até <strong>100% do valor gasto nas suas compras. Vais mesmo abrir mão desta oportunidade?</strong>",
-            body4: "Para não perder, basta escrever <strong>\"tagpeak\"</strong> no campo de desconto/cupão no checkout da sua próxima compra na ${brandName}.",
+            body4: `Para não perder, basta escrever <strong>"tagpeak"</strong> no campo de desconto/cupão no checkout da sua próxima compra na ${brandName}.`,
             body5: "Para mais informações, visite: www.tagpeak.com"
         },
         neutral: {
@@ -122,7 +122,7 @@ function getEmailFraming(brandName) {
             body1: `A ${brandName} estabeleceu uma parceria com a Tagpeak com o objetivo de disponibilizar um benefício adicional às compras.`,
             body2: "Este benefício permite que uma percentagem do valor pago nas compras seja automaticamente investido em ações de empresas cotadas em bolsa, geridas pela equipa especializada da Tagpeak, sem custos ou riscos para o utilizador.",
             body3: "Esse mecanismo permite obter um cashback de até 100% do valor gasto na compra.",
-            body4: "Para utilizar, basta inserir <strong>\"tagpeak\"</strong> no campo de desconto/cupão durante o checkout da sua próxima compra na ${brandName}.",
+            body4: `Para utilizar, basta inserir <strong>"tagpeak"</strong> no campo de desconto/cupão durante o checkout da sua próxima compra na ${brandName}.`,
             body5: "Para mais informações, visite: www.tagpeak.com"
         }
     };
@@ -312,21 +312,25 @@ function renderDemographicsScreen() {
                 <div>
                     <label class="block text-base font-semibold text-gray-800 mb-3">3. Rendimento médio mensal</label>
                     <div class="space-y-2" id="income-group">
-                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === 'less_750' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', 'less_750', 'income-group')">
-                            <input type="radio" name="income" value="less_750" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === 'less_750' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
-                            <span class="text-gray-700">&lt; 750€</span>
+                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === 'less_1500' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', 'less_1500', 'income-group')">
+                            <input type="radio" name="income" value="less_1500" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === 'less_1500' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
+                            <span class="text-gray-700">Menos de 1500€</span>
                         </label>
-                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === '750_1500' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', '750_1500', 'income-group')">
-                            <input type="radio" name="income" value="750_1500" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === '750_1500' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
-                            <span class="text-gray-700">750€ - 1500€</span>
+                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === '1500_2500' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', '1500_2500', 'income-group')">
+                            <input type="radio" name="income" value="1500_2500" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === '1500_2500' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
+                            <span class="text-gray-700">1500€ - 2500€</span>
                         </label>
-                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === '1500_3000' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', '1500_3000', 'income-group')">
-                            <input type="radio" name="income" value="1500_3000" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === '1500_3000' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
-                            <span class="text-gray-700">1500€ - 3000€</span>
+                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === '2500_4000' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', '2500_4000', 'income-group')">
+                            <input type="radio" name="income" value="2500_4000" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === '2500_4000' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
+                            <span class="text-gray-700">2500€ - 4000€</span>
                         </label>
-                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === 'more_3000' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', 'more_3000', 'income-group')">
-                            <input type="radio" name="income" value="more_3000" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === 'more_3000' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
-                            <span class="text-gray-700">&gt; 3000€</span>
+                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === '4000_6000' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', '4000_6000', 'income-group')">
+                            <input type="radio" name="income" value="4000_6000" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === '4000_6000' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
+                            <span class="text-gray-700">4000€ - 6000€</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition-all ${surveyData.monthlyIncome === 'more_6000' ? 'border-blue-500 bg-blue-50' : ''}" onclick="selectOption('income', 'more_6000', 'income-group')">
+                            <input type="radio" name="income" value="more_6000" class="mr-3 w-5 h-5" ${surveyData.monthlyIncome === 'more_6000' ? 'checked' : ''} onchange="surveyData.monthlyIncome = this.value; clearError('income-error')">
+                            <span class="text-gray-700">Mais de 6000€</span>
                         </label>
                     </div>
                     <p id="income-error" class="text-red-500 text-sm mt-2 hidden">Por favor, selecione uma opção.</p>
@@ -355,7 +359,8 @@ function renderDemographicsScreen() {
                 
                 <div>
                     <label class="block text-base font-semibold text-gray-800 mb-3">6. Prolific ID</label>
-                    <input type="text" id="prolificId" class="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="Seu ID do Prolific" value="${surveyData.prolificId || ''}" onchange="surveyData.prolificId = this.value">
+                    <input type="text" id="prolificId" class="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="Seu ID do Prolific" value="${surveyData.prolificId || ''}" onchange="surveyData.prolificId = this.value; clearError('prolific-error')" required>
+                    <p id="prolific-error" class="text-red-500 text-sm mt-2 hidden">Por favor, insira o seu Prolific ID.</p>
                 </div>
             </div>
             
@@ -1140,6 +1145,10 @@ function validateAndContinue(currentScreen, nextScreen) {
         if (!surveyData.shoppingPreference) {
             showError('shopping-error');
             errors.push('Forma de compras');
+        }
+        if (!surveyData.prolificId || surveyData.prolificId.trim() === '') {
+            showError('prolific-error');
+            errors.push('Prolific ID');
         }
         
         if (errors.length > 0) {

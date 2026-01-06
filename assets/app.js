@@ -20,6 +20,7 @@ let surveyData = {
     monthlyIncome: null,
     shoppingPreference: null,
     firstName: null,
+    prolificId: null,
     
     // Financial literacy (Ecrã 3)
     financialLiteracyQ1: null, // Compound interest
@@ -162,18 +163,10 @@ function renderScreen(screenName) {
     contentArea.classList.add('fade-out');
     
     setTimeout(() => {
-        // Special styling for attention screen (Ecrã 5)
-        if (screenName === 'preparation') {
-            surveyContainer.classList.remove('card');
-            surveyContainer.classList.add('bg-yellow-100');
-            surveyContainer.style.padding = '0';
-            surveyContainer.style.boxShadow = 'none';
-        } else {
-            surveyContainer.classList.add('card');
-            surveyContainer.classList.remove('bg-yellow-100');
-            surveyContainer.style.padding = '';
-            surveyContainer.style.boxShadow = '';
-        }
+        // Ensure card styling
+        surveyContainer.classList.add('card');
+        surveyContainer.style.padding = '';
+        surveyContainer.style.boxShadow = '';
         
         contentArea.innerHTML = '';
         
@@ -204,9 +197,6 @@ function renderScreen(screenName) {
                 break;
             case 'initial_involvement':
                 contentArea.innerHTML = renderInitialInvolvementScreen();
-                break;
-            case 'preparation':
-                contentArea.innerHTML = renderPreparationScreen();
                 break;
             case 'email_framing':
                 contentArea.innerHTML = renderEmailFramingScreen();
@@ -362,6 +352,11 @@ function renderDemographicsScreen() {
                     <input type="text" id="firstName" class="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="Seu primeiro nome" value="${surveyData.firstName || ''}" onchange="surveyData.firstName = this.value">
                     <p class="text-sm text-gray-500 mt-2">Esta informação será utilizada somente para melhorar a experiência.</p>
                 </div>
+                
+                <div>
+                    <label class="block text-base font-semibold text-gray-800 mb-3">6. Prolific ID</label>
+                    <input type="text" id="prolificId" class="w-full p-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="Seu ID do Prolific" value="${surveyData.prolificId || ''}" onchange="surveyData.prolificId = this.value">
+                </div>
             </div>
             
             <button onclick="validateAndContinue('demographics', 'financial_literacy')" class="btn-primary mt-8 w-full">
@@ -410,7 +405,7 @@ function validateBrandSelection() {
         showError('brand-error');
         return;
     }
-    renderScreen('initial_involvement');
+    renderScreen('email_notification');
 }
 
 function renderFinancialLiteracyScreen() {
@@ -502,34 +497,7 @@ function renderInitialInvolvementScreen() {
                 ${renderLikertScale('inv_valuable', 'initialInvolvementValuable', 'sem valor', 'valiosos', 1, 7, surveyData.initialInvolvementValuable)}
             </div>
             
-            <button onclick="validateLikertScreen('initial_involvement', ['initialInvolvementImportant', 'initialInvolvementRelevant', 'initialInvolvementMeaningful', 'initialInvolvementValuable'], 'preparation')" class="btn-primary mt-8 w-full">
-                Continuar
-            </button>
-        </div>
-    `;
-}
-
-function renderPreparationScreen() {
-    return `
-        <div class="p-8 text-center">
-            <div class="bg-gradient-to-br from-yellow-100 via-yellow-50 to-orange-50 p-10 rounded-2xl border-4 border-yellow-400 shadow-2xl">
-                <div class="mb-6">
-                    <div class="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg animate-pulse">
-                        <svg class="w-10 h-10 text-yellow-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                        </svg>
-                    </div>
-                    <h2 class="text-3xl font-bold text-yellow-900 mb-4">Atenção!</h2>
-                </div>
-                <p class="text-xl text-yellow-900 font-semibold leading-relaxed">
-                    Pedimos que leia com atenção as informações que serão apresentadas a seguir.
-                </p>
-                <p class="text-lg text-yellow-800 font-medium mt-4">
-                    Elas serão importantes para a conclusão do estudo.
-                </p>
-            </div>
-            
-            <button onclick="renderScreen('email_notification')" class="btn-primary mt-6">
+            <button onclick="validateLikertScreen('initial_involvement', ['initialInvolvementImportant', 'initialInvolvementRelevant', 'initialInvolvementMeaningful', 'initialInvolvementValuable'], 'brand_selection')" class="btn-primary mt-8 w-full">
                 Continuar
             </button>
         </div>
@@ -568,10 +536,18 @@ function renderEmailFramingScreen() {
         assignFramingCondition();
     }
     
-    const brandName = surveyData.selectedBrand || 'Airpnp';
+    if (!surveyData.selectedBrand) {
+        return '<div class="text-center text-red-500">Erro: Marca não selecionada. Por favor, volte atrás.</div>';
+    }
+    
+    const brandName = surveyData.selectedBrand;
     const emailFramings = getEmailFraming(brandName);
     const email = emailFramings[framingCondition];
     const displayName = surveyData.firstName || '[Nome da pessoa]';
+    
+    // Generate email domain from brand name
+    const emailDomain = brandName.toLowerCase().replace(/[^a-z0-9]/g, '') + '.com';
+    const brandInitial = brandName.charAt(0).toUpperCase();
     
     return `
         <div class="space-y-6">
@@ -604,13 +580,13 @@ function renderEmailFramingScreen() {
                                 </div>
                                 <div class="flex-shrink-0">
                                     <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                                        A
+                                        ${brandInitial}
                                     </div>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center space-x-2">
-                                        <span class="font-semibold text-gray-900 truncate">Airpnp</span>
-                                        <span class="text-xs text-gray-500">noreply@airpnp.com</span>
+                                        <span class="font-semibold text-gray-900 truncate">${brandName}</span>
+                                        <span class="text-xs text-gray-500">noreply@${emailDomain}</span>
                                     </div>
                                     <div class="text-sm font-medium text-gray-800 truncate mt-1">${email.subject}</div>
                                 </div>
@@ -628,11 +604,11 @@ function renderEmailFramingScreen() {
                             <div class="flex items-start justify-between mb-3">
                                 <div class="flex items-center space-x-3">
                                     <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                                        A
+                                        ${brandInitial}
                                     </div>
                                     <div>
-                                        <div class="font-semibold text-gray-900">Airpnp</div>
-                                        <div class="text-sm text-gray-500">noreply@airpnp.com</div>
+                                        <div class="font-semibold text-gray-900">${brandName}</div>
+                                        <div class="text-sm text-gray-500">noreply@${emailDomain}</div>
                                     </div>
                                 </div>
                                 <div class="text-sm text-gray-500">Hoje às ${new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}</div>
@@ -659,7 +635,7 @@ function renderEmailFramingScreen() {
                         <!-- Email Footer -->
                         <div class="mt-8 pt-6 border-t border-gray-200">
                             <div class="text-xs text-gray-500">
-                                <p>Airpnp - A sua plataforma de reservas de alojamento</p>
+                                <p>${brandName} - A sua plataforma de compras</p>
                                 <p class="mt-1">Este e-mail foi enviado para ${displayName.toLowerCase()}@email.com</p>
                             </div>
                         </div>
@@ -801,7 +777,7 @@ function renderMessageInvolvementScreen() {
 }
 
 function renderIntentionScreen() {
-    const brandName = surveyData.selectedBrand || 'Airpnp';
+    const brandName = surveyData.selectedBrand || 'a marca selecionada';
     return `
         <div class="space-y-5">
             <p class="text-center text-gray-700 mb-2">Imagine que está prestes a fazer uma compra na <strong class="text-blue-600">${brandName}</strong>.</p>
@@ -860,7 +836,14 @@ function renderWebsiteViewScreen() {
                     class="w-full h-full border-0"
                     style="height: calc(80vh - 50px);"
                     allow="fullscreen"
+                    sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+                    referrerpolicy="no-referrer-when-downgrade"
                 ></iframe>
+            </div>
+            
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+                <p class="font-medium mb-1">Nota:</p>
+                <p>Se o website não carregar, pode ser devido a restrições de segurança. Por favor, clique em "Continuar" quando estiver pronto.</p>
             </div>
             
             <button onclick="finishWebsiteView()" class="btn-primary w-full">
@@ -880,7 +863,7 @@ function finishWebsiteView() {
 }
 
 function renderIntentionAfterWebsiteScreen() {
-    const brandName = surveyData.selectedBrand || 'Airpnp';
+    const brandName = surveyData.selectedBrand || 'a marca selecionada';
     return `
         <div class="space-y-5">
             <p class="text-center text-gray-700 mb-2">Agora que conhece melhor a Tagpeak, imagine que está prestes a fazer uma compra na <strong class="text-blue-600">${brandName}</strong>.</p>
@@ -907,7 +890,6 @@ function renderEmotionsScreen1() {
             
             <div class="space-y-4">
                 <div class="bg-gray-50 p-4 rounded-2xl">
-                    <h3 class="text-lg font-semibold mb-3 text-gray-800">1. Facilidade de uso</h3>
                     <div class="space-y-4">
                         <div>
                             <p class="text-base font-medium text-gray-800 mb-4">"É difícil de utilizar o benefício"</p>
@@ -921,7 +903,6 @@ function renderEmotionsScreen1() {
                 </div>
                 
                 <div class="bg-gray-50 p-4 rounded-2xl">
-                    <h3 class="text-lg font-semibold mb-3 text-gray-800">2. Visão generalizada do produto</h3>
                     <div class="space-y-4">
                         <div>
                             <p class="text-base font-medium text-gray-800 mb-4">"Poderia explicar facilmente o funcionamento associado ao benefício"</p>
@@ -935,7 +916,6 @@ function renderEmotionsScreen1() {
                 </div>
                 
                 <div class="bg-gray-50 p-4 rounded-2xl">
-                    <h3 class="text-lg font-semibold mb-3 text-gray-800">3. Clareza na utilização</h3>
                     <div class="space-y-4">
                         <div>
                             <p class="text-base font-medium text-gray-800 mb-4">"As etapas do processo de utilização do benefício são claras para mim"</p>
@@ -963,7 +943,6 @@ function renderEmotionsScreen2() {
             
             <div class="space-y-4">
                 <div class="bg-gray-50 p-4 rounded-2xl">
-                    <h3 class="text-lg font-semibold mb-3 text-gray-800">4. Percepção de vantagem em relação a outros benefícios</h3>
                     <div class="space-y-4">
                         <div>
                             <p class="text-base font-medium text-gray-800 mb-4">"Este benefício parece‑me mais vantajoso do que outras opções de desconto ou cashback que conheço."</p>
@@ -977,7 +956,6 @@ function renderEmotionsScreen2() {
                 </div>
                 
                 <div class="bg-gray-50 p-4 rounded-2xl">
-                    <h3 class="text-lg font-semibold mb-3 text-gray-800">5. Vontade/interesse de utilização</h3>
                     <div class="space-y-4">
                         <div>
                             <p class="text-base font-medium text-gray-800 mb-4">"Tenho interesse em usar este benefício."</p>
@@ -1239,6 +1217,14 @@ function validateLikertScreen(screenName, fieldNames, nextScreen) {
         'intentionAfterWebsiteDefinitelyUse': 'int_after_definitely',
         'intentionAfterWebsiteFrequent': 'int_after_frequent'
     };
+    
+    // Handle brand selection validation
+    if (screenName === 'brand_selection') {
+        if (!surveyData.selectedBrand) {
+            showError('brand-error');
+            isValid = false;
+        }
+    }
     
     fieldNames.forEach(fieldName => {
         if (!surveyData[fieldName] || surveyData[fieldName] === null) {

@@ -65,6 +65,8 @@ export default async function handler(req, res) {
             monthly_income: surveyData.monthlyIncome || null,
             shopping_preference: surveyData.shoppingPreference || null,
             first_name: surveyData.firstName || null,
+            prolific_id: surveyData.prolificId || null,
+            selected_brand: surveyData.selectedBrand || null,
             financial_literacy_q1: surveyData.financialLiteracyQ1 || null,
             financial_literacy_q2: surveyData.financialLiteracyQ2 || null,
             financial_literacy_q3: surveyData.financialLiteracyQ3 || null,
@@ -137,6 +139,11 @@ export default async function handler(req, res) {
             willingness_interest: surveyData.willingnessInterest,
             willingness_likely_use: surveyData.willingnessLikelyUse,
             willingness_intend_future: surveyData.willingnessIntendFuture,
+            intention_after_website_probable: surveyData.intentionAfterWebsiteProbable || null,
+            intention_after_website_possible: surveyData.intentionAfterWebsitePossible || null,
+            intention_after_website_definitely_use: surveyData.intentionAfterWebsiteDefinitelyUse || null,
+            intention_after_website_frequent: surveyData.intentionAfterWebsiteFrequent || null,
+            website_view_time: surveyData.websiteViewTime || null,
             concerns_text: surveyData.concernsText,
             user_feedback: surveyData.userFeedback || null
         };

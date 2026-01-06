@@ -11,6 +11,9 @@ let framingCondition = null; // Will be randomly assigned: 'positive', 'negative
 
 // Survey state
 let surveyData = {
+    // Brand selection
+    selectedBrand: null,
+    
     // Demographics (Ecrã 2)
     age: null,
     gender: null,
@@ -51,6 +54,15 @@ let surveyData = {
     intentionDefinitelyUse: null, // 1-7
     intentionFrequent: null, // 1-7
     
+    // Intention to use after website (Ecrã 10b)
+    intentionAfterWebsiteProbable: null, // 1-7
+    intentionAfterWebsitePossible: null, // 1-7
+    intentionAfterWebsiteDefinitelyUse: null, // 1-7
+    intentionAfterWebsiteFrequent: null, // 1-7
+    
+    // Website viewing time
+    websiteViewTime: null, // in seconds
+    
     // Ease of use (Ecrã 12)
     easeDifficult: null, // 1-7 (reversed)
     easeEasy: null, // 1-7
@@ -79,36 +91,41 @@ let surveyData = {
     userFeedback: null
 };
 
-// Email framings
-const emailFramings = {
-    positive: {
-        subject: "Ganhe mais com suas reservas Airpnp",
-        greeting: "Olá, [Nome da pessoa],",
-        body1: "A Airpnp, em parceria com a Tagpeak, uniu forças para multiplicar as vantagens sempre que reserva alojamentos conosco.",
-        body2: "Agora podes ter uma percentagem do valor que paga nas suas reservas automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si.",
-        body3: "Tudo isso para permitir que ganhe um cashback de até <strong>100% do valor gasto nas suas reservas</strong>. Aproveite estes benefícios exclusivos!",
-        body4: "Comece a ganhar agora! É muito simples, basta escrever <strong>\"tagpeak\"</strong> no campo de desconto/cupão no checkout da sua próxima reserva na Airpnp.",
-        body5: "Para mais informações, visite: www.tagpeak.com"
-    },
-    negative: {
-        subject: "Não deixei escapar os benefícios nas suas reservas Airpnp",
-        greeting: "Olá, [Nome da pessoa],",
-        body1: "A Airpnp, em parceria com a Tagpeak, uniu forças para aumentar as vantagens sempre que reserva alojamentos conosco.",
-        body2: "Agora podes ter uma percentagem do valor que paga nas suas reservas automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si, mas somente se ativar a parceria.",
-        body3: "Tudo isso para permitir que evite perder um cashback de até <strong>100% do valor gasto nas suas reservas. Vais mesmo abrir mão desta oportunidade?</strong>",
-        body4: "Para não perder, basta escrever <strong>\"tagpeak\"</strong> no campo de desconto/cupão no checkout da sua próxima reserva na Airpnp.",
-        body5: "Para mais informações, visite: www.tagpeak.com"
-    },
-    neutral: {
-        subject: "Nova parceria Airpnp e Tagpeak",
-        greeting: "Olá, [Nome da pessoa],",
-        body1: "A Airpnp estabeleceu uma parceria com a Tagpeak com o objetivo de disponibilizar um benefício adicional às reservas de alojamento.",
-        body2: "Este benefício permite que uma percentagem do valor pago nas reservas seja automaticamente investido em ações de empresas cotadas em bolsa, geridas pela equipa especializada da Tagpeak, sem custos ou riscos para o utilizador.",
-        body3: "Esse mecanismo permite obter um cashback de até 100% do valor gasto na reserva.",
-        body4: "Para utilizar, basta inserir <strong>\"tagpeak\"</strong> no campo de desconto/cupão durante o checkout da sua próxima reserva Airpnp.",
-        body5: "Para mais informações, visite: www.tagpeak.com"
-    }
-};
+// Brand names
+const brands = ['Adidas', 'Booking.com', 'Sephora', 'Samsung', 'New Balance', 'Conforama', 'Sonos', 'Temu', 'Fila', 'Tous', 'Converse', 'Gocco', 'Pikolin'];
+
+// Email framings - dynamically use selected brand
+function getEmailFraming(brandName) {
+    return {
+        positive: {
+            subject: `Ganhe mais com suas compras ${brandName}`,
+            greeting: "Olá, [Nome da pessoa],",
+            body1: `A ${brandName}, em parceria com a Tagpeak, uniu forças para multiplicar as vantagens sempre que faz compras conosco.`,
+            body2: "Agora podes ter uma percentagem do valor que paga nas suas compras automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si.",
+            body3: "Tudo isso para permitir que ganhe um cashback de até <strong>100% do valor gasto nas suas compras</strong>. Aproveite estes benefícios exclusivos!",
+            body4: "Comece a ganhar agora! É muito simples, basta escrever <strong>\"tagpeak\"</strong> no campo de desconto/cupão no checkout da sua próxima compra na ${brandName}.",
+            body5: "Para mais informações, visite: www.tagpeak.com"
+        },
+        negative: {
+            subject: `Não deixei escapar os benefícios nas suas compras ${brandName}`,
+            greeting: "Olá, [Nome da pessoa],",
+            body1: `A ${brandName}, em parceria com a Tagpeak, uniu forças para aumentar as vantagens sempre que faz compras conosco.`,
+            body2: "Agora podes ter uma percentagem do valor que paga nas suas compras automaticamente investida em ações de empresas cotadas em bolsa pela equipa especializada da Tagpeak, sem qualquer custo e risco para si, mas somente se ativar a parceria.",
+            body3: "Tudo isso para permitir que evite perder um cashback de até <strong>100% do valor gasto nas suas compras. Vais mesmo abrir mão desta oportunidade?</strong>",
+            body4: "Para não perder, basta escrever <strong>\"tagpeak\"</strong> no campo de desconto/cupão no checkout da sua próxima compra na ${brandName}.",
+            body5: "Para mais informações, visite: www.tagpeak.com"
+        },
+        neutral: {
+            subject: `Nova parceria ${brandName} e Tagpeak`,
+            greeting: "Olá, [Nome da pessoa],",
+            body1: `A ${brandName} estabeleceu uma parceria com a Tagpeak com o objetivo de disponibilizar um benefício adicional às compras.`,
+            body2: "Este benefício permite que uma percentagem do valor pago nas compras seja automaticamente investido em ações de empresas cotadas em bolsa, geridas pela equipa especializada da Tagpeak, sem custos ou riscos para o utilizador.",
+            body3: "Esse mecanismo permite obter um cashback de até 100% do valor gasto na compra.",
+            body4: "Para utilizar, basta inserir <strong>\"tagpeak\"</strong> no campo de desconto/cupão durante o checkout da sua próxima compra na ${brandName}.",
+            body5: "Para mais informações, visite: www.tagpeak.com"
+        }
+    };
+}
 
 // Assign random framing condition
 function assignFramingCondition() {
@@ -167,8 +184,23 @@ function renderScreen(screenName) {
             case 'demographics':
                 contentArea.innerHTML = renderDemographicsScreen();
                 break;
+            case 'brand_selection':
+                contentArea.innerHTML = renderBrandSelectionScreen();
+                break;
             case 'financial_literacy':
                 contentArea.innerHTML = renderFinancialLiteracyScreen();
+                break;
+            case 'email_notification':
+                contentArea.innerHTML = renderEmailNotificationScreen();
+                break;
+            case 'tagpeak_info':
+                contentArea.innerHTML = renderTagpeakInfoScreen();
+                break;
+            case 'website_view':
+                contentArea.innerHTML = renderWebsiteViewScreen();
+                break;
+            case 'intention_after_website':
+                contentArea.innerHTML = renderIntentionAfterWebsiteScreen();
                 break;
             case 'initial_involvement':
                 contentArea.innerHTML = renderInitialInvolvementScreen();
@@ -190,9 +222,6 @@ function renderScreen(screenName) {
                 break;
             case 'intention':
                 contentArea.innerHTML = renderIntentionScreen();
-                break;
-            case 'website':
-                contentArea.innerHTML = renderWebsiteScreen();
                 break;
             case 'emotions_1':
                 contentArea.innerHTML = renderEmotionsScreen1();
@@ -219,65 +248,16 @@ function renderScreen(screenName) {
 
 function renderWelcomeScreen() {
     return `
-        <div class="text-center space-y-8">
+        <div class="text-center space-y-6">
             <div>
-                <h1 class="text-4xl font-bold mb-4">Bem-vindo(a)!</h1>
-                <p class="text-lg text-gray-700">Agradecemos por dedicar alguns minutos para participar deste estudo.</p>
+                <h1 class="text-4xl font-bold mb-3">Bem-vindo(a)!</h1>
+                <p class="text-lg text-gray-700">Agradecemos por participar neste estudo sobre programas de benefícios.</p>
             </div>
             
-            <div class="text-left space-y-6 bg-gradient-to-br from-gray-50 to-blue-50 p-8 rounded-2xl border border-gray-200 shadow-lg">
-                <div class="flex items-start space-x-4">
-                    <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-lg mb-2 text-gray-800">Objetivo da Pesquisa</h3>
-                        <p class="text-gray-700">Queremos compreender melhor programas de benefícios oferecidos por empresas. As respostas vão ajudar-nos a desenvolver soluções mais alinhadas com as demandas dos consumidores.</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start space-x-4">
-                    <div class="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-lg mb-2 text-gray-800">Tempo Estimado</h3>
-                        <p class="text-gray-700">A pesquisa leva cerca de 7 a 10 minutos para ser concluída.</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start space-x-4">
-                    <div class="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-lg mb-2 text-gray-800">Confidencialidade</h3>
-                        <p class="text-gray-700">As suas respostas são anónimas e serão utilizadas exclusivamente para fins internos, com o objetivo de gerar insights e melhorar os nossos serviços.</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-start space-x-4">
-                    <div class="flex-shrink-0 w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-lg mb-2 text-gray-800">Participação Voluntária</h3>
-                        <p class="text-gray-700">A participação é totalmente voluntária e pode ser interrompida a qualquer momento. Ao continuar, está a concordar com os termos acima.</p>
-                    </div>
-                </div>
-                
-                <div class="pt-4 border-t border-gray-200">
-                    <p class="text-sm text-gray-600 mb-2">Para questões ou feedback:</p>
-                    <a href="mailto:luis@tagpeak.com" class="text-blue-600 hover:text-blue-700 font-medium hover:underline">luis@tagpeak.com</a>
-                </div>
+            <div class="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-2xl border border-gray-200">
+                <p class="text-gray-700 mb-4">A pesquisa leva cerca de <strong>7-10 minutos</strong> e as suas respostas são <strong>anónimas e confidenciais</strong>.</p>
+                <p class="text-sm text-gray-600">A participação é voluntária e pode ser interrompida a qualquer momento.</p>
+                <p class="text-xs text-gray-500 mt-3">Questões: <a href="mailto:luis@tagpeak.com" class="text-blue-600 hover:underline">luis@tagpeak.com</a></p>
             </div>
             
             <button onclick="renderScreen('demographics')" class="btn-primary mt-4">
@@ -289,13 +269,10 @@ function renderWelcomeScreen() {
 
 function renderDemographicsScreen() {
     return `
-        <div class="space-y-8">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold mb-3">Informação Sociodemográfica</h2>
-                <p class="text-gray-600">Os seus dados serão mantidos confidenciais e utilizados apenas para fins de análise estatística.</p>
-            </div>
+        <div class="space-y-6">
+            <p class="text-center text-gray-600 mb-4">Os seus dados serão mantidos confidenciais e utilizados apenas para fins de análise estatística.</p>
             
-            <div class="space-y-8">
+            <div class="space-y-5">
                 <div>
                     <label class="block text-base font-semibold text-gray-800 mb-3">1. Idade</label>
                     <div class="space-y-2" id="age-group">
@@ -394,15 +371,54 @@ function renderDemographicsScreen() {
     `;
 }
 
+function renderBrandSelectionScreen() {
+    return `
+        <div class="space-y-6">
+            <p class="text-center text-lg text-gray-700 mb-6">Escolha uma marca que gosta ou utiliza:</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                ${brands.map(brand => `
+                    <button 
+                        onclick="selectBrand('${brand}')" 
+                        class="brand-btn p-4 border-2 rounded-xl font-semibold text-gray-700 transition-all hover:scale-105 ${surveyData.selectedBrand === brand ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'}"
+                    >
+                        ${brand}
+                    </button>
+                `).join('')}
+            </div>
+            <p id="brand-error" class="text-red-500 text-sm text-center mt-2 hidden">Por favor, selecione uma marca.</p>
+            
+            <button onclick="validateBrandSelection()" class="btn-primary mt-6 w-full">
+                Continuar
+            </button>
+        </div>
+    `;
+}
+
+function selectBrand(brand) {
+    surveyData.selectedBrand = brand;
+    clearError('brand-error');
+    // Re-render to update visual state
+    const contentArea = document.getElementById('content-area');
+    if (contentArea) {
+        contentArea.innerHTML = renderBrandSelectionScreen();
+    }
+}
+
+function validateBrandSelection() {
+    if (!surveyData.selectedBrand) {
+        showError('brand-error');
+        return;
+    }
+    renderScreen('initial_involvement');
+}
+
 function renderFinancialLiteracyScreen() {
     return `
-        <div class="space-y-8">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold mb-3">Avaliação de Literacia Financeira</h2>
-                <p class="text-gray-600">Por favor, responda às seguintes perguntas:</p>
-            </div>
+        <div class="space-y-5">
+            <p class="text-center text-gray-600 mb-4">Por favor, responda às seguintes perguntas:</p>
             
-            <div class="space-y-6">
+            <div class="space-y-4">
                 <div class="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-2xl border border-gray-200">
                     <p class="text-base font-semibold text-gray-800 mb-4">Suponha que tem €100 numa conta que rende 2% ao ano. Após 5 anos, quanto terá na conta?</p>
                     <div class="space-y-2">
@@ -466,7 +482,7 @@ function renderFinancialLiteracyScreen() {
                 </div>
             </div>
             
-            <button onclick="validateAndContinue('financial_literacy', 'initial_involvement')" class="btn-primary mt-8 w-full">
+            <button onclick="validateAndContinue('financial_literacy', 'brand_selection')" class="btn-primary mt-8 w-full">
                 Continuar
             </button>
         </div>
@@ -475,14 +491,11 @@ function renderFinancialLiteracyScreen() {
 
 function renderInitialInvolvementScreen() {
     return `
-        <div class="space-y-8">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold mb-3">Avaliação do Envolvimento</h2>
-                <p class="text-lg font-medium text-gray-700 mb-2">"Para mim, benefícios promocionais (como cashback, descontos, cupões, etc.) são:"</p>
-                <p class="text-sm text-gray-500">*itens cotados em reverso</p>
-            </div>
+        <div class="space-y-5">
+            <p class="text-center text-gray-700 mb-2">"Para mim, benefícios promocionais (como cashback, descontos, cupões, etc.) são:"</p>
+            <p class="text-center text-xs text-gray-500 mb-4">*itens cotados em reverso</p>
             
-            <div class="space-y-8 bg-gray-50 p-6 rounded-2xl">
+            <div class="space-y-5 bg-gray-50 p-4 rounded-2xl">
                 ${renderLikertScale('inv_important', 'initialInvolvementImportant', 'importantes', 'nada importantes', 1, 7, surveyData.initialInvolvementImportant)}
                 ${renderLikertScale('inv_relevant', 'initialInvolvementRelevant', 'relevantes', 'irrelevantes', 1, 7, surveyData.initialInvolvementRelevant)}
                 ${renderLikertScale('inv_meaningful', 'initialInvolvementMeaningful', 'não significam nada', 'significam muito para mim', 1, 7, surveyData.initialInvolvementMeaningful)}
@@ -516,8 +529,35 @@ function renderPreparationScreen() {
                 </p>
             </div>
             
-            <button onclick="assignFramingCondition(); renderScreen('email_framing')" class="btn-primary mt-8">
+            <button onclick="renderScreen('email_notification')" class="btn-primary mt-6">
                 Continuar
+            </button>
+        </div>
+    `;
+}
+
+function renderEmailNotificationScreen() {
+    return `
+        <div class="text-center space-y-8">
+            <div class="relative">
+                <div class="w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl animate-bounce">
+                    <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <div class="absolute top-0 right-0 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-sm animate-pulse">
+                    1
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                <h2 class="text-3xl font-bold text-gray-800">Recebeu um novo e-mail!</h2>
+                <p class="text-xl text-gray-700">Por favor, abra e leia o e-mail que acabou de receber.</p>
+                <p class="text-gray-600">As informações contidas no e-mail serão importantes para as próximas questões.</p>
+            </div>
+            
+            <button onclick="assignFramingCondition(); renderScreen('email_framing')" class="btn-primary mt-8">
+                Abrir E-mail
             </button>
         </div>
     `;
@@ -528,13 +568,13 @@ function renderEmailFramingScreen() {
         assignFramingCondition();
     }
     
+    const brandName = surveyData.selectedBrand || 'Airpnp';
+    const emailFramings = getEmailFraming(brandName);
     const email = emailFramings[framingCondition];
     const displayName = surveyData.firstName || '[Nome da pessoa]';
     
     return `
         <div class="space-y-6">
-            <h2 class="text-3xl font-bold text-center mb-6">E-mail</h2>
-            
             <!-- Email Inbox Frame -->
             <div class="bg-gray-100 rounded-2xl shadow-2xl overflow-hidden border border-gray-300">
                 <!-- Email Client Header -->
@@ -636,13 +676,10 @@ function renderEmailFramingScreen() {
 
 function renderExclusionScreen() {
     return `
-        <div class="space-y-8">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold mb-3">Perguntas de Verificação</h2>
-                <p class="text-gray-600">Responda às seguintes questões com base no e-mail que acabou de ler:</p>
-            </div>
+        <div class="space-y-5">
+            <p class="text-center text-gray-600 mb-4">Responda às seguintes questões com base no e-mail que acabou de ler:</p>
             
-            <div class="space-y-6">
+            <div class="space-y-4">
                 <div class="bg-gradient-to-br from-gray-50 to-blue-50 p-6 rounded-2xl border border-gray-200">
                     <p class="text-base font-semibold text-gray-800 mb-4">"O e-mail refere qual tipo de benefício?"</p>
                     <div class="space-y-2">
@@ -697,13 +734,10 @@ function renderExclusionScreen() {
 
 function renderManipulationCheckScreen() {
     return `
-        <div class="space-y-8">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold mb-3">Verificação de Manipulação</h2>
-                <p class="text-gray-600">Com base no e-mail que leu, responda às seguintes questões:</p>
-            </div>
+        <div class="space-y-5">
+            <p class="text-center text-gray-600 mb-4">Com base no e-mail que leu, responda às seguintes questões:</p>
             
-            <div class="space-y-8 bg-gray-50 p-6 rounded-2xl">
+            <div class="space-y-5 bg-gray-50 p-4 rounded-2xl">
                 <div>
                     <p class="text-base font-semibold text-gray-800 mb-4">"A mensagem apresentada enfatizou principalmente:"</p>
                     ${renderLikertScale('manip_loss', 'manipulationLossEmphasis', 'Perdas por NÃO usar o benefício', 'Benefícios de USAR o benefício', 1, 7, surveyData.manipulationLossEmphasis)}
@@ -724,13 +758,10 @@ function renderManipulationCheckScreen() {
 
 function renderMessageInvolvementScreen() {
     return `
-        <div class="space-y-8">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold mb-3">Envolvimento com a Mensagem</h2>
-                <p class="text-gray-600">Avalie a sua experiência ao ler o e-mail:</p>
-            </div>
+        <div class="space-y-5">
+            <p class="text-center text-gray-600 mb-4">Avalie a sua experiência ao ler o e-mail:</p>
             
-            <div class="space-y-8 bg-gray-50 p-6 rounded-2xl">
+            <div class="space-y-5 bg-gray-50 p-4 rounded-2xl">
                 <div>
                     <p class="text-base font-semibold text-gray-800 mb-4">1. Você diria que, enquanto lia, você:</p>
                     ${renderLikertScale('inv_interested', 'involvementInterested', 'não estava interessado', 'estava muito interessado', 1, 9, surveyData.involvementInterested)}
@@ -770,76 +801,99 @@ function renderMessageInvolvementScreen() {
 }
 
 function renderIntentionScreen() {
+    const brandName = surveyData.selectedBrand || 'Airpnp';
     return `
-        <div class="space-y-8">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold mb-4">Intenção de Uso</h2>
-                <p class="text-lg text-gray-700 mb-2">Imagine que está prestes a fazer uma reserva na <strong class="text-blue-600">Airpnp</strong>.</p>
-                <p class="text-gray-600">Indique o quanto é provável que utilize este novo benefício na sua próxima reserva:</p>
-            </div>
+        <div class="space-y-5">
+            <p class="text-center text-gray-700 mb-2">Imagine que está prestes a fazer uma compra na <strong class="text-blue-600">${brandName}</strong>.</p>
+            <p class="text-center text-gray-600 mb-4">Indique o quanto é provável que utilize este novo benefício na sua próxima compra:</p>
             
-            <div class="space-y-8 bg-gray-50 p-6 rounded-2xl">
+            <div class="space-y-5 bg-gray-50 p-4 rounded-2xl">
                 ${renderLikertScale('int_probable', 'intentionProbable', 'improvável', 'provável', 1, 7, surveyData.intentionProbable)}
                 ${renderLikertScale('int_possible', 'intentionPossible', 'impossível', 'possível', 1, 7, surveyData.intentionPossible)}
                 ${renderLikertScale('int_definitely', 'intentionDefinitelyUse', 'definitivamente não usaria', 'definitivamente usaria', 1, 7, surveyData.intentionDefinitelyUse)}
                 ${renderLikertScale('int_frequent', 'intentionFrequent', 'nada frequente', 'muito frequente', 1, 7, surveyData.intentionFrequent)}
             </div>
             
-            <button onclick="validateLikertScreen('intention', ['intentionProbable', 'intentionPossible', 'intentionDefinitelyUse', 'intentionFrequent'], 'website')" class="btn-primary mt-8 w-full">
+            <button onclick="validateLikertScreen('intention', ['intentionProbable', 'intentionPossible', 'intentionDefinitelyUse', 'intentionFrequent'], 'tagpeak_info')" class="btn-primary mt-6 w-full">
                 Continuar
             </button>
         </div>
     `;
 }
 
-function renderWebsiteScreen() {
+function renderTagpeakInfoScreen() {
     return `
-        <div class="space-y-6">
-            <h2 class="text-3xl font-bold text-center mb-6">Apresentação do site TAGPEAK</h2>
+        <div class="text-center space-y-6">
+            <p class="text-lg text-gray-700">Vamos dar-lhe mais informações sobre a Tagpeak que podem ter faltado no e-mail.</p>
+            <p class="text-gray-600">Poderá navegar livremente pelo website da Tagpeak para conhecer melhor o produto.</p>
             
-            <div class="space-y-8">
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <div class="flex items-start space-x-4">
-                        <div class="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">01</div>
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">Purchase from our partner stores</h3>
-                            <p class="text-gray-700">Check our available brands and go to their website to make a purchase.</p>
-                        </div>
+            <button onclick="renderScreen('website_view')" class="btn-primary mt-4">
+                Continuar
+            </button>
+        </div>
+    `;
+}
+
+let websiteStartTime = null;
+
+function renderWebsiteViewScreen() {
+    // Start tracking time when screen loads
+    websiteStartTime = Date.now();
+    
+    return `
+        <div class="space-y-4">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden border-2 border-gray-300" style="height: 80vh;">
+                <div class="bg-gray-100 px-4 py-2 flex items-center justify-between border-b border-gray-300">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
                     </div>
-                </div>
-                
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <div class="flex items-start space-x-4">
-                        <div class="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">02</div>
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">We invest a % of the price you paid</h3>
-                            <p class="text-gray-700">Brands fund strategic investments in high-potential companies, which allow us to boost your reward. This has no extra cost to you.</p>
-                        </div>
+                    <div class="flex-1 mx-4">
+                        <div class="bg-white px-3 py-1 rounded text-sm text-gray-600 text-center">https://tagpeak.com</div>
                     </div>
+                    <div class="text-sm text-gray-500">Navegue pelo website</div>
                 </div>
-                
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <div class="flex items-start space-x-4">
-                        <div class="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">03</div>
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">Follow the reward evolution</h3>
-                            <p class="text-gray-700">Your cash reward will move according to the investments made by Tagpeak. You get to see the daily evolution on your dashboard.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-gray-50 p-6 rounded-lg">
-                    <div class="flex items-start space-x-4">
-                        <div class="bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">04</div>
-                        <div>
-                            <h3 class="text-xl font-bold mb-2">Cash-out the reward at any time</h3>
-                            <p class="text-gray-700">Whenever you decide or the pre-defined investment period is over, you may cash out directly to your bank account.</p>
-                        </div>
-                    </div>
-                </div>
+                <iframe 
+                    id="tagpeak-iframe"
+                    src="https://tagpeak.com" 
+                    class="w-full h-full border-0"
+                    style="height: calc(80vh - 50px);"
+                    allow="fullscreen"
+                ></iframe>
             </div>
             
-            <button onclick="renderScreen('emotions_1')" class="btn-primary mt-8 w-full">
+            <button onclick="finishWebsiteView()" class="btn-primary w-full">
+                Continuar
+            </button>
+        </div>
+    `;
+}
+
+function finishWebsiteView() {
+    if (websiteStartTime) {
+        const timeSpent = Math.floor((Date.now() - websiteStartTime) / 1000); // in seconds
+        surveyData.websiteViewTime = timeSpent;
+        websiteStartTime = null;
+    }
+    renderScreen('intention_after_website');
+}
+
+function renderIntentionAfterWebsiteScreen() {
+    const brandName = surveyData.selectedBrand || 'Airpnp';
+    return `
+        <div class="space-y-5">
+            <p class="text-center text-gray-700 mb-2">Agora que conhece melhor a Tagpeak, imagine que está prestes a fazer uma compra na <strong class="text-blue-600">${brandName}</strong>.</p>
+            <p class="text-center text-gray-600 mb-4">Indique o quanto é provável que utilize este novo benefício na sua próxima compra:</p>
+            
+            <div class="space-y-5 bg-gray-50 p-4 rounded-2xl">
+                ${renderLikertScale('int_after_probable', 'intentionAfterWebsiteProbable', 'improvável', 'provável', 1, 7, surveyData.intentionAfterWebsiteProbable)}
+                ${renderLikertScale('int_after_possible', 'intentionAfterWebsitePossible', 'impossível', 'possível', 1, 7, surveyData.intentionAfterWebsitePossible)}
+                ${renderLikertScale('int_after_definitely', 'intentionAfterWebsiteDefinitelyUse', 'definitivamente não usaria', 'definitivamente usaria', 1, 7, surveyData.intentionAfterWebsiteDefinitelyUse)}
+                ${renderLikertScale('int_after_frequent', 'intentionAfterWebsiteFrequent', 'nada frequente', 'muito frequente', 1, 7, surveyData.intentionAfterWebsiteFrequent)}
+            </div>
+            
+            <button onclick="validateLikertScreen('intention_after_website', ['intentionAfterWebsiteProbable', 'intentionAfterWebsitePossible', 'intentionAfterWebsiteDefinitelyUse', 'intentionAfterWebsiteFrequent'], 'emotions_1')" class="btn-primary mt-6 w-full">
                 Continuar
             </button>
         </div>
@@ -848,16 +902,13 @@ function renderWebsiteScreen() {
 
 function renderEmotionsScreen1() {
     return `
-        <div class="space-y-8">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold mb-3">Avaliação do Produto</h2>
-                <p class="text-gray-600">De acordo com as informações apresentadas, avalie as seguintes afirmações:</p>
-            </div>
+        <div class="space-y-5">
+            <p class="text-center text-gray-600 mb-4">De acordo com as informações apresentadas, avalie as seguintes afirmações:</p>
             
-            <div class="space-y-8">
-                <div class="bg-gray-50 p-6 rounded-2xl">
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">1. Facilidade de uso</h3>
-                    <div class="space-y-6">
+            <div class="space-y-4">
+                <div class="bg-gray-50 p-4 rounded-2xl">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800">1. Facilidade de uso</h3>
+                    <div class="space-y-4">
                         <div>
                             <p class="text-base font-medium text-gray-800 mb-4">"É difícil de utilizar o benefício"</p>
                             ${renderLikertScale('ease_difficult', 'easeDifficult', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.easeDifficult)}
@@ -869,9 +920,9 @@ function renderEmotionsScreen1() {
                     </div>
                 </div>
                 
-                <div class="bg-gray-50 p-6 rounded-2xl">
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">2. Visão generalizada do produto</h3>
-                    <div class="space-y-6">
+                <div class="bg-gray-50 p-4 rounded-2xl">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800">2. Visão generalizada do produto</h3>
+                    <div class="space-y-4">
                         <div>
                             <p class="text-base font-medium text-gray-800 mb-4">"Poderia explicar facilmente o funcionamento associado ao benefício"</p>
                             ${renderLikertScale('product_explain', 'productExplainEasy', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.productExplainEasy)}
@@ -883,9 +934,9 @@ function renderEmotionsScreen1() {
                     </div>
                 </div>
                 
-                <div class="bg-gray-50 p-6 rounded-2xl">
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">3. Clareza na utilização</h3>
-                    <div class="space-y-6">
+                <div class="bg-gray-50 p-4 rounded-2xl">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800">3. Clareza na utilização</h3>
+                    <div class="space-y-4">
                         <div>
                             <p class="text-base font-medium text-gray-800 mb-4">"As etapas do processo de utilização do benefício são claras para mim"</p>
                             ${renderLikertScale('clarity_steps', 'clarityStepsClear', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.clarityStepsClear)}
@@ -898,7 +949,7 @@ function renderEmotionsScreen1() {
                 </div>
             </div>
             
-            <button onclick="validateLikertScreen('emotions_1', ['easeDifficult', 'easeEasy', 'productExplainEasy', 'productDescriptionEasy', 'clarityStepsClear', 'clarityFeelSecure'], 'emotions_2')" class="btn-primary mt-8 w-full">
+            <button onclick="validateLikertScreen('emotions_1', ['easeDifficult', 'easeEasy', 'productExplainEasy', 'productDescriptionEasy', 'clarityStepsClear', 'clarityFeelSecure'], 'emotions_2')" class="btn-primary mt-6 w-full">
                 Continuar
             </button>
         </div>
@@ -907,16 +958,13 @@ function renderEmotionsScreen1() {
 
 function renderEmotionsScreen2() {
     return `
-        <div class="space-y-8">
-            <div class="text-center">
-                <h2 class="text-3xl font-bold mb-3">Avaliação do Produto (continuação)</h2>
-                <p class="text-gray-600">Avalie as seguintes afirmações:</p>
-            </div>
+        <div class="space-y-5">
+            <p class="text-center text-gray-600 mb-4">Avalie as seguintes afirmações:</p>
             
-            <div class="space-y-8">
-                <div class="bg-gray-50 p-6 rounded-2xl">
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">4. Percepção de vantagem em relação a outros benefícios</h3>
-                    <div class="space-y-6">
+            <div class="space-y-4">
+                <div class="bg-gray-50 p-4 rounded-2xl">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800">4. Percepção de vantagem em relação a outros benefícios</h3>
+                    <div class="space-y-4">
                         <div>
                             <p class="text-base font-medium text-gray-800 mb-4">"Este benefício parece‑me mais vantajoso do que outras opções de desconto ou cashback que conheço."</p>
                             ${renderLikertScale('advantage_more', 'advantageMoreAdvantageous', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.advantageMoreAdvantageous)}
@@ -928,9 +976,9 @@ function renderEmotionsScreen2() {
                     </div>
                 </div>
                 
-                <div class="bg-gray-50 p-6 rounded-2xl">
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">5. Vontade/interesse de utilização</h3>
-                    <div class="space-y-6">
+                <div class="bg-gray-50 p-4 rounded-2xl">
+                    <h3 class="text-lg font-semibold mb-3 text-gray-800">5. Vontade/interesse de utilização</h3>
+                    <div class="space-y-4">
                         <div>
                             <p class="text-base font-medium text-gray-800 mb-4">"Tenho interesse em usar este benefício."</p>
                             ${renderLikertScale('willingness_interest', 'willingnessInterest', 'Discordo totalmente', 'Concordo totalmente', 1, 7, surveyData.willingnessInterest)}
@@ -947,7 +995,7 @@ function renderEmotionsScreen2() {
                 </div>
             </div>
             
-            <button onclick="validateLikertScreen('emotions_2', ['advantageMoreAdvantageous', 'advantageBetterPosition', 'willingnessInterest', 'willingnessLikelyUse', 'willingnessIntendFuture'], 'concerns')" class="btn-primary mt-8 w-full">
+            <button onclick="validateLikertScreen('emotions_2', ['advantageMoreAdvantageous', 'advantageBetterPosition', 'willingnessInterest', 'willingnessLikelyUse', 'willingnessIntendFuture'], 'concerns')" class="btn-primary mt-6 w-full">
                 Continuar
             </button>
         </div>
@@ -956,9 +1004,8 @@ function renderEmotionsScreen2() {
 
 function renderConcernsScreen() {
     return `
-        <div class="space-y-8">
+        <div class="space-y-5">
             <div class="text-center">
-                <h2 class="text-3xl font-bold mb-4">Dúvidas ou Receios</h2>
                 <p class="text-lg text-gray-700 mb-2">Após as informações apresentadas sobre o produto, há alguma dúvida ou receio que ainda tenha em mente?</p>
                 <p class="text-sm text-gray-500">Por favor, partilhe as suas preocupações ou questões.</p>
             </div>
@@ -1186,7 +1233,11 @@ function validateLikertScreen(screenName, fieldNames, nextScreen) {
         'advantageBetterPosition': 'advantage_better',
         'willingnessInterest': 'willingness_interest',
         'willingnessLikelyUse': 'willingness_likely',
-        'willingnessIntendFuture': 'willingness_future'
+        'willingnessIntendFuture': 'willingness_future',
+        'intentionAfterWebsiteProbable': 'int_after_probable',
+        'intentionAfterWebsitePossible': 'int_after_possible',
+        'intentionAfterWebsiteDefinitelyUse': 'int_after_definitely',
+        'intentionAfterWebsiteFrequent': 'int_after_frequent'
     };
     
     fieldNames.forEach(fieldName => {
@@ -1291,11 +1342,14 @@ window.renderScreen = renderScreen;
 window.validateAndContinue = validateAndContinue;
 window.validateLikertScreen = validateLikertScreen;
 window.validateConcernsAndSubmit = validateConcernsAndSubmit;
+window.validateBrandSelection = validateBrandSelection;
 window.selectOption = selectOption;
+window.selectBrand = selectBrand;
 window.selectLikertOption = selectLikertOption;
 window.clearError = clearError;
 window.showError = showError;
 window.assignFramingCondition = assignFramingCondition;
+window.finishWebsiteView = finishWebsiteView;
 window.saveResults = saveResults;
 window.surveyData = surveyData;
 

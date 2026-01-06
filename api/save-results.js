@@ -73,15 +73,23 @@ export default async function handler(req, res) {
             initial_involvement_valuable: surveyData.initialInvolvementValuable
         };
 
-        const { error: demographicsError } = await supabase
+        // Use upsert for demographics to handle UNIQUE constraint on user_id
+        const { error: demographicsError, data: demographicsDataResult } = await supabase
             .from('demographics')
-            .insert([demographicsData]);
+            .upsert(demographicsData, { 
+                onConflict: 'user_id',
+                ignoreDuplicates: false 
+            })
+            .select();
 
         if (demographicsError) {
             console.error('Error saving demographics:', demographicsError);
+            console.error('Demographics data attempted:', JSON.stringify(demographicsData, null, 2));
             return res.status(500).json({ 
                 error: 'Failed to save demographics',
-                details: demographicsError.message 
+                details: demographicsError.message,
+                code: demographicsError.code,
+                hint: demographicsError.hint
             });
         }
 
@@ -119,15 +127,19 @@ export default async function handler(req, res) {
             user_feedback: surveyData.userFeedback || null
         };
 
-        const { error: resultsError } = await supabase
+        const { error: resultsError, data: resultsDataResult } = await supabase
             .from('framing_study_results')
-            .insert([framingResultsData]);
+            .insert([framingResultsData])
+            .select();
 
         if (resultsError) {
             console.error('Error saving results:', resultsError);
+            console.error('Results data attempted:', JSON.stringify(framingResultsData, null, 2));
             return res.status(500).json({ 
                 error: 'Failed to save results',
-                details: resultsError.message 
+                details: resultsError.message,
+                code: resultsError.code,
+                hint: resultsError.hint
             });
         }
 
